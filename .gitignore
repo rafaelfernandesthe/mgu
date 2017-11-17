@@ -1,4 +1,7 @@
 /target/
+*/target/
+.gitignore
+.classpath
 
 # Compiled class file
 *.class
