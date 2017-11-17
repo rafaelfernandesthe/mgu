@@ -1,7 +1,10 @@
-/target/
-*/target/
-.gitignore
 .classpath
+.project
+.settings
+.metadata
+.gitignore
+**/target
+**/bin
 
 # Compiled class file
 *.class
