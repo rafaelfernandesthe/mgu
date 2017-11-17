@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<header th:fragment="menu">
+		<div style="height: 40px;margin-left: 10px">
+			<div class="btn-group">
+				<a class="btn dropdown-toggle menu-link" data-toggle="dropdown" href="#" data-icon="fa fa-user" th:text="#{usuario}">
+					Usuário
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="#" th:href="@{/usuarioCadastro}" th:text="#{menu.cadastro}+' '+#{usuario}">Cadastro Usuário</a></li>
+					<li><a href="#" th:href="@{/usuarioConsulta}" th:text="#{menu.lista}+' '+#{usuario}">Lista Usuário</a></li>
+				</ul>
+			</div>
+			<div class="btn-group">
+				<a class="btn dropdown-toggle menu-link" data-toggle="dropdown" href="#" data-icon="fa fa-users" th:text="#{grupoPerfil}">
+					Grupo de Perfil
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="#" th:href="@{/grupoPerfilCadastro}" th:text="#{menu.cadastro}+' '+#{grupoPerfil}">Cadastro Grupo de Perfil</a></li>
+					<li><a href="#" th:href="@{/grupoPerfilConsulta}" th:text="#{menu.lista}+' '+#{grupoPerfil}">Lista Grupo de Perfil</a></li>				
+				</ul>
+			</div>
+			
+			<div class="btn-group">
+				<a class="btn dropdown-toggle menu-link" data-toggle="dropdown" href="#" data-icon="fa fa-wrench" th:text="#{configuracao}">
+					Configuração
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="#" th:href="@{/grupoPerfil}" th:text="#{parametros}">Parametro do sistema </a></li>		
+					<li><a href="#" th:href="@{/grupoPerfil}" th:text="#{menu.lista}+' '+#{parametros}">Lista Parametro do sistema</a></li>	
+				</ul>
+			</div>
+				
+	         <div class="btn-group" style="margin-top: 10px; margin-right: 10px; float:right; ">
+				<form id="logout" th:action="@{/logout}" method="POST" >
+		     		<a class="btn menu-link" onclick="javascript:document.getElementById('logout').submit()" >Sair
+		     			<span class="fa fa-sign-out"></span>
+		     		</a>
+				</form>
+	         </div>
+         </div>
+		</header>
+	</body>
+</html>

@@ -1,0 +1,70 @@
+body {
+	background-color: #254970;
+	font-family: Calibri !important;
+}
+
+.loginInput {
+	width: 100%;
+	color: black;
+}
+
+.btnLogin {
+	width: 100%;
+	background: url(../img/login/btnBackground.png);
+    background-repeat: repeat;
+    background-color: transparent;
+    background-attachment: scroll;
+    border: 1px solid #5B7596;
+    margin-left: -10px;
+}
+
+.login-container {
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.25);
+    height: 325px;
+    left: 50%;
+    margin-left: -235px;
+    margin-top: -200px;
+    position: absolute;
+    top: 50%;
+    width: 470px;
+}
+
+#cabecalho {
+    background-image: url(../img/login/login-top-bg.png);
+    background-attachment: scroll;
+    background-repeat: no-repeat;
+    background-position-x: left;
+    background-position-y: top;
+    height: 215px;
+    width: 470px;
+}
+
+#titulo {
+    font-family: Calibri;
+    color: #FFFFFF !important;
+    font-weight: bold;
+    font-size: 9pt;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+#conteudo-form {
+    background-image: url(../img/login/login-bottom-bg.png);
+    background-attachment: scroll;
+    background-repeat: no-repeat;
+    background-position-x: left;
+    background-position-y: bottom;
+    background-size: auto;
+    background-origin: padding-box;
+    background-clip: border-box;
+    background-color: transparent;
+    border-radius: 0 0 10px 10px;
+    height: 110px;
+    width: 470px;
+    font-family: Calibri;
+    color: #FFFFFF !important;
+    font-weight: bold;
+    font-size: 9pt;
+    vertical-align: top;
+}

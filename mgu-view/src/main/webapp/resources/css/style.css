@@ -1,0 +1,116 @@
+body {
+	background-color: whitesmoke;
+    height: 100%;
+}
+
+.header {
+	
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #4A6695;
+    color: white;
+    text-align: center;
+}
+
+.user-box {
+    box-shadow: 0 0 15px 1px rgba(51, 81, 126, 0.5) !important;
+	-moz-box-shadow: 0 0 15px 1px rgba(51, 81, 126, 0.5) !important;
+	-webkit-box-shadow: 0 0 15px 1px rgba(51, 81, 126, 0.5) !important;
+    
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 4px 4px 4px 4px;
+    height: 90px;
+    position: absolute;
+    right: 4%;
+    top: 19px;
+    width: 300px;
+    z-index: 100;
+}
+
+.user-box-line {
+    height: 3px;
+    margin-bottom: 0;
+    margin-top: 18px;
+}
+
+.innerUser-box {
+	filter: alpha(opacity=100); /* internet explorer */
+    -khtml-opacity: 1;      /* khtml, old safari */
+    -moz-opacity: 1;       /* mozilla, netscape */
+    opacity: 1;
+    margin: 2px 5px;
+    font-weight: normal;
+    border-width: 1px 0;
+}
+
+.menu-link {
+	font-weight: bold !important;
+	color: #4A6695 !important;
+}
+
+.ui-menu-parent {
+	border : 1px solid lightgray !important;
+	margin-right: 5px !important;
+} 
+
+.buttonsGroup {
+	text-align: center;
+	padding-top: 1%;
+}
+
+/**
+*java script realiza o show desse componete no fim do carregamente da pagina
+*a��o tomada para retirar o efeito de tela 'montando' os componentes
+*/ 
+#content {
+	display:none;
+}
+
+.pui-datatableResult #ui-id-1 {
+    width: 10%;
+}
+
+.navbar {
+	margin-bottom: 5px;
+}
+
+.pui-picklist {
+	width: 100%;
+}
+
+.ui-picklist .ui-picklist-listwrapper {
+	width: 48%;
+}
+
+.ui-picklist .ui-picklist-list {
+	width: 100%;
+}
+
+.ui-picklist-buttons {
+    width: 4%;
+}
+
+.ui-button-icon-only {
+	text-indent: 0px !important;
+}
+
+.ui-picklist-button-add , .ui-picklist-button-addall , .ui-picklist-button-remove , .ui-picklist-button-removeall , .ui-picklist-caption.ui-widget-header {
+	background: url('../img/btnBackground.png') !important;
+}
+
+.ui-picklist-caption.ui-widget-header {
+	color:white !important;
+}
+
+.fa.fa-fw {
+    color: white !important;
+}
+
+.fa.fa-fw.fa-search {
+	color: lightblue !important;
+}

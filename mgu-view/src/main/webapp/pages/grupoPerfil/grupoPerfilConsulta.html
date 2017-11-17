@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/_layout/layout.html}">
+
+<body>
+	<div layout:fragment="content">
+		<ul class="pui-breadcrumb">
+			<li><a href="#">Home</a></li>
+			<li><a href="#">Grupo de Perfil</a></li>
+			<li><a href="#">Consulta</a></li>
+		</ul>
+
+		<div class="pui-panel-toggleable" th:title="#{pagina.consulta}+' '+#{grupoPerfil}">
+			<form action="#" method="get" th:action="@{/grupoPerfil/s}" th:object="${grupoPerfil}">
+			
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group">
+							<label class="control-label" for="nome"
+								th:text="#{grupoPerfil.nome}">Nome: </label> <input
+								class="form-control" id="nome" th:field="*{noGrupoPerfil}" />
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group buttonsGroup">
+					<button class="pui-button" type="submit">
+						<label th:text="#{botao.consultar}"></label>
+					</button>
+					<a class="pui-button" th:href="@{'/grupoPerfil'}">
+						<label th:text="#{botao.limpar}"></label>
+					</a>
+				</div>
+			</form>
+		</div>
+
+		<div class="pui-panel-toggleable" th:title="#{tabela.resultados}">
+			<div class="pui-datatableResult" id="tableGrupoPerfil"></div>
+		</div>
+	</div>
+
+	<div layout:fragment="javascript-support">
+		<script>
+			$(function (){
+			  	var localData = [(${grupoPerfisJSON})];
+				$('#tableGrupoPerfil').puidatatable({
+					emptyMessage: 'Nenhum Registro Encontrado',
+					responsive: true,
+					paginator: {
+				        rows: 10
+				    },
+			        columns: [
+			        	{field: '', headerText: 'Opções'},
+			            {field: 'noGrupoPerfil', headerText: 'Nome'},
+			        ],
+			        datasource: localData,
+				});
+			});
+		</script>
+	</div>
+
+</body>
+</html>

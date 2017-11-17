@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8"/>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"/>
+		<link href="../resources/css/loginStyle.css" th:href="@{/resources/css/loginStyle.css}" rel="stylesheet"/>
+	
+	    <title th:text="#{sistema.titulo}">Nome do Sistema</title>
+	    
+	</head>
+	<body onload='document.forms[0].username.focus();'>
+		<script type="text/javascript">
+			function go(url) {  
+		    	window.location = url+"?dcUsername="+document.getElementsByName("password")[0].value;
+		    } 
+		</script>
+		
+		<div class="login-container">
+			
+			<div id="cabecalho"></div>
+			<div id="conteudo-form" class="container">
+				<form id="formulario" th:action="@{/login}" method="post" >
+					<div class="row">
+						<div class="col-sm-12">
+							<label id="titulo"><a th:href="@{/}">MGU</a> > Identificação do Usuário</td>
+						</label>
+					</div>
+					<div class="row">
+						<div class="col-sm-2">
+							<label for="username" class="col-sm-2 col-form-label">Usuário:</label>
+						</div>
+						<div class="col-sm-6">
+							<input type="text" id="username" name="username" class="loginInput" />
+						</div>
+						<div class="col-sm-4">
+							<input class="btnLogin" type="submit" value="Efetuar Login" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-2">
+							<label for="username" class="col-sm-2 col-form-label">Senha:</label>
+						</div>
+						<div class="col-sm-6">
+							<input type="password" id="password" name="password" class="loginInput"/>
+						</div>
+						<div class="col-sm-4">
+							<input class="btnLogin" type="button" onclick="go('[(${pageContext.request.contextPath})]/senha/problemaSenha');" value="Problemas com Senha"/>
+						</div>
+					</div>
+					<div class="row">
+						<p th:if="${loginError}" class="error">Login ou Senha Inválidos</p>
+					</div>
+				</form>
+			</div>
+			
+			<div style="margin-top: 10px">
+				<c:if test="${param.msgSucesso != null}">
+					<div id="msgSucesso" class="sucessBlock" style="width: 455px;margin-right: 56px;">
+						${param.msgSucesso}
+					</div>
+				</c:if>
+				<c:if test="${param.acessoNegado eq true}">
+					<div id="acessoNegado" class="errorblock" style="width: 455px;margin-right: 56px;">
+						UsuÃ¡rio informado nÃ£o possui acesso ao modulo MGU
+					</div>
+				</c:if>
+				<c:if test="${param.error eq true}">
+					<div id="msgError" class="errorblock" style="width: 455px;margin-right: 56px;">
+						NÃ£o foi possÃ­vel efetuar o login, usuario ou senha invalidos
+					</div>
+				</c:if>
+				<c:if test="${param.expirado eq true}">
+					<div id="msgError" class="errorblock" style="width: 455px;margin-right: 56px;">
+						Senha expirada/temporaria e deve ser trocada.&nbsp;&nbsp;<a onclick="go('${pageContext.request.contextPath}/senha/trocarSenha');">clique aqui</a>
+					</div>
+				</c:if>
+			</div>
+		</div>
+	</body>
+</html>

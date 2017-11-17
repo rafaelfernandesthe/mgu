@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/_layout/layout.html}">
+
+<body>
+	<div layout:fragment="content">
+		<ul class="pui-breadcrumb">
+			<li><a href="#">Home</a></li>
+			<li><a href="#">Usuário</a></li>
+			<li><a href="#">Cadastro</a></li>
+		</ul>
+
+		<div class="pui-panel" th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
+			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}" th:object="${usuario}">
+
+				<div th:include="~{/_layout/mensagem.html}"></div>
+
+				<div class="row">
+					<div class="col-sm-2">
+						<label class="control-label" for="nome" th:text="#{grupoPerfil.nome}">Nome: </label>
+					</div>
+					<div class="col-sm-4"> 
+						<input class="form-control" id="nome" th:field="*{nmUsuario}" />
+					</div>
+				
+					<div class="col-sm-2">
+						<label class="control-label" for="username" th:text="#{usuario.usuarioAcesso}">Usuário Acesso: </label>
+					</div>
+					<div class="col-sm-4"> 
+						<input class="form-control" id="username" th:field="*{dcUsername}" />
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-sm-2">
+						<label class="control-label" for="listaGrupoPerfil" th:text="#{grupoPerfil}">Grupo Perfil</label>						
+					</div>
+					<div class="col-sm-10">
+						<div class="pui-picklist" id="listaGrupoPerfil">
+							<select></select>
+							<select th:select="grupoPerfisSelecionados"></select>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group buttonsGroup">
+					<button class="pui-button" type="submit">
+						<label th:text="#{botao.cadastrar}"></label>
+					</button>
+					<a class="pui-button" th:href="@{'/usuarioCadastro'}">
+						<label th:text="#{botao.limpar}"></label>
+					</a>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+	<div layout:fragment="javascript-support">
+		<script>
+			$(function (){
+			  	var sourceData = [(${grupoPerfisSourceJSON})];
+			  	var targetData = [(${grupoPerfisTargetJSON})];
+				$('#listaGrupoPerfil').puipicklist({
+			        sourceCaption: 'Disponíveis',
+			        targetCaption: 'Selecionados',
+			        filter: true,
+			        filterMatchMode: 'contains',
+			        sourceData: sourceData,
+			        targetData: targetData,
+			        reponsive: true,
+				});
+			});
+		</script>
+	</div>
+
+</body>
+</html>
