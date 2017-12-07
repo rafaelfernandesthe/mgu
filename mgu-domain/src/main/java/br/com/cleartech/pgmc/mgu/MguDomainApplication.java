@@ -20,7 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @ComponentScan( "br.com.cleartech.pgmc" )
 @EnableJpaRepositories( "br.com.cleartech.pgmc" )
-public class MguDomainInitializer {
+public class MguDomainApplication {
 
 	@Bean
 	@Autowired

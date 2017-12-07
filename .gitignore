@@ -1,3 +1,7 @@
+**/.classpath
+**/.project
+**/.settings
+**/.metadata
 .classpath
 .project
 .settings
@@ -5,6 +9,7 @@
 .gitignore
 **/target
 **/bin
+.tern-project
 
 # Compiled class file
 *.class

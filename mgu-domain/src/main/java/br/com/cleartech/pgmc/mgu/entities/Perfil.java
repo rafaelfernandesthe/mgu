@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -65,6 +66,10 @@ public class Perfil implements Serializable {
 	@NotAudited
 	@OneToMany( mappedBy = "perfil", fetch = FetchType.LAZY )
 	private List<Usuario> usuarios = new ArrayList<Usuario>();
+
+	@Transient
+	// Utilizado no POST /sistema
+	private List<Perfil> listaPerfil;
 
 	public Perfil() {}
 
@@ -124,6 +129,14 @@ public class Perfil implements Serializable {
 
 	public void setAcessoOperadoras( List<AcessoOperadora> acessoOperadoras ) {
 		this.acessoOperadoras = acessoOperadoras;
+	}
+
+	public List<Perfil> getListaPerfil() {
+		return listaPerfil;
+	}
+
+	public void setListaPerfil( List<Perfil> listaPerfil ) {
+		this.listaPerfil = listaPerfil;
 	}
 
 	@Override
