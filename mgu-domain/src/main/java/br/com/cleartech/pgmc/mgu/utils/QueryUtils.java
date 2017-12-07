@@ -7,7 +7,7 @@ import com.mysema.query.types.path.StringPath;
 public class QueryUtils {
 
 	public static BooleanExpression containsIgnoreCaseIgnoreAccents( StringPath pathField, String value ) {
-		return Expressions.stringTemplate( String.format( "translate(%s, '��������������������������', 'AAAAAAAAEEEEIIOOOOOOUUUUCC')", pathField.getMetadata().getElement().toString() ) ).containsIgnoreCase( StringUtils.removeAccents( value ) );
+		return Expressions.stringTemplate( String.format( "translate(%s, 'âàãáÁÂÀÃéêÉÊíÍóôõÓÔÕüúÜÚÇç', 'AAAAAAAAEEEEIIOOOOOOUUUUCC')", pathField.getMetadata().getElement().toString() ) ).containsIgnoreCase( StringUtils.removeAccents( value ) );
 	}
 
 }

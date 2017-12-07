@@ -65,7 +65,7 @@ body {
 
 /**
 *java script realiza o show desse componete no fim do carregamente da pagina
-*a��o tomada para retirar o efeito de tela 'montando' os componentes
+*ação tomada para retirar o efeito de tela 'montando' os componentes
 */ 
 #content {
 	display:none;
