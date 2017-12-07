@@ -14,4 +14,6 @@ public interface GrupoPerfilService {
 
 	public List<GrupoPerfil> findByPrestadoraAndNome( GrupoPerfil grupoPerfil );
 
+	public List<GrupoPerfil> loadAllById( List<GrupoPerfil> list );
+
 }

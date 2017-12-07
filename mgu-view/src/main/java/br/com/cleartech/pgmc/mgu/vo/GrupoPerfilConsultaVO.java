@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
-import br.com.cleartech.pgmc.mgu.utils.EntityVOBase;
+import br.com.cleartech.pgmc.mgu.utils.EntityVOSearchBase;
 
-public class GrupoPerfilConsultaVO extends EntityVOBase {
+public class GrupoPerfilConsultaVO extends EntityVOSearchBase {
 
 	private static final long serialVersionUID = -2539799703471445183L;
 
@@ -15,8 +15,8 @@ public class GrupoPerfilConsultaVO extends EntityVOBase {
 	private String noGrupoPerfil;
 
 	@Override
-	public List<EntityVOBase> getVO( List<?> list ) {
-		List<EntityVOBase> result = new ArrayList<>();
+	public List<EntityVOSearchBase> getVO( List<?> list ) {
+		List<EntityVOSearchBase> result = new ArrayList<>();
 		if ( list != null )
 			for ( GrupoPerfil item : (List<GrupoPerfil>) list ) {
 				result.add( new GrupoPerfilConsultaVO( item.getId(), item.getNoGrupoPerfil() ) );

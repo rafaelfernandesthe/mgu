@@ -5,12 +5,10 @@ import java.util.List;
 
 public abstract class EntityVOBase implements Serializable {
 
-	private static final long serialVersionUID = -3607176027988973185L;
-
-	public abstract List<EntityVOBase> getVO( List<?> list );
+	private static final long serialVersionUID = 6419615057247037869L;
 
 	public String getVOToJson( List<?> list ) {
-		return MguUtils.getJson( getVO( list ) );
+		return MguUtils.getJSON( list );
 	}
 
 }

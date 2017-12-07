@@ -1,5 +1,6 @@
 package br.com.cleartech.pgmc.mgu.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,15 @@ public class GrupoPerfilServiceImpl implements GrupoPerfilService {
 	@Override
 	public List<GrupoPerfil> findByPrestadoraAndNome( GrupoPerfil grupoPerfil ) {
 		return grupoPerfilRepositoryCustom.findByPrestadoraAndNome( grupoPerfil.getPrestadora().getId(), grupoPerfil.getNoGrupoPerfil() );
+	}
+
+	@Override
+	public List<GrupoPerfil> loadAllById( List<GrupoPerfil> list ) {
+		List<GrupoPerfil> result = new ArrayList<>();
+		for ( GrupoPerfil item : list ) {
+			result.add( grupoPerfilRepository.findOne( item.getId() ) );
+		}
+		return result;
 	}
 
 }

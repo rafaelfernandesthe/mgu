@@ -54,6 +54,7 @@
     </header>
 
 	<section style="padding-bottom: 1%">
+		<div id="growl"></div>
 		<div id="content" class="container-fluid" layout:fragment="content">
 			<!-- ============================================================================ -->
 			<!-- This content is only used for static prototyping purposes (natural templates)-->
@@ -87,7 +88,22 @@
 	<script type="text/javascript" src="../../resources/js/mgu-commons.js" th:src="@{/resources/js/mgu-commons.js}"></script>
 	<script>
 		$(function (){
+			//usuario consegue ver a pagina sendo 'montada'
+			//no style.css tem #content {display:none;}
 			$('#content').show();
+
+			//remover todos os parametros de url na tela de consulta 
+			window.history.replaceState(null, null, window.location.pathname.replace(/\/s$/g,''));
+
+			//mensagem padrão de sucesso
+			var param = getUrlParams('sucess');
+			if(param != undefined && param != '' && param != null){
+				showMessage('info','Operação realizada com sucesso!');
+			}
+
+			if(messages.length > 0){
+				$('.messageError').puimessages('show', 'error', {summary: '', detail: messages });
+			}
 		});
 	</script>
 	

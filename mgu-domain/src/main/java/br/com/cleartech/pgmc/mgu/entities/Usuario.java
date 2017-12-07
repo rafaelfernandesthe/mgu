@@ -16,7 +16,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PreRemove;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -29,7 +28,6 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
-import br.com.cleartech.pgmc.mgu.enums.SimNaoEnum;
 
 @Audited
 @Entity
@@ -51,9 +49,8 @@ public class Usuario implements Serializable {
 	@Column( name = "DC_EMAIL" )
 	private String dcEmail;
 
-	@Column( name = "FL_DYNAMICS", precision = 1 )
-	@Enumerated( EnumType.ORDINAL )
-	private SimNaoEnum flEnviarDynamics = SimNaoEnum.NAO;
+	@Column( name = "FL_DYNAMICS" )
+	private boolean flEnviarDynamics;
 
 	@Column( name = "DC_IP_ORIGEM" )
 	private String dcIpOrigem;
@@ -76,45 +73,41 @@ public class Usuario implements Serializable {
 	@Column( name = "DC_TELEFONE_FIXO" )
 	private String dcTelefoneFixo;
 
-	@Column( name = "FL_MASTER", precision = 1 )
-	@Enumerated( EnumType.ORDINAL )
-	private SimNaoEnum flMaster = SimNaoEnum.NAO;
+	@Column( name = "FL_MASTER" )
+	private boolean flMaster;
 
 	@Column( name = "FL_BLOQUEIO", precision = 1 )
 	@Enumerated( EnumType.ORDINAL )
 	private BloqueioUsuario flBloqueio = BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO;
 
-	@Column( name = "FL_PRIMEIRO_ACESSO", precision = 1 )
-	@Enumerated( EnumType.ORDINAL )
-	private SimNaoEnum flPrimeiroAcesso = SimNaoEnum.SIM;
+	@Column( name = "FL_PRIMEIRO_ACESSO" )
+	private boolean flPrimeiroAcesso;
 
 	@Column( name = "NM_USUARIO" )
-	private String nmUsuario = new String();
+	private String nmUsuario;
 
 	@Column( name = "DC_USERNAME" )
-	private String dcUsername = new String();
+	private String dcUsername;
 
 	@Temporal( value = TemporalType.TIMESTAMP )
 	@Column( name = "DT_ULTIMO_ACESSO" )
-	private Date ultimoAcesso = new Date();
+	private Date ultimoAcesso;
 
 	@Column( name = "QT_TENTATIVA_ACESSO" )
-	private Long qtTentativaAcesso = new Long( 0 );
+	private Long qtTentativaAcesso;
 
 	@Temporal( value = TemporalType.TIMESTAMP )
 	@Column( name = "ULTIMA_TROCA_SENHA" )
-	private Date ultimaTrocaSenha = new Date();
+	private Date ultimaTrocaSenha;
 
 	@Column( name = "NU_CPF" )
-	private String nuCpf = new String();
+	private String nuCpf;
 
-	@Column( name = "FL_APROVADO", precision = 1 )
-	@Enumerated( EnumType.ORDINAL )
-	private SimNaoEnum flArovado = SimNaoEnum.SIM;
+	@Column( name = "FL_APROVADO" )
+	private boolean flArovado;
 
-	@Column( name = "FL_PRIMEIRO_ACESSO_SNOA", precision = 1 )
-	@Enumerated( EnumType.ORDINAL )
-	private SimNaoEnum flPrimeiroAcessoSNOA = SimNaoEnum.SIM;
+	@Column( name = "FL_PRIMEIRO_ACESSO_SNOA" )
+	private boolean flPrimeiroAcessoSNOA;
 
 	// bi-directional many-to-one association to Usuario
 	@ManyToOne
@@ -129,21 +122,24 @@ public class Usuario implements Serializable {
 	// bi-directional many-to-one association to Usuario
 	@NotAudited
 	@OneToMany( mappedBy = "delegado" )
-	private List<Usuario> usuarios = new ArrayList<Usuario>();
+	private List<Usuario> usuarios;
 
 	// bi-directional many-to-one association to Delegado
 	@NotAudited
 	@OneToMany( mappedBy = "usuarioMaster" )
-	private List<Delegado> delegadosMaster = new ArrayList<Delegado>();
+	private List<Delegado> delegadosMaster;
 
 	@NotAudited
 	@OneToMany( mappedBy = "usuarioComum" )
-	private List<Delegado> delegadosComuns = new ArrayList<Delegado>();
+	private List<Delegado> delegadosComuns;
 
 	@NotAudited
 	@ManyToMany
 	@JoinTable( name = "usuario_x_grupo_perfil", joinColumns = @JoinColumn( name = "pk_id_usuario" ), inverseJoinColumns = @JoinColumn( name = "pk_id_grupo_perfil" ) )
 	private List<GrupoPerfil> grupoPerfis;
+
+	@Transient
+	private List<Integer> grupoPerfisIdList;
 
 	@NotAudited
 	@ManyToMany
@@ -154,60 +150,19 @@ public class Usuario implements Serializable {
 	@JoinColumn( name = "FK_NIVEL_ESCALONAMENTO" )
 	private NivelEscalonamento nivelEscalonamento;
 
-	@Column( name = "FL_ENVIO_EMAIL", precision = 1 )
-	// @Enumerated(EnumType.ORDINAL)
-	private Integer flEnvioEmail = 0;
+	@Column( name = "FL_ENVIO_EMAIL" )
+	private boolean flEnvioEmail;
 
-	@Column( name = "FL_USUARIO_SISTEMA", precision = 1 )
-	// @Enumerated(EnumType.ORDINAL)
-	private Integer flUsuarioSistema = 0;
-
-	@Transient
-	private List<Long> listaPrestadoras = new ArrayList<Long>();
-
-	@Transient
-	private List<Long> listaGrupoPerfil = new ArrayList<Long>();
-
-	@Transient
-	private Long idDelegado;
-
-	@Transient
-	private Long idNivelEscalonamento;
-
-	@Transient
-	private Long idPerfil;
-
-	@Transient
-	private Long idGrupoPerfil;
-
-	@Transient
-	private Long longUltimoacesso = new Long( 0L );
-
-	@Transient
-	private Long longUltimatrocasenha = new Long( 0L );
-
-	@Transient
-	private Usuario delegadoAntigo;
-
-	@Transient
-	private Prestadora prestadora;
-
-	@Transient
-	private String grupoPrestadora = new String();
-
-	@Transient
-	private String nomePrestadora = new String();
-
-	@Transient
-	private GrupoPrestadora grupos = new GrupoPrestadora();
+	@Column( name = "FL_USUARIO_SISTEMA" )
+	private Integer flUsuarioSistema;
 
 	public Usuario() {}
 
-	public SimNaoEnum getFlEnviarDynamics() {
+	public boolean getFlEnviarDynamics() {
 		return flEnviarDynamics;
 	}
 
-	public void setFlEnviarDynamics( SimNaoEnum flEnviarDynamics ) {
+	public void setFlEnviarDynamics( boolean flEnviarDynamics ) {
 		this.flEnviarDynamics = flEnviarDynamics;
 	}
 
@@ -298,20 +253,12 @@ public class Usuario implements Serializable {
 		this.dcTelefoneFixo = dcTelefoneFixo;
 	}
 
-	public SimNaoEnum getFlMaster() {
+	public boolean getFlMaster() {
 		return flMaster;
 	}
 
-	public void setFlMaster( SimNaoEnum flMaster ) {
+	public void setFlMaster( boolean flMaster ) {
 		this.flMaster = flMaster;
-	}
-
-	public Prestadora getPrestadora() {
-		return prestadora;
-	}
-
-	public void setPrestadora( Prestadora prestadora ) {
-		this.prestadora = prestadora;
 	}
 
 	@XmlElement( name = "bloqueado" )
@@ -321,14 +268,6 @@ public class Usuario implements Serializable {
 
 	public void setFlBloqueio( BloqueioUsuario flBloqueio ) {
 		this.flBloqueio = flBloqueio;
-	}
-
-	public String getNomePrestadora() {
-		return nomePrestadora;
-	}
-
-	public void setNomePrestadora( String nomePrestadora ) {
-		this.nomePrestadora = nomePrestadora;
 	}
 
 	@XmlElement( name = "nomeusuario" )
@@ -369,11 +308,11 @@ public class Usuario implements Serializable {
 		this.nuCpf = nuCpf;
 	}
 
-	public SimNaoEnum getFlArovado() {
+	public boolean getFlArovado() {
 		return flArovado;
 	}
 
-	public void setFlArovado( SimNaoEnum flArovado ) {
+	public void setFlArovado( boolean flArovado ) {
 		this.flArovado = flArovado;
 	}
 
@@ -435,54 +374,6 @@ public class Usuario implements Serializable {
 		this.nivelEscalonamento = nivelEscalonamento;
 	}
 
-	public List<Long> getListaPrestadoras() {
-		return listaPrestadoras;
-	}
-
-	public void setListaPrestadoras( List<Long> listaPrestadoras ) {
-		this.listaPrestadoras = listaPrestadoras;
-	}
-
-	public List<Long> getListaGrupoPerfil() {
-		return listaGrupoPerfil;
-	}
-
-	public void setListaGrupoPerfil( List<Long> listaGrupoPerfil ) {
-		this.listaGrupoPerfil = listaGrupoPerfil;
-	}
-
-	public Long getIdDelegado() {
-		return idDelegado;
-	}
-
-	public void setIdDelegado( Long idDelegado ) {
-		this.idDelegado = idDelegado;
-	}
-
-	public Long getIdNivelEscalonamento() {
-		return idNivelEscalonamento;
-	}
-
-	public void setIdNivelEscalonamento( Long idNivelEscalonamento ) {
-		this.idNivelEscalonamento = idNivelEscalonamento;
-	}
-
-	public Long getIdPerfil() {
-		return idPerfil;
-	}
-
-	public void setIdPerfil( Long idPerfil ) {
-		this.idPerfil = idPerfil;
-	}
-
-	public Long getIdGrupoPerfil() {
-		return idGrupoPerfil;
-	}
-
-	public void setIdGrupoPerfil( Long idGrupoPerfil ) {
-		this.idGrupoPerfil = idGrupoPerfil;
-	}
-
 	@XmlElement
 	public String getSistema() {
 		return sistema;
@@ -490,31 +381,6 @@ public class Usuario implements Serializable {
 
 	public void setSistema( String sistema ) {
 		this.sistema = sistema;
-	}
-
-	public Usuario getDelegadoAntigo() {
-		return delegadoAntigo;
-	}
-
-	public void setDelegadoAntigo( Usuario delegadoAntigo ) {
-		this.delegadoAntigo = delegadoAntigo;
-	}
-
-	public String getGrupoPrestadora() {
-		return grupoPrestadora;
-	}
-
-	public void setGrupoPrestadora( String grupoPrestadora ) {
-		this.grupoPrestadora = grupoPrestadora;
-	}
-
-	@XmlElement( name = "grupo_prestadora" )
-	public GrupoPrestadora getGrupos() {
-		return grupos;
-	}
-
-	public void setGrupos( GrupoPrestadora grupos ) {
-		this.grupos = grupos;
 	}
 
 	@Override
@@ -542,46 +408,6 @@ public class Usuario implements Serializable {
 		return true;
 	}
 
-	public SimNaoEnum getFlPrimeiroAcesso() {
-		return flPrimeiroAcesso;
-	}
-
-	public void setFlPrimeiroAcesso( SimNaoEnum flPrimeiroAcesso ) {
-		this.flPrimeiroAcesso = flPrimeiroAcesso;
-	}
-
-	public Integer getFlEnvioEmail() {
-		return flEnvioEmail;
-	}
-
-	public void setFlEnvioEmail( Integer flEnvioEmail ) {
-		this.flEnvioEmail = flEnvioEmail;
-	}
-
-	public SimNaoEnum getFlPrimeiroAcessoSNOA() {
-		return flPrimeiroAcessoSNOA;
-	}
-
-	public void setFlPrimeiroAcessoSNOA( SimNaoEnum flPrimeiroAcessoSNOA ) {
-		this.flPrimeiroAcessoSNOA = flPrimeiroAcessoSNOA;
-	}
-
-	public Long getLongUltimoacesso() {
-		return longUltimoacesso;
-	}
-
-	public void setLongUltimoacesso( Long longUltimoacesso ) {
-		this.longUltimoacesso = longUltimoacesso;
-	}
-
-	public Long getLongUltimatrocasenha() {
-		return longUltimatrocasenha;
-	}
-
-	public void setLongUltimatrocasenha( Long longUltimatrocasenha ) {
-		this.longUltimatrocasenha = longUltimatrocasenha;
-	}
-
 	public Integer getFlUsuarioSistema() {
 		return flUsuarioSistema;
 	}
@@ -598,14 +424,20 @@ public class Usuario implements Serializable {
 		this.perfil = perfil;
 	}
 
-	@PreRemove
-	private void testRemove() {
-		System.out.println( "teste" );
-	}
-
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flArovado + ", flPrimeiroAcessoSNOA=" + flPrimeiroAcessoSNOA + ", perfil=" + perfil + ", usuarios=" + usuarios + ", grupoPerfis=" + grupoPerfis + ", flEnvioEmail=" + flEnvioEmail + ", flUsuarioSistema=" + flUsuarioSistema + ", listaPrestadoras=" + listaPrestadoras + ", listaGrupoPerfil=" + listaGrupoPerfil + ", idPerfil=" + idPerfil + ", idGrupoPerfil=" + idGrupoPerfil + ", prestadora=" + prestadora + ", grupoPrestadora=" + grupoPrestadora + ", nomePrestadora=" + nomePrestadora + ", grupos=" + grupos + "]";
+		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flArovado + ", flPrimeiroAcessoSNOA=" + flPrimeiroAcessoSNOA + ", perfil=" + perfil + ", usuarios=" + usuarios + ", grupoPerfis=" + grupoPerfis + ", flEnvioEmail=" + flEnvioEmail + ", flUsuarioSistema=" + flUsuarioSistema + "]";
+	}
+
+	public List<Integer> getGrupoPerfisIdList() {
+		if ( grupoPerfisIdList == null ) {
+			grupoPerfisIdList = new ArrayList<Integer>();
+		}
+		return grupoPerfisIdList;
+	}
+
+	public void setGrupoPerfisIdList( List<Integer> grupoPerfisIdList ) {
+		this.grupoPerfisIdList = grupoPerfisIdList;
 	}
 
 }
