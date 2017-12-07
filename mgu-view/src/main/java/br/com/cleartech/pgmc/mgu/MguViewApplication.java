@@ -9,30 +9,30 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
 @Configuration
-@Import( MguServiceInitializer.class )
-public class MguViewInitializer implements WebApplicationInitializer {
+public class MguViewApplication implements WebApplicationInitializer {
 
+	@Override
 	public void onStartup( ServletContext servletContext ) throws ServletException {
 		AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
-		applicationContext.scan( MguViewInitializer.class.getPackage().getName() );
+		applicationContext.scan( MguViewApplication.class.getPackage().getName() );
 
 		servletContext.addListener( new ContextLoaderListener( applicationContext ) );
 		servletContext.addListener( new RequestContextListener() );
 
 		ServletRegistration.Dynamic dispatcher = servletContext.addServlet( "dispatcher", dispatcherServlet( applicationContext ) );
 		dispatcher.setAsyncSupported( true );
-		dispatcher.setLoadOnStartup( 1 );
-		dispatcher.addMapping( "/" );
+		dispatcher.setLoadOnStartup( 0 );
+		dispatcher.addMapping( "/*" );
 
 		FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter( "characterEncodingFilter", characterEncodingFilter() );
 		characterEncodingFilter.setAsyncSupported( true );

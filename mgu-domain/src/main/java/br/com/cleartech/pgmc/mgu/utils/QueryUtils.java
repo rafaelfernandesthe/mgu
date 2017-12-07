@@ -1,13 +1,13 @@
 package br.com.cleartech.pgmc.mgu.utils;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringPath;
+import com.mysema.query.support.Expressions;
+import com.mysema.query.types.expr.BooleanExpression;
+import com.mysema.query.types.path.StringPath;
 
 public class QueryUtils {
 
 	public static BooleanExpression containsIgnoreCaseIgnoreAccents( StringPath pathField, String value ) {
-		return Expressions.stringTemplate( String.format( "translate(%s, 'âàãáÁÂÀÃéêÉÊíÍóôõÓÔÕüúÜÚÇç', 'AAAAAAAAEEEEIIOOOOOOUUUUCC')", pathField.getMetadata().getElement().toString() ) ).containsIgnoreCase( StringUtils.removeAccents( value ) );
+		return Expressions.stringTemplate( String.format( "translate(%s, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'AAAAAAAAEEEEIIOOOOOOUUUUCC')", pathField.getMetadata().getElement().toString() ) ).containsIgnoreCase( StringUtils.removeAccents( value ) );
 	}
 
 }

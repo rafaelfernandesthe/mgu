@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.support.JpaMetamodelEntityInforma
 import org.springframework.data.jpa.repository.support.QueryDslJpaRepository;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.dsl.PathBuilder;
+import com.mysema.query.types.EntityPath;
+import com.mysema.query.types.path.PathBuilder;
 
 public class QuerydslJpaRepositoryAux<T, ID extends Serializable> extends QueryDslJpaRepository<T, ID> {
 
@@ -27,6 +27,7 @@ public class QuerydslJpaRepositoryAux<T, ID extends Serializable> extends QueryD
 	public QuerydslJpaRepositoryAux( Class<T> entityClass, EntityManager entityManager ) {
 		this( entityClass, new JpaMetamodelEntityInformation<T, ID>( entityClass, entityManager.getMetamodel() ), entityManager );
 	}
+
 
 	public QuerydslJpaRepositoryAux( Class<T> entityClass, JpaEntityInformation<T, ID> entityMetadata, EntityManager entityManager ) {
 		super( entityMetadata, entityManager );
