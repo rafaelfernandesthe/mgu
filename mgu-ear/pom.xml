@@ -17,11 +17,17 @@
 			<version>${current.version}</version>
 			<type>war</type>
 		</dependency>
+		<dependency>
+			<groupId>br.com.cleartech.pgmc</groupId>
+			<artifactId>mgu-integration</artifactId>
+			<version>${current.version}</version>
+			<type>war</type>
+		</dependency>
 	</dependencies>
 
 
 	<build>
-		<finalName>${contexto.web}-web-${current.version}</finalName>
+		<finalName>${context.view}-web-${current.version}</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-ear-plugin</artifactId>
@@ -31,8 +37,14 @@
 						<webModule>
 							<groupId>br.com.cleartech.pgmc</groupId>
 							<artifactId>mgu-view</artifactId>
-							<bundleFileName>${contexto.web}-web.war</bundleFileName>
-							<contextRoot>/${contexto.web}</contextRoot>
+							<bundleFileName>${context.view}-web.war</bundleFileName>
+							<contextRoot>/${context.view}</contextRoot>
+						</webModule>
+						<webModule>
+							<groupId>br.com.cleartech.pgmc</groupId>
+							<artifactId>mgu-integration</artifactId>
+							<bundleFileName>${context.integration}.war</bundleFileName>
+							<contextRoot>/${context.integration}</contextRoot>
 						</webModule>
 					</modules>
 				</configuration>

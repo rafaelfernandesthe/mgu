@@ -17,7 +17,9 @@
 		<spring.version>4.3.13.RELEASE</spring.version>
 		<spring.security.version>3.2.0.RELEASE</spring.security.version>
 
-		<contexto.web>mgu-dev</contexto.web>
+		<context.view>mgu-cleartech</context.view><!--Mudar para profiles  -->
+		<context.integration>mgu-cleartech-ws</context.integration><!--Mudar para profiles  -->
+		
 	</properties>
 
 	<modules>
@@ -25,6 +27,7 @@
 		<module>mgu-ear</module>
 		<module>mgu-service</module>
 		<module>mgu-view</module>
+		<module>mgu-integration</module>
 	</modules>
 
 	<build>

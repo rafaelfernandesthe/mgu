@@ -1,14 +1,38 @@
 package br.com.cleartech.pgmc.mgu.integration;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+import javax.servlet.ServletRegistration.Dynamic;
+
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.RequestContextListener;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@SpringBootApplication
+@Configuration
+@EnableWebMvc
 @ComponentScan( "br.com.cleartech.pgmc.mgu" )
-public class MguIntegrationApplication {
+public class MguIntegrationApplication implements WebApplicationInitializer {
 
-    public static void main(String[] args) {
-        SpringApplication.run(MguIntegrationApplication.class, args);
-    }
+	@Override
+	public void onStartup( ServletContext servletContext ) throws ServletException {
+		AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
+		ctx.register( MguIntegrationApplication.class );
+		ctx.setServletContext( servletContext );
+		Dynamic dynamic = servletContext.addServlet( "dispatcher", new DispatcherServlet( ctx ) );
+		dynamic.addMapping( "/*" );
+		dynamic.setLoadOnStartup( 1 );
+
+	}
 }
