@@ -9,6 +9,7 @@
 .gitignore
 **/target
 **/bin
+.tern-project
 
 # Compiled class file
 *.class
