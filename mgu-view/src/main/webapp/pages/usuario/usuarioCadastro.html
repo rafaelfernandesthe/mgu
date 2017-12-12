@@ -1,57 +1,166 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/_layout/layout.html}">
+	layout:decorate="~{/_layout/layout.html}" xmlns="">
+
+
 
 <body>
+
 	<div layout:fragment="content">
+
+
 		<ul class="pui-breadcrumb">
 			<li><a href="#">Home</a></li>
 			<li><a href="#">Usuário</a></li>
 			<li><a href="#">Cadastro</a></li>
 		</ul>
 
-		<div class="pui-panel" th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
-			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}" th:object="${usuario}">
+		<div class="painel-primary pui-panel"
+			th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
+			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}"
+				th:object="${usuario}">
 
 				<div th:include="~{/_layout/mensagem.html}"></div>
 
 				<div class="row">
-					<div class="col-sm-2">
-						<label class="control-label" for="nome" th:text="#{grupoPerfil.nome}">Nome: </label>
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="nome"
+							th:text="#{grupoPerfil.nome}"> <span
+							style="color: red !important; font-weight: bold;">*</span>
+						</label>
 					</div>
-					<div class="col-sm-4"> 
-						<input class="form-control" id="nome" th:field="*{nmUsuario}" />
+					<div class="col-sm-4 form-group">
+						<input class="form-control input-sm" id="nome"
+							th:field="*{nmUsuario}" required="required" autofocus />
 					</div>
-				
-					<div class="col-sm-2">
-						<label class="control-label" for="username" th:text="#{usuario.usuarioAcesso}">Usuário Acesso: </label>
+
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="username"
+							th:text="#{usuario.usuarioAcesso}">Usuário Acesso: </label>
 					</div>
-					<div class="col-sm-4"> 
-						<input class="form-control" id="username" th:field="*{dcUsername}" />
+					<div class="col-sm-4 form-group">
+						<input class="form-control input-sm" id="username"
+							th:field="*{dcUsername}" required="required" />
 					</div>
 				</div>
-				
 				<div class="row">
-					<div class="col-sm-2">
-						<label class="control-label" for="listaGrupoPerfil" th:text="#{grupoPerfil}">Grupo Perfil</label>						
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="email"
+							th:text="#{usuario.email}">Email: </label>
 					</div>
-					<div class="col-sm-10">
+					<div class="col-sm-4 form-group">
+						<input class="form-control input-sm" id="email"
+							th:field="*{dcEmail}" required="required" />
+					</div>
+
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="cargo"
+							th:text="#{usuario.cargo}">Cargo: </label>
+					</div>
+					<div class="col-sm-4 form-group">
+						<input class="form-control input-sm" id="cargo"
+							th:field="*{dcCargo}" />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="nome"
+							th:text="#{usuario.telefone}">Telefone: </label>
+					</div>
+					<div class="col-sm-4 form-group">
+						<input class="form-control input-sm" id="telefone"
+							th:field="*{dcTelefone}" required="required"  />
+					</div>
+
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="cargo"
+							th:text="#{usuario.telefoneFixo}">Telefone Fixo: </label>
+					</div>
+					<div class="col-sm-4 form-group">
+						<input class="form-control input-sm" id="telefoneFixo" 
+							OnKeyPress="formatar('##-####-####', this)"
+							th:field="*{dcTelefoneFixo}" />
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="nome" th:text="#{usuario.cpf}">Cpf
+						</label>
+					</div>
+					<div class="col-sm-4 form-group">
+						<input type="text" class="form-control input-sm CPF"
+							maxlength="14" id="cpf" th:field="*{nuCpf}"
+							placeholder="___.___.___-__" required="required" />
+					</div>
+
+
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="nivelEscalonamento"
+							th:text="#{usuario.nivelEscalonamento}">Nivel: </label>
+					</div>
+					<div class="col-sm-4 form-group">
+						<select class="form-control input-sm" id="selectbasic" name="loja"
+							required>
+							<option>Selecione</option>
+							<option value="baixo">1 - Baixo</option>
+							<option value="medio">2 - Médio</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="listaGrupoPerfil"
+							th:text="#{grupoPerfil}">Grupo Perfil</label>
+					</div>
+					<div class="col-sm-10 form-group">
 						<div class="pui-picklist" id="listaGrupoPerfil">
-							<select></select>
-							<select th:field="*{grupoPerfisIdList}" th:multiple="true"></select>
+							<select></select> <select th:select="grupoPerfisSelecionados"></select>
 						</div>
 					</div>
 				</div>
 
+				<div class="row">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="nome"
+							th:text="#{usuario.bloquado}">Bloqueado: </label>
+					</div>
+					<div class="col-sm-2 form-group">
+						<label class="radio-inline"> <input type="radio"
+							name="optradio">Não
+						</label> <label class="radio-inline"> <input type="radio"
+							name="optradio">Sim
+						</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="nome"
+							th:text="#{usuario.enviaEmail}">Envia E-mail: </label>
+					</div>
+					<div class="col-sm-4 form-group">
+						<label class="radio-inline"> <input type="radio"
+							name="optradio">Não
+						</label> <label class="radio-inline"> <input type="radio"
+							name="optradio">Sim
+						</label>
+					</div>
+					
+
+				</div>
+
 				<div class="form-group buttonsGroup">
-					<button id="buttonSubmit" class="pui-button" type="submit" >
+					<button class="pui-button" type="submit">
 						<label th:text="#{botao.cadastrar}"></label>
 					</button>
-					<a class="pui-button" th:href="@{'/usuarioCadastro'}">
-						<label th:text="#{botao.limpar}"></label>
+					<a class="pui-button" th:href="@{'/usuarioCadastro'}"> <label
+						th:text="#{botao.limpar}"></label>
 					</a>
 				</div>
+
 			</form>
 		</div>
 
@@ -72,7 +181,16 @@
 			        reponsive: true,
 				});
 				
+				$('#pm2').puimenu({
+				    popup: true,
+				    trigger: $('#pm2trigger')
+				});
+				$('#telefoneFixo').mask('(00) 0000-0000');
+				$('#telefone').mask('(00) 00000-0000');
+				$('#cpf').mask('999.999.999-99' );
 			});
+			
+			
 		</script>
 	</div>
 
