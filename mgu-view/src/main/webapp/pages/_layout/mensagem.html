@@ -2,29 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 	
-
 	<div class="alert alert-danger alert-dismissible fade in" th:if="${#fields.hasGlobalErrors()}">
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 			<span aria-hidden="true">×</span>
 		</button>
 		<p class="messageError" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
 	</div>
-	
-	<div th:if="${#fields.hasGlobalErrors()}">
-		<div class="messageError" th:each="err : ${#fields.globalErrors()}"></div>
-	</div>
-
-	<script>
-		//mensagem padrão de erro
-		console.log([[${#fields.hasGlobalErrors()}]]);
-		console.log('[[${#fields.globalErrors()}]]');
-		var messages = '[[${#fields.globalErrors()}]]';
-		console.log(messages);
-		console.log(messages.length);
-		console.log(new Array(messages));
-		var messages2 = /*[[${#fields.globalErrors()}]]*/ "";
-		console.log(messages2);
-		console.log(messages2.length);
-	</script>
 	
 </html>

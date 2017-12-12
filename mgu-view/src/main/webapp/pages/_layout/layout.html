@@ -88,7 +88,7 @@
 	<script type="text/javascript" src="../../resources/js/mgu-commons.js" th:src="@{/resources/js/mgu-commons.js}"></script>
 	<script>
 		$(function (){
-			//usuario consegue ver a pagina sendo 'montada'
+			//usuario nao deve conseguir ver a pagina sendo 'montada'
 			//no style.css tem #content {display:none;}
 			$('#content').show();
 
@@ -101,9 +101,6 @@
 				showMessage('info','Operação realizada com sucesso!');
 			}
 
-			if(messages.length > 0){
-				$('.messageError').puimessages('show', 'error', {summary: '', detail: messages });
-			}
 		});
 	</script>
 	
