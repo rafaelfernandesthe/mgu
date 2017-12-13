@@ -1,6 +1,7 @@
 package br.com.cleartech.pgmc.mgu.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 public class MguUtils {
 
 	static Gson gson = new Gson();
+	static int strategy = 1;// by get method
 
 	public static List<ValueObject> getVO( List<?> list, String valueFieldName, String labelFieldName ) {
 		List<ValueObject> result = new ArrayList<>();
@@ -23,13 +25,21 @@ public class MguUtils {
 		if ( !ListUtils.isEmpty( list ) && !StringUtils.isEmpty( valueFieldName ) && !StringUtils.isEmpty( labelFieldName ) ) {
 			Object model = list.get( 0 );
 
-			Field value = ReflectionUtils.findField( model.getClass(), valueFieldName );
-			value.setAccessible( true );
-			Field label = ReflectionUtils.findField( model.getClass(), labelFieldName );
-			label.setAccessible( true );
+			if ( strategy == 1 ) {
+				Method valueMethod = ReflectionUtils.findMethod( model.getClass(), "get" + valueFieldName.substring( 0, 1 ).toUpperCase() + valueFieldName.substring( 1 ) );
+				Method labelMethod = ReflectionUtils.findMethod( model.getClass(), "get" + labelFieldName.substring( 0, 1 ).toUpperCase() + labelFieldName.substring( 1 ) );
+				for ( Object target : list ) {
+					result.add( new ValueObject( String.valueOf( ReflectionUtils.invokeMethod( valueMethod, target ) ), String.valueOf( ReflectionUtils.invokeMethod( labelMethod, target ) ) ) );
+				}
+			} else {
+				Field value = ReflectionUtils.findField( model.getClass(), valueFieldName );
+				value.setAccessible( true );
+				Field label = ReflectionUtils.findField( model.getClass(), labelFieldName );
+				label.setAccessible( true );
 
-			for ( Object target : list ) {
-				result.add( new ValueObject( String.valueOf( ReflectionUtils.getField( value, target ) ), String.valueOf( ReflectionUtils.getField( label, target ) ) ) );
+				for ( Object target : list ) {
+					result.add( new ValueObject( String.valueOf( ReflectionUtils.getField( value, target ) ), String.valueOf( ReflectionUtils.getField( label, target ) ) ) );
+				}
 			}
 		}
 

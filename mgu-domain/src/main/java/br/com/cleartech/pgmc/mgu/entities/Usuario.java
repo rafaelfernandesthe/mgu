@@ -290,7 +290,10 @@ public class Usuario implements Serializable {
 
 	@XmlElement( name = "cpf" )
 	public String getNuCpf() {
-		return this.nuCpf.replaceAll( "[^\\d]", "" );
+		if(this.nuCpf != null)
+			return this.nuCpf.replaceAll( "[^\\d]", "" );
+		
+		else return this.nuCpf;
 	}
 
 	public String getNuCpfWithMask() {

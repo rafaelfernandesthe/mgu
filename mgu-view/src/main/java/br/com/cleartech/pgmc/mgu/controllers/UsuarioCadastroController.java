@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
+import br.com.cleartech.pgmc.mgu.entities.NivelEscalonamento;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.services.GrupoPerfilService;
+import br.com.cleartech.pgmc.mgu.services.NivelEscalonamentoService;
 import br.com.cleartech.pgmc.mgu.services.UsuarioService;
 import br.com.cleartech.pgmc.mgu.utils.MappedViews;
 import br.com.cleartech.pgmc.mgu.utils.MguUtils;
@@ -32,6 +35,9 @@ public class UsuarioCadastroController {
 
 	@Autowired
 	private GrupoPerfilService grupoPerfilService;
+
+	@Autowired
+	private NivelEscalonamentoService nivelEscalonamentoService;
 
 	private Usuario usuario;
 
@@ -51,6 +57,7 @@ public class UsuarioCadastroController {
 		LOGGER.info( usuario.getNmUsuario() );
 		LOGGER.info( usuario.getDcUsername() );
 		LOGGER.info( usuario.getGrupoPerfisIdList().toString() );
+		LOGGER.info( usuario.toString() );
 
 		if ( !bindingResult.hasErrors() ) {
 			bindingResult.addError( new ObjectError( "errox", "Errox!!" ) );
@@ -76,6 +83,10 @@ public class UsuarioCadastroController {
 
 			return MappedViews.USUARIO_CADASTRO.getPath();
 		}
+	}
+
+	public List<NivelEscalonamento> getTodosOsNiveisEscalonamento() {
+		return nivelEscalonamentoService.findAll();
 	}
 
 	private List<GrupoPerfil> getGrupoPerfilList() {

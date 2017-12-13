@@ -596,5 +596,3 @@
         }
     }, globals.watchInterval);
 }, window.jQuery, window.Zepto));
-
-console.log("teste");
