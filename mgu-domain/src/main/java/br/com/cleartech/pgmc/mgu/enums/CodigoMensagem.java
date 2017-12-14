@@ -20,7 +20,7 @@ public enum CodigoMensagem {
 	RETORNO_15( 15, "Prestadora associada com sucesso ao Usuário." ),
 	RETORNO_16( 16, "Prestadora informada não existe na base de dados." ),
 	RETORNO_17( 17, "Grupo prestadora do usuário não pode ser diferente da prestadora informada." ),
-	RETORNO_18( 18, "Não foi possível associar a prestadora ao usuário" ),
+	RETORNO_18( 18, "Não foi possível associar a prestadora ao usuário." ),
 	RETORNO_19( 19, "Sistema informado não existe na base de dados." ),
 	RETORNO_20(20,"Lista de Perfis."),
 	RETORNO_21( 21, "Sistema não tem nenhum perfil cadastrado." ),
@@ -28,14 +28,15 @@ public enum CodigoMensagem {
 	RETORNO_23( 23, "Usuário esta com a senha provisória e ainda não foi aprovado no credenciamento." ),
 	RETORNO_24( 24, "Usuário não tem nenhum perfil associado ao sistema informado." ),
 	RETORNO_25( 25, "CPF informado já existe em nossa base de dados." ),
-	RETORNO_26( 26, "Usuário não tem acesso ao Dynamics" ),
+	RETORNO_26( 26, "Usuário não tem acesso ao Dynamics." ),
 	RETORNO_27( 27, "Usuário informado esta com caracter inválido." ),
 	RETORNO_28( 28, "Após mais uma tentativa invalida, o Usuário será bloqueado por excesso de tentativas inválidas de acesso." ),
 	RETORNO_29( 29, "Usuario bloqueado por excesso de tentativas invalidas de acesso." ),
 	RETORNO_30( 30, "Usuário informado já possui uma sessão ativa para o sistema." ),
-	
 	RETORNO_31( 31, "Usuário bloqueado por inatividade, favor entrar em contato com o administrador de sua prestadora." ),
-	RETORNO_32( 32, "Senha do usuário expirada, favor atualizar a senha antes de prosseguir com o acesso." );
+	RETORNO_32( 32, "Senha do usuário expirada, favor atualizar a senha antes de prosseguir com o acesso." ),
+	RETORNO_33( 33, "LDAP - Não foi possível criar o usuário informado." ),
+	RETORNO_34( 34, "DYNAMICS - Não foi possível criar o usuário informado." );
 	
 	private Integer codigo;
 	private String descricao;

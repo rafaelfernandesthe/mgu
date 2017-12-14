@@ -1,23 +1,30 @@
-package br.com.cleartech.pgmc.mgu.integration.models;
+package br.com.cleartech.pgmc.mgu.integration.ws.responses;
+
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 
 @XmlRootElement( name = "mgu" )
-public class MguResposta {
-
-	private Integer retorno;
-
-	private String descricao;
-
-	private Usuario usuario;
-
-	private Perfil perfil;
+public class MguResponse {
 
 	@XmlElement( name = "retorno" )
+	private Integer retorno;
+
+	@XmlElement( name = "descricao" )
+	private String descricao;
+
+	@XmlElement( name = "usuario" )
+	private Usuario usuario;
+
+	@XmlElementWrapper( name = "perfis" )
+	@XmlElement( name = "perfil" )
+	private List<Perfil> perfis;
+
 	public Integer getRetorno() {
 		return retorno;
 	}
@@ -26,7 +33,6 @@ public class MguResposta {
 		this.retorno = retorno;
 	}
 
-	@XmlElement( name = "descricao" )
 	public String getDescricao() {
 		return descricao;
 	}
@@ -35,7 +41,6 @@ public class MguResposta {
 		this.descricao = descricao;
 	}
 
-	@XmlElement( name = "usuario" )
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -44,13 +49,16 @@ public class MguResposta {
 		this.usuario = usuario;
 	}
 
-	@XmlElement( name = "perfis" )
-	public Perfil getPerfil() {
-		return perfil;
+	public List<Perfil> getPerfis() {
+		return perfis;
 	}
 
-	public void setPerfil( Perfil perfil ) {
-		this.perfil = perfil;
+	public void setPerfis( List<Perfil> perfis ) {
+		this.perfis = perfis;
+	}
+
+	public void addPerfil( Perfil p ) {
+		this.perfis.add( p );
 	}
 
 }

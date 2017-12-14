@@ -6,4 +6,6 @@ import br.com.cleartech.pgmc.mgu.entities.AcessoSimultaneo;
 
 public interface AcessoSimultaneoRepository extends CrudRepository<AcessoSimultaneo, Long> {
 
+	AcessoSimultaneo findByUsername( String username );
+
 }
