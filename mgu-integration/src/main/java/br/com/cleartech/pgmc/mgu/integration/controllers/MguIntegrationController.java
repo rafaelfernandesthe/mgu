@@ -105,16 +105,16 @@ public class MguIntegrationController {
 	public Object criarUsuarioMaster( @RequestBody UsuarioMasterRequest usuarioMaster ) {
 		Object mguResponse = null;
 		Usuario usuario = null;
+		Boolean existeUsuario;
 		if ( XmlUtils.contemCaracterEspecial( usuarioMaster.getUserName() ) ) {
 			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_27 );
 		}
-		Boolean valido = false;
 		try {
-			valido = ldapService.existeUsuario( usuarioMaster.getUserName() );
+			existeUsuario = ldapService.existeUsuario( usuarioMaster.getUserName() );
 		} catch ( Exception e ) {
 			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_33 );
 		}
-		if ( !valido ) {
+		if ( !existeUsuario ) {
 			try {
 				usuario = usuarioMaster.masterToUsuario();
 				Prestadora prestadora = prestadoraService.findById( usuarioMaster.getIdPrestadora() );

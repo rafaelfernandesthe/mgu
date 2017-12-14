@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
+import br.com.cleartech.pgmc.mgu.enums.AssuntoEnum;
+import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
 import br.com.cleartech.pgmc.mgu.enums.SimNaoEnum;
 import br.com.cleartech.pgmc.mgu.enums.StatusDynamics;
 import br.com.cleartech.pgmc.mgu.exceptions.DynamicsException;
@@ -17,6 +19,7 @@ import br.com.cleartech.pgmc.mgu.exceptions.LdapException;
 import br.com.cleartech.pgmc.mgu.exceptions.MguException;
 import br.com.cleartech.pgmc.mgu.repositories.UsuarioRepository;
 import br.com.cleartech.pgmc.mgu.services.DynamicsService;
+import br.com.cleartech.pgmc.mgu.services.EmailService;
 import br.com.cleartech.pgmc.mgu.services.LdapService;
 import br.com.cleartech.pgmc.mgu.services.ParametrizacaoService;
 import br.com.cleartech.pgmc.mgu.services.PerfilService;
@@ -47,6 +50,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Autowired
 	private DynamicsService dynamicsService;
 
+	@Autowired
+	private EmailService emailService;
+
 	@Override
 	public Usuario salvar( Usuario usuario ) {
 		return usuarioRepository.save( usuario );
@@ -66,7 +72,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public Usuario salvarUsuarioMaster( Usuario usuario ) throws Exception {
 		String senha = GeradorSenha.getRandomPassword( 8 );
 		usuario.setDcSenha( GeradorSenha.md5( senha ) );
-
 		usuarioRepository.save( usuario );
 
 		try {
@@ -77,7 +82,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		}
 
 		try {
-			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( "dynamics_active" ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( "dynamics_active" ) ) : false;
+			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
 			if ( dynamicsAtivo ) {
 				DadosRetorno retornoDynamics = dynamicsService.criarUsuario( usuario );
 				System.out.println( retornoDynamics.toString() );
@@ -86,7 +91,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 					if ( mensagensValidasDynamics.contains( retornoDynamics.getMensagem().getValue() ) ) {
 						if ( existsPerfilDynamics( usuario ) ) {
 							usuario.setFlEnviarDynamics( SimNaoEnum.SIM );
-							// updateUsuario( usuario ); // TODO
+							usuarioRepository.save( usuario );
 						}
 					}
 				} else {
@@ -105,7 +110,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 		}
 
 		try {
-			// enviaEmail( usuario, senha ); // TODO
+			usuario.setSenhaSemMD5( senha );
+			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.CRIAR_USUARIO );
 		} catch ( Exception e ) {
 			e.printStackTrace();
 			new MguException( "MGU ALERTA: Usuário criado com sucesso, porem não foi possivel enviar a senha para o e-mail \"" + usuario.getDcEmail() + "\" , favor entrar em contato com a central de serviços para solicitar a senha de acesso do usuário \"" + usuario.getDcUsername() + "\"\n\n" ).printStackTrace();

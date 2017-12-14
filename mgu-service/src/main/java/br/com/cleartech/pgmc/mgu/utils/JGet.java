@@ -47,8 +47,11 @@ public class JGet {
 			ioe.printStackTrace();
 		} finally {
 			try {
-				is.close();
+				if ( is != null ) {
+					is.close();
+				}
 			} catch ( IOException ioe ) {
+				ioe.printStackTrace();
 			}
 		}
 

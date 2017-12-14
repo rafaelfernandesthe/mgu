@@ -162,7 +162,7 @@ public class Usuario implements Serializable {
 	@NotAudited
 	@ManyToMany
 	@Fetch( FetchMode.JOIN )
-	@JoinTable( name = "PRESTADORA_X_USUARIO", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_PRESTADORA" ) )
+	@JoinTable( name = "PRESTADORA_X_USUARIO_TEMP", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_PRESTADORA" ) )
 	private List<Prestadora> prestadoras;
 
 	@ManyToOne
@@ -216,6 +216,10 @@ public class Usuario implements Serializable {
 	@Transient
 	@XmlElement( name = "grupo_prestadora" )
 	private GrupoPrestadora grupos = new GrupoPrestadora();
+
+	@Transient
+	// Utilizado no envio de e-mail
+	private String senhaSemMD5;
 
 	public Usuario() {}
 
@@ -425,6 +429,8 @@ public class Usuario implements Serializable {
 	}
 
 	public List<Prestadora> getPrestadoras() {
+		if ( prestadoras == null )
+			prestadoras = new ArrayList<Prestadora>();
 		return prestadoras;
 	}
 
@@ -601,9 +607,12 @@ public class Usuario implements Serializable {
 		this.perfil = perfil;
 	}
 
-	@PreRemove
-	private void testRemove() {
-		System.out.println( "teste" );
+	public String getSenhaSemMD5() {
+		return senhaSemMD5;
+	}
+
+	public void setSenhaSemMD5( String senhaSemMD5 ) {
+		this.senhaSemMD5 = senhaSemMD5;
 	}
 
 	@Override

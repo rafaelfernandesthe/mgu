@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
-import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
 import br.com.cleartech.pgmc.mgu.services.DynamicsService;
 import br.com.cleartech.pgmc.mgu.services.ParametrizacaoService;
 import br.com.cleartech.pgmc.mgu.utils.FormatterUtils;
@@ -54,7 +53,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 			marshaller.marshal( nomeUsuario, System.out );
 			d.setNome( nomeUsuario );
 
-			JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadora().getNoPrestadora() );
+			JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadoras().get( 0 ).getNoPrestadora() );
 			marshaller.marshal( prest, System.out );
 			d.setNomePrestadora( prest );
 
@@ -77,7 +76,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 			marshaller.marshal( email, System.out );
 			d.setEmail( email );
 
-			JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadora().getId() ) );
+			JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadoras().get( 0 ).getId() ) );
 			marshaller.marshal( spid, System.out );
 			d.setSpidPrestadora( spid );
 
@@ -112,17 +111,17 @@ public class DynamicsServiceImpl implements DynamicsService {
 			marshaller.marshal( nomeUsuario, System.out );
 			d.setNome( nomeUsuario );
 
-			if ( usuario.getPrestadora() == null ) {
+			if ( usuario.getPrestadoras().isEmpty() ) {
 				logger.warn( "PROBLEMAS NA INTEGACAO -> prestadora == null" );
 				return;
 			}
 
-			JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadora().getId() ) );
+			JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadoras().get( 0 ).getId() ) );
 			marshaller.marshal( spid, System.out );
 			d.setSpidPrestadora( spid );
 
-			if ( usuario.getPrestadora().getNoPrestadora() != null ) {
-				JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadora().getNoPrestadora() );
+			if ( usuario.getPrestadoras().get( 0 ).getNoPrestadora() != null ) {
+				JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadoras().get( 0 ).getNoPrestadora() );
 				marshaller.marshal( prest, System.out );
 				d.setNomePrestadora( prest );
 			}
@@ -172,6 +171,8 @@ public class DynamicsServiceImpl implements DynamicsService {
 	}
 
 	private String getEndpoint(){
-		return parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_URL.getDcParametro() );
+		return "http://10.200.21.3:8091/UsuarioPgmc.svc?wsdl"; // LOCAL
+		// return parametrizacaoService.findByDcParametro(
+		// ParametrizacaoEnum.DYNAMICS_URL.getDcParametro() );
 	}
 }

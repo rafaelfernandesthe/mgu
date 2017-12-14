@@ -1,0 +1,14 @@
+package br.com.cleartech.pgmc.mgu.enums;
+
+public enum AssuntoEnum {
+
+	CRIAR_USUARIO,
+	REMOVER_USUARIO,
+	REINICIAR_SENHA,
+	ALTERAR_SENHA,
+	ADICIONAR_DELEGADO,
+	REMOVER_DELEGADO,
+	BLOQUEAR_USUARIO,
+	DESBLOQUEAR_USUARIO;
+
+}
