@@ -63,9 +63,7 @@
 						<label class="control-label" for="cargo" th:text="#{usuario.telefoneFixo}">Telefone Fixo: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="telefoneFixo" 
-							OnKeyPress="formatar('##-####-####', this)"
-							th:field="*{dcTelefoneFixo}" />
+						<input class="form-control input-sm" id="telefoneFixo" th:field="*{dcTelefoneFixo}" />
 					</div>
 				</div>
 
@@ -84,10 +82,10 @@
 						<label class="control-label" for="nivelEscalonamento" th:text="#{usuario.nivelEscalonamento}">Nivel: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<select class="form-control input-sm" id="nivelEscalonamento" th:field="*{nivelEscalonamento}" required>
+						<select class="form-control input-sm" id="nivelsEscalonamento" th:field="*{nivelEscalonamento}" required>
 							<option value="">Selecione</option> 
-							<option th:each="nvl : ${@usuarioCadastroController.getTodosOsNiveisEscalonamento()}" 
-						          th:value="${nvl}" 
+							<option th:each="nvl : ${niveisEscalonamento}" 
+						          th:value="${{nvl}}" 
 						          th:text="${nvl.nuNivelEscalonamento + ' - ' + nvl.dcNivelEscalonamento}">
 							</option>
 						</select>

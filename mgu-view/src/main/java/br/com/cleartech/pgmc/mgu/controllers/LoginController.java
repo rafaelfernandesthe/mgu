@@ -18,7 +18,6 @@ public class LoginController {
 	public String erroLogin( Model model ) {
 		model.addAttribute( "error", true );
 		return MappedViews.LOGIN.getPath();
-
 	}
 	
 }

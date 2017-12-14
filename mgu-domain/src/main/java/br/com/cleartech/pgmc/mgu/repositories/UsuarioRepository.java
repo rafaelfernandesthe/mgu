@@ -6,4 +6,8 @@ import br.com.cleartech.pgmc.mgu.entities.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
+	Usuario findByDcUsername( String username );
+
+	Usuario findByDcUsernameIgnoreCase( String username );
+
 }

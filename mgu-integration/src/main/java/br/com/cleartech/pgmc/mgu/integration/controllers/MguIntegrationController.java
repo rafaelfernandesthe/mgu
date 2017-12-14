@@ -1,18 +1,15 @@
 package br.com.cleartech.pgmc.mgu.integration.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.cleartech.pgmc.mgu.enums.CodigoMensagem;
-import br.com.cleartech.pgmc.mgu.services.PerfilService;
 
 @RestController
 public class MguIntegrationController {
 
-	@Autowired
-	private PerfilService perfilService;
+	// @Autowired
+	// private PerfilService perfilService;
 
 	@GetMapping( "/status2" )
 	public CodigoMensagem status2() {

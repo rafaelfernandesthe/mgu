@@ -6,12 +6,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -39,6 +39,9 @@ public class UsuarioCadastroController {
 	@Autowired
 	private NivelEscalonamentoService nivelEscalonamentoService;
 
+	@Autowired
+	private AutenticacaoController autenticacaoController;
+
 	private Usuario usuario;
 
 	@GetMapping
@@ -54,24 +57,22 @@ public class UsuarioCadastroController {
 	public String salvar( Usuario usuario, BindingResult bindingResult, Model model ) {
 
 		LOGGER.info( model.asMap() + "" );
-		LOGGER.info( usuario.getNmUsuario() );
-		LOGGER.info( usuario.getDcUsername() );
-		LOGGER.info( usuario.getGrupoPerfisIdList().toString() );
-		LOGGER.info( usuario.toString() );
 
-		if ( !bindingResult.hasErrors() ) {
-			bindingResult.addError( new ObjectError( "errox", "Errox!!" ) );
-			bindingResult.addError( new ObjectError( "erroy", "Erroy!!" ) );
-			bindingResult.addError( new ObjectError( "erroz", ", erro tal !" ) );
+		if ( bindingResult.hasErrors() ) {
+			return MappedViews.USUARIO_CADASTRO.getPath();
 		}
 
-		// prepare
+		if ( usuario.getGrupoPerfisIdList().isEmpty() ) {
+			bindingResult.addError( new ObjectError( "usuario.grupoPerfisIdList", "É necessário informar pelo menos um Perfil" ) );
+		}
+
+		// carregar grupos
 		List<GrupoPerfil> groupSelecteds = MguUtils.idListToGrupoPerfilList( usuario.getGrupoPerfisIdList() );
 		usuario.setGrupoPerfis( groupSelecteds );
-
 		if ( !bindingResult.hasErrors() ) {
 
 			// usuarioService.salvar( usuario );
+			LOGGER.info( "salvando: " + usuario );
 			return "redirect:/grupoPerfilConsulta" + MappedViews.SUCESS_PARAMETER.getPath();
 		} else {
 			List<GrupoPerfil> listaGrupoPerfilTotal = getGrupoPerfilList();
@@ -85,12 +86,13 @@ public class UsuarioCadastroController {
 		}
 	}
 
+	@ModelAttribute( "niveisEscalonamento" )
 	public List<NivelEscalonamento> getTodosOsNiveisEscalonamento() {
 		return nivelEscalonamentoService.findAll();
 	}
 
 	private List<GrupoPerfil> getGrupoPerfilList() {
-		return grupoPerfilService.findByPrestadora( 1630l );
+		return grupoPerfilService.findByPrestadora( autenticacaoController.getIdPrestadora() );
 	}
 
 	public Usuario getUsuario() {
