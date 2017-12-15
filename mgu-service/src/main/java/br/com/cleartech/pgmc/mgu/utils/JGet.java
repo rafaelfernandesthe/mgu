@@ -21,7 +21,7 @@ public class JGet {
 	private static final int CONNECTION_TIMEOUT = 12000;
 	private static final int READ_TIMEOUT = 12000;
 
-	public static void tryUrl( String wsdlUrl ) {
+	public static void tryUrl( String wsdlUrl ) throws Exception {
 
 		URL u;
 		InputStream is = null;
@@ -42,9 +42,11 @@ public class JGet {
 		} catch ( MalformedURLException mue ) {
 			System.err.println( "Ouch - a MalformedURLException happened." );
 			mue.printStackTrace();
+			throw mue;
 		} catch ( IOException ioe ) {
 			System.err.println( "Oops- an IOException happened." );
 			ioe.printStackTrace();
+			throw ioe;
 		} finally {
 			try {
 				if ( is != null ) {

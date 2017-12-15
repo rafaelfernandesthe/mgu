@@ -27,7 +27,7 @@ import br.com.cleartech.pgmc.mgu.services.UsuarioService;
 
 @Component
 public class MguAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger( MguAuthenticationProvider.class );
 
 	@Autowired
@@ -57,13 +57,13 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 		try {
 			Usuario usuario = usuarioService.findByUsername( username );
 
-			if ( usuario.getFlMaster().equals( false ) ) {
+			if ( usuario.getFlMaster() == false ) {
 				Delegado delegado = delegadoService.findByUsuarioComumDcUsername( usuario.getDcUsername() );
 				usuario.getPrestadoras().clear();
 				usuario.getPrestadoras().add( delegado.getPrestadora() );
 			}
 
-			if ( usuario.getFlAprovado().equals( false ) ) {
+			if ( usuario.getFlAprovado() == false ) {
 				throw new MguViewAuthenticationException( "Acesso Negado" );
 			}
 

@@ -1,6 +1,6 @@
 package br.com.cleartech.pgmc.mgu.exceptions;
 
-public class LdapException extends Exception {
+public class LdapException extends RuntimeException {
 	/**
 	 * 
 	 */

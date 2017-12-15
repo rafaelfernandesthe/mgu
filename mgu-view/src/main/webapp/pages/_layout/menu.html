@@ -29,7 +29,7 @@
 							</ul></li>
 						<li class="dropdown"><a class="btn dropdown-toggle menu-link"
 							data-toggle="dropdown" href="#" data-icon="fa fa-users"
-							th:text="#{grupoPerfil}"> Grupo de Perfil <span class="caret"></span>
+							th:text="#{grupoPerfil}"> Grupo de Perfil <span class="glyphicon glyphicon-asterisk">
 						</a>
 							<ul class="dropdown-menu">
 								<li><a href="#" th:href="@{/grupoPerfilCadastro}"
@@ -42,12 +42,9 @@
 							th:text="#{configuracao}"> Configuração <span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="#" th:href="@{/parametro}"
-								th:text="#{parametros}">Parametro do sistema </a></li>
-							<li><a href="#" th:href="@{/consultaParametro}"
-								th:text="#{menu.lista}+' '+#{parametros}">Lista Parametro
-									do sistema</a></li>
-						</ul></li>
+							<li><a href="#" th:href="@{/parametro}" th:text="#{parametros}">Parametro do sistema </a></li>
+						</ul>
+						</li>
 					</ul>
 					
 					<div class="btn-group" style="margin-top: 10px; margin-right: 10px; float:right; ">

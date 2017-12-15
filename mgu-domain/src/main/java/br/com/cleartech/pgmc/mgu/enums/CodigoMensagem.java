@@ -36,7 +36,8 @@ public enum CodigoMensagem {
 	RETORNO_31( 31, "Usuário bloqueado por inatividade, favor entrar em contato com o administrador de sua prestadora." ),
 	RETORNO_32( 32, "Senha do usuário expirada, favor atualizar a senha antes de prosseguir com o acesso." ),
 	RETORNO_33( 33, "LDAP - Não foi possível criar o usuário informado." ),
-	RETORNO_34( 34, "DYNAMICS - Não foi possível criar o usuário informado." );
+	RETORNO_34( 34, "DYNAMICS - Não foi possível criar o usuário informado." ),
+	RETORNO_35( 35, "Não foi possível enviar a senha para o e-mail." );
 	
 	private Integer codigo;
 	private String descricao;
