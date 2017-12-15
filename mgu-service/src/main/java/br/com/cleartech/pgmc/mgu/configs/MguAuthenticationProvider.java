@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,9 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 			MguUserDetails usuarioDaSessao = new MguUserDetails();
 			usuarioDaSessao.setNmUsuario( usuario.getNmUsuario() );
 			usuarioDaSessao.setDcUsername( usuario.getDcUsername() );
+			if ( usuario.getPrestadoras().isEmpty() ) {
+				throw new MguViewAuthenticationException( "Usuário não possui prestadora associada" );
+			}
 			usuarioDaSessao.setPrestadora( usuario.getPrestadoras().get( 0 ).getNoPrestadora() );
 			usuarioDaSessao.setIdPrestadora( usuario.getPrestadoras().get( 0 ).getId() );
 			usuarioDaSessao.setGrupoPrestadora( usuario.getPrestadoras().get( 0 ).getGrupoPrestadora().getNoGrupoPrestadora() );
@@ -89,7 +93,7 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 
 			logger.info( "Login realizado com sucesso" );
 			return usuarioDaSessao;
-		} catch ( Exception e ) {
+		} catch ( HibernateException e ) {
 			e.printStackTrace();
 			throw new MguViewAuthenticationException( "Acesso Negado" );
 		}
