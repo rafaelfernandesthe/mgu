@@ -1,6 +1,6 @@
 package br.com.cleartech.pgmc.mgu.exceptions;
 
-public class MguException extends Exception {
+public class MguException extends RuntimeException {
 	/**
 	 * 
 	 */

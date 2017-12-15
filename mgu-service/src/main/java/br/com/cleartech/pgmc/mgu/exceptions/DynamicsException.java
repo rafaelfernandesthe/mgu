@@ -1,6 +1,6 @@
 package br.com.cleartech.pgmc.mgu.exceptions;
 
-public class DynamicsException extends Exception {
+public class DynamicsException extends RuntimeException {
 
 	private static final long serialVersionUID = 6125114276189063864L;
 
