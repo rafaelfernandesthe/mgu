@@ -6,4 +6,6 @@ import br.com.cleartech.pgmc.mgu.entities.ParametroSistema;
 
 public interface ParametroSistemaRepository extends CrudRepository<ParametroSistema, Long> {
 
+	ParametroSistema findByGrupoPrestadoraId( Long idGrupoPrestadora );
+
 }

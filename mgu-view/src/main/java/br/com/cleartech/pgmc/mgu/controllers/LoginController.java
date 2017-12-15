@@ -1,5 +1,7 @@
 package br.com.cleartech.pgmc.mgu.controllers;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +12,7 @@ import br.com.cleartech.pgmc.mgu.utils.MappedViews;
 public class LoginController {
 
 	@GetMapping( "/login" )
-	public String login() {
+	public String login( HttpSession session ) {
 		return MappedViews.LOGIN.getPath();
 	}
 
@@ -19,5 +21,5 @@ public class LoginController {
 		model.addAttribute( "error", true );
 		return MappedViews.LOGIN.getPath();
 	}
-	
+
 }

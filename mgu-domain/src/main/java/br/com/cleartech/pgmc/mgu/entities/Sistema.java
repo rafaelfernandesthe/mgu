@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.envers.Audited;
 
@@ -20,16 +22,10 @@ import org.hibernate.envers.Audited;
 @Entity
 @Table( name = "SISTEMA" )
 @SequenceGenerator( name = "SEQ_SISTEMA", sequenceName = "SEQ_SISTEMA", initialValue = 1, allocationSize = 1 )
+@XmlRootElement( name = "sistema" )
 public class Sistema implements Serializable {
 
 	private static final long serialVersionUID = 4940984505758366601L;
-
-	// public static final String SISTEMA_DYNAMICS = "DYNAMICS";
-	// public static final String SISTEMA_SNOA = "SNOA";
-	// public static final String SISTEMA_SOIA = "SOIA";
-	// public static final String SISTEMA_CREDENCIAMENTO = "CREDENCIAMENTO";
-	// public static final String SISTEMA_SCADA = "SCADA";
-	// public static final String SISTEMA_GED = "GED";
 
 	@Id
 	@OrderBy
@@ -46,6 +42,7 @@ public class Sistema implements Serializable {
 		this.setDcSistema( dcSistema );
 	}
 
+	@XmlElement( name = "id_sistema" )
 	public Long getId() {
 		return this.id;
 	}
@@ -54,6 +51,7 @@ public class Sistema implements Serializable {
 		this.id = id;
 	}
 
+	@XmlElement( name = "nome_sistema" )
 	public String getDcSistema() {
 		return this.dcSistema;
 	}

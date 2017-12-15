@@ -74,21 +74,31 @@ public class LdapServiceImpl implements LdapService {
 
 	@Override
 	public Boolean existeUsuario( String usuario ) throws LdapException {
-		return null;
+		//@formatter:off
+				ContainerCriteria query = LdapQueryBuilder.query()
+						.base( getUserDnBase() )
+						.searchScope( SearchScope.SUBTREE )
+						.attributes( "cn" )
+						.where( "cn" ).is( usuario );
+				//@formatter:on
+		AttributesMapper<?> attrs = new AttributesMapper<Object>() {
+			@Override
+			public Object mapFromAttributes( Attributes attrs ) throws NamingException {
+				return attrs.get( "cn" ).get();
+			}
+		};
+
+		return !ldapTemplate.search( query, attrs ).isEmpty();
 	}
 
 	@Override
 	public Boolean existeUsuario( String usuario, String senha ) throws LdapException {
-		String userDnBase = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.USER_DN_PATH_BASE.getDcParametro() );
-
 		//@formatter:off
 		ContainerCriteria query = LdapQueryBuilder.query()
-				.base( userDnBase )
+				.base( getUserDnBase() )
 				.searchScope( SearchScope.SUBTREE )
 				.attributes( "cn" )
 				.where( "cn" ).is( usuario ).and( "userPassword" ).is( senha );
-		
-
 		//@formatter:on
 		
 		// AndFilter filter = new AndFilter();
@@ -97,14 +107,14 @@ public class LdapServiceImpl implements LdapService {
 		// filter.and( new EqualsFilter( "userpassword", senha ) );
 		// 25d55ad283aa400af464c76d713c07ad
 
-		AttributesMapper attrs = new AttributesMapper() {
+		AttributesMapper<?> attrs = new AttributesMapper<Object>() {
 			@Override
 			public Object mapFromAttributes( Attributes attrs ) throws NamingException {
 				return attrs.get( "cn" ).get();
 			}
 		};
 
-		List result = ldapTemplate.search( query, attrs );
+		List<?> result = ldapTemplate.search( query, attrs );
 
 		// List result = ldapTemplate.search( userDnBase, filter.encode(),
 		// SearchControls.SUBTREE_SCOPE, getAttrs, attrs );
@@ -113,10 +123,15 @@ public class LdapServiceImpl implements LdapService {
 		return true;
 	}
 
+
+
 	@Override
 	public Boolean contemSenhaNoHistorico( String usuario, String senhaNova ) throws LdapException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	private String getUserDnBase() {
+		return parametrizacaoService.findByDcParametro( ParametrizacaoEnum.USER_DN_PATH_BASE.getDcParametro() );
+	}
 }

@@ -55,7 +55,7 @@ public class Usuario implements Serializable {
 	private String dcEmail;
 
 	@Column( name = "FL_DYNAMICS" )
-	private boolean flEnviarDynamics;
+	private Boolean flEnviarDynamics;
 
 	@Column( name = "DC_IP_ORIGEM" )
 	@XmlElement( name = "iporigem" )
@@ -84,7 +84,7 @@ public class Usuario implements Serializable {
 	private String dcTelefoneFixo;
 
 	@Column( name = "FL_MASTER" )
-	private boolean flMaster;
+	private Boolean flMaster;
 
 	@Column( name = "FL_BLOQUEIO", precision = 1 )
 	@Enumerated( EnumType.ORDINAL )
@@ -92,7 +92,7 @@ public class Usuario implements Serializable {
 	private BloqueioUsuario flBloqueio = BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO;
 
 	@Column( name = "FL_PRIMEIRO_ACESSO" )
-	private boolean flPrimeiroAcesso;
+	private Boolean flPrimeiroAcesso;
 
 	@Column( name = "NM_USUARIO" )
 	@XmlElement( name = "nomeusuario" )
@@ -118,10 +118,10 @@ public class Usuario implements Serializable {
 	private String nuCpf;
 
 	@Column( name = "FL_APROVADO" )
-	private boolean flAprovado;
+	private Boolean flAprovado;
 
 	@Column( name = "FL_PRIMEIRO_ACESSO_SNOA" )
-	private boolean flPrimeiroAcessoSNOA;
+	private Boolean flPrimeiroAcessoSNOA;
 
 	// bi-directional many-to-one association to Usuario
 	@ManyToOne
@@ -166,18 +166,29 @@ public class Usuario implements Serializable {
 	private NivelEscalonamento nivelEscalonamento;
 
 	@Column( name = "FL_ENVIO_EMAIL" )
-	private boolean flEnvioEmail;
+	private Boolean flEnvioEmail;
 
 	@Column( name = "FL_USUARIO_SISTEMA" )
 	private Integer flUsuarioSistema;
 
+	@Transient
+	private List<Long> listaGrupoPerfil;
+
+	@Transient
+	@XmlElement( name = "grupo_prestadora" )
+	private GrupoPrestadora grupos;
+
+	@Transient
+	// Utilizado no envio de e-mail
+	private String senhaSemMD5;
+
 	public Usuario() {}
 
-	public boolean getFlEnviarDynamics() {
+	public Boolean getFlEnviarDynamics() {
 		return flEnviarDynamics;
 	}
 
-	public void setFlEnviarDynamics( boolean flEnviarDynamics ) {
+	public void setFlEnviarDynamics( Boolean flEnviarDynamics ) {
 		this.flEnviarDynamics = flEnviarDynamics;
 	}
 
@@ -261,11 +272,11 @@ public class Usuario implements Serializable {
 		this.dcTelefoneFixo = dcTelefoneFixo;
 	}
 
-	public boolean getFlMaster() {
+	public Boolean getFlMaster() {
 		return flMaster;
 	}
 
-	public void setFlMaster( boolean flMaster ) {
+	public void setFlMaster( Boolean flMaster ) {
 		this.flMaster = flMaster;
 	}
 
@@ -316,11 +327,11 @@ public class Usuario implements Serializable {
 		this.nuCpf = nuCpf;
 	}
 
-	public boolean getFlAprovado() {
+	public Boolean getFlAprovado() {
 		return flAprovado;
 	}
 
-	public void setFlAprovado( boolean flAprovado ) {
+	public void setFlAprovado( Boolean flAprovado ) {
 		this.flAprovado = flAprovado;
 	}
 
@@ -367,6 +378,8 @@ public class Usuario implements Serializable {
 	}
 
 	public List<Prestadora> getPrestadoras() {
+		if ( prestadoras == null )
+			prestadoras = new ArrayList<Prestadora>();
 		return prestadoras;
 	}
 
@@ -388,6 +401,65 @@ public class Usuario implements Serializable {
 
 	public void setSistema( String sistema ) {
 		this.sistema = sistema;
+	}
+
+	public Boolean getFlPrimeiroAcessoSNOA() {
+		return flPrimeiroAcessoSNOA;
+	}
+
+	public void setFlPrimeiroAcessoSNOA( Boolean flPrimeiroAcessoSNOA ) {
+		this.flPrimeiroAcessoSNOA = flPrimeiroAcessoSNOA;
+	}
+
+	public Integer getFlUsuarioSistema() {
+		return flUsuarioSistema;
+	}
+
+	public void setFlUsuarioSistema( Integer flUsuarioSistema ) {
+		this.flUsuarioSistema = flUsuarioSistema;
+	}
+
+	public Perfil getPerfil() {
+		return perfil;
+	}
+
+	public void setPerfil( Perfil perfil ) {
+		this.perfil = perfil;
+	}
+
+	public List<Long> getListaGrupoPerfil() {
+		return listaGrupoPerfil;
+	}
+
+	public void setListaGrupoPerfil( List<Long> listaGrupoPerfil ) {
+		this.listaGrupoPerfil = listaGrupoPerfil;
+	}
+
+	public String getSenhaSemMD5() {
+		return senhaSemMD5;
+	}
+
+	public void setSenhaSemMD5( String senhaSemMD5 ) {
+		this.senhaSemMD5 = senhaSemMD5;
+	}
+
+	public List<Integer> getGrupoPerfisIdList() {
+		if ( grupoPerfisIdList == null ) {
+			grupoPerfisIdList = new ArrayList<Integer>();
+		}
+		return grupoPerfisIdList;
+	}
+
+	public void setGrupoPerfisIdList( List<Integer> grupoPerfisIdList ) {
+		this.grupoPerfisIdList = grupoPerfisIdList;
+	}
+
+	public GrupoPrestadora getGrupos() {
+		return grupos;
+	}
+
+	public void setGrupos( GrupoPrestadora grupos ) {
+		this.grupos = grupos;
 	}
 
 	@Override
@@ -415,36 +487,9 @@ public class Usuario implements Serializable {
 		return true;
 	}
 
-	public Integer getFlUsuarioSistema() {
-		return flUsuarioSistema;
-	}
-
-	public void setFlUsuarioSistema( Integer flUsuarioSistema ) {
-		this.flUsuarioSistema = flUsuarioSistema;
-	}
-
-	public Perfil getPerfil() {
-		return perfil;
-	}
-
-	public void setPerfil( Perfil perfil ) {
-		this.perfil = perfil;
-	}
-
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flAprovado + ", flPrimeiroAcessoSNOA=" + flPrimeiroAcessoSNOA + ", perfil=" + perfil + ", usuarios=" + usuarios + ", grupoPerfis=" + grupoPerfis + ", flEnvioEmail=" + flEnvioEmail + ", flUsuarioSistema=" + flUsuarioSistema + "]";
-	}
-
-	public List<Integer> getGrupoPerfisIdList() {
-		if ( grupoPerfisIdList == null ) {
-			grupoPerfisIdList = new ArrayList<Integer>();
-		}
-		return grupoPerfisIdList;
-	}
-
-	public void setGrupoPerfisIdList( List<Integer> grupoPerfisIdList ) {
-		this.grupoPerfisIdList = grupoPerfisIdList;
+		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flAprovado + ", flPrimeiroAcessoSNOA=" + getFlPrimeiroAcessoSNOA() + ", perfil=" + perfil + ", usuarios=" + usuarios + ", grupoPerfis=" + grupoPerfis + ", flEnvioEmail=" + flEnvioEmail + ", flUsuarioSistema=" + flUsuarioSistema + "]";
 	}
 
 }

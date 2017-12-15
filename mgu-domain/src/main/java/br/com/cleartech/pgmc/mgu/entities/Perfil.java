@@ -18,7 +18,10 @@ import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlElement;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
@@ -40,9 +43,11 @@ public class Perfil implements Serializable {
 	@Id
 	@GeneratedValue( generator = "SEQ_PERFIL" )
 	@Column( name = "PK_ID_PERFIL" )
+	@XmlElement( name = "id" )
 	private Long id;
 
 	@Column( name = "DC_PERFIL" )
+	@XmlElement( name = "nome" )
 	private String dcPerfil;
 
 	@Column( name = "DC_DESCRICAO" )
@@ -53,10 +58,18 @@ public class Perfil implements Serializable {
 	@JoinTable( name = "grupo_perfil_x_perfil", joinColumns = @JoinColumn( name = "pk_id_perfil" ), inverseJoinColumns = @JoinColumn( name = "pk_id_grupo_perfil" ) )
 	private List<GrupoPerfil> grupoPerfis;
 
+	// @NotAudited
+	// @ManyToMany
+	// @Fetch( FetchMode.SUBSELECT )
+	// @JoinTable( name = "PERFIL_ACESSO_OPER", joinColumns = @JoinColumn( name
+	// = "PK_ID_PERFIL" ), inverseJoinColumns = @JoinColumn( name =
+	// "PK_PERFIL_ACESSO_OPER" ) )
+	// private List<PerfilAcessoOperadora> perfilAcessoOperadoras;
+
 	@NotAudited
-	@ManyToMany
-	@JoinTable( name = "PERFIL_ACESSO_OPER", joinColumns = @JoinColumn( name = "PK_ID_PERFIL" ), inverseJoinColumns = @JoinColumn( name = "PK_ACESSO_OPER" ) )
-	private List<AcessoOperadora> acessoOperadoras;
+	@OneToMany( mappedBy = "perfil" )
+	@LazyCollection( LazyCollectionOption.FALSE )
+	private List<PerfilAcessoOperadora> perfilAcessoOperadoras;
 
 	@OrderBy
 	@ManyToOne
@@ -69,9 +82,8 @@ public class Perfil implements Serializable {
 
 	@Transient
 	// Utilizado no POST /sistema
+	@XmlElement( name = "perfil" )
 	private List<Perfil> listaPerfil;
-
-	public Perfil() {}
 
 	public Long getId() {
 		return this.id;
@@ -121,14 +133,14 @@ public class Perfil implements Serializable {
 		this.usuarios = usuarios;
 	}
 
-	public List<AcessoOperadora> getAcessoOperadoras() {
-		if ( acessoOperadoras == null )
-			acessoOperadoras = new ArrayList<AcessoOperadora>();
-		return acessoOperadoras;
+	public List<PerfilAcessoOperadora> getPerfilAcessoOperadoras() {
+		if ( perfilAcessoOperadoras == null )
+			return new ArrayList<PerfilAcessoOperadora>();
+		return perfilAcessoOperadoras;
 	}
 
-	public void setAcessoOperadoras( List<AcessoOperadora> acessoOperadoras ) {
-		this.acessoOperadoras = acessoOperadoras;
+	public void setPerfilAcessoOperadoras( List<PerfilAcessoOperadora> perfilAcessoOperadoras ) {
+		this.perfilAcessoOperadoras = perfilAcessoOperadoras;
 	}
 
 	public List<Perfil> getListaPerfil() {
@@ -137,6 +149,10 @@ public class Perfil implements Serializable {
 
 	public void setListaPerfil( List<Perfil> listaPerfil ) {
 		this.listaPerfil = listaPerfil;
+	}
+
+	public void addPerfil( Perfil p ) {
+		this.listaPerfil.add( p );
 	}
 
 	@Override

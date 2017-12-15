@@ -15,7 +15,7 @@
 		<hibernate.version>4.0.1.Final</hibernate.version>
 		<hibernate.envers.version>4.1.0.Final</hibernate.envers.version>
 		<spring.version>4.3.13.RELEASE</spring.version>
-		<spring.security.version>3.2.0.RELEASE</spring.security.version>
+		<spring.security.version>4.2.3.RELEASE</spring.security.version>
 
 		<context.view>mgu-cleartech</context.view><!--Mudar para profiles  -->
 		<context.integration>mgu-cleartech-ws</context.integration><!--Mudar para profiles  -->

@@ -92,7 +92,8 @@ public class UsuarioCadastroController {
 	}
 
 	private List<GrupoPerfil> getGrupoPerfilList() {
-		return grupoPerfilService.findByPrestadora( autenticacaoController.getIdPrestadora() );
+//		return grupoPerfilService.findByPrestadora( autenticacaoController.getIdPrestadora() );
+		return grupoPerfilService.findByPrestadora( 1630l );
 	}
 
 	public Usuario getUsuario() {

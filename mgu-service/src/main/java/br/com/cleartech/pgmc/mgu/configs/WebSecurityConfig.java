@@ -1,10 +1,11 @@
-package br.com.cleartech.pgmc.mgu.config;
+package br.com.cleartech.pgmc.mgu.configs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.BaseLdapPathContextSource;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -74,4 +75,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	;
     	//@formatter:on
 	}
+
+	@Bean
+	public LdapTemplate ldapTemplate() {
+		return new LdapTemplate( ldapContextSource() );
+	}
+
 }

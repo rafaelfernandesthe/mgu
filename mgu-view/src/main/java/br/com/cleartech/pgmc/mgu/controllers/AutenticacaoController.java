@@ -6,16 +6,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.SessionScope;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import br.com.cleartech.pgmc.mgu.entities.Prestadora;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.services.PrestadoraService;
 import br.com.cleartech.pgmc.mgu.services.UsuarioService;
 
-@SessionScope
-@Component
+@Controller
+@SessionAttributes( { "nomeUsuario" } )
 public class AutenticacaoController implements Serializable {
 
 	private static final long serialVersionUID = -2145378914330158661L;
@@ -44,7 +45,7 @@ public class AutenticacaoController implements Serializable {
 
 	public AutenticacaoController() {
 		LOGGER.info( "construtor-> " + AutenticacaoController.class.getName() );
-		if ( usuario == null ) {
+		if ( usuario == null && SecurityContextHolder.getContext().getAuthentication() != null ) {
 			String dcUsernameLogado = SecurityContextHolder.getContext().getAuthentication().getName();
 			usuario = usuarioService.findByUsername( dcUsernameLogado );
 			nomeUsuario = usuario.getNmUsuario();
@@ -57,6 +58,7 @@ public class AutenticacaoController implements Serializable {
 		}
 	}
 
+	@ModelAttribute( "nomeUsuario" )
 	public String getNomeUsuario() {
 		return nomeUsuario;
 	}

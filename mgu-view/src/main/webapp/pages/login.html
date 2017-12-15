@@ -51,7 +51,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<p th:if="${loginError}" class="error">Login ou Senha Inválidos</p>
+						<p th:if="${loginError}" class="error">Login ou Senha Inválidos!</p>
 					</div>
 				</form>
 			</div>
@@ -64,17 +64,17 @@
 				</c:if>
 				<c:if test="${param.acessoNegado eq true}">
 					<div id="acessoNegado" class="errorblock" style="width: 455px;margin-right: 56px;">
-						UsuÃ¡rio informado nÃ£o possui acesso ao modulo MGU
+						Usuário informado não possui acesso ao modulo MGU!
 					</div>
 				</c:if>
 				<c:if test="${param.error eq true}">
 					<div id="msgError" class="errorblock" style="width: 455px;margin-right: 56px;">
-						NÃ£o foi possÃ­vel efetuar o login, usuario ou senha invalidos
+						Não foi possível efetuar o login, usuario ou senha inválidos!
 					</div>
 				</c:if>
 				<c:if test="${param.expirado eq true}">
 					<div id="msgError" class="errorblock" style="width: 455px;margin-right: 56px;">
-						Senha expirada/temporaria e deve ser trocada.&nbsp;&nbsp;<a onclick="go('${pageContext.request.contextPath}/senha/trocarSenha');">clique aqui</a>
+						Senha expirada/temporária e deve ser trocada.&nbsp;&nbsp;<a onclick="go('${pageContext.request.contextPath}/senha/trocarSenha');">clique aqui</a>
 					</div>
 				</c:if>
 			</div>
