@@ -12,4 +12,12 @@ public class StringUtils {
 		return result;
 	}
 
+	public static boolean isEmpty( String value ) {
+		if ( org.springframework.util.StringUtils.isEmpty( value ) || org.springframework.util.StringUtils.isEmpty( value.trim() ) || "null".equals( value ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
 }

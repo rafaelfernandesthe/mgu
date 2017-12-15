@@ -3,7 +3,7 @@
   
 	<head>
 		<meta charset="UTF-8"/>
-		<link rel="application icon" th:href="@{../favicon.ico}" href="../../favicon.ico"/>  
+		<link rel="application icon" href="../../resources/img/favicon.ico" th:href="@{/resources/img/favicon.ico}"/>  
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"/>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" rel="stylesheet"/>
@@ -24,11 +24,15 @@
 	            	 
 		    		<div class="user-box">
 		    			<div class="innerUser-box">
-			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">Usuário:</span>
+		    				<form>
+		    				<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;" th:text="Usuário: ${@autenticacaoController.getNomeUsuario()}">Usuário: Cleartech</span>
+		    				</form>
 			    			<br/>
-			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">Empresa:</span> 
+			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;" >Usuário: Cleartech</span>
 			    			<br/>
-			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">Grupo:</span>
+			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">Empresa: Cleartech</span> 
+			    			<br/>
+			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">Grupo: Cleartech</span>
 		    			</div>
 		    		</div>
 		    	

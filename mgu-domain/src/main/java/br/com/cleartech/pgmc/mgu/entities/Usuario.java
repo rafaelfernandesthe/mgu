@@ -24,6 +24,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
@@ -41,21 +43,26 @@ public class Usuario implements Serializable {
 	@Id
 	@GeneratedValue( generator = "SEQ_USUARIO" )
 	@Column( name = "PK_ID_USUARIO" )
+	@XmlElement( name = "id" )
 	private Long id;
 
 	@Column( name = "DC_CARGO" )
+	@XmlElement( name = "cargo" )
 	private String dcCargo;
 
 	@Column( name = "DC_EMAIL" )
+	@XmlElement( name = "email" )
 	private String dcEmail;
 
 	@Column( name = "FL_DYNAMICS" )
 	private boolean flEnviarDynamics;
 
 	@Column( name = "DC_IP_ORIGEM" )
+	@XmlElement( name = "iporigem" )
 	private String dcIpOrigem;
 
 	@Transient
+	@XmlElement( name = "senha" )
 	private String dcSenha;
 
 	@Transient
@@ -65,12 +72,15 @@ public class Usuario implements Serializable {
 	private String dcSenhaAntiga;
 
 	@Transient
+	@XmlElement( name = "sistema" )
 	private String sistema;
 
 	@Column( name = "DC_TELEFONE" )
+	@XmlElement( name = "telefone" )
 	private String dcTelefone;
 
 	@Column( name = "DC_TELEFONE_FIXO" )
+	@XmlElement( name = "telefone2" )
 	private String dcTelefoneFixo;
 
 	@Column( name = "FL_MASTER" )
@@ -78,15 +88,18 @@ public class Usuario implements Serializable {
 
 	@Column( name = "FL_BLOQUEIO", precision = 1 )
 	@Enumerated( EnumType.ORDINAL )
+	@XmlElement( name = "bloqueado" )
 	private BloqueioUsuario flBloqueio = BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO;
 
 	@Column( name = "FL_PRIMEIRO_ACESSO" )
 	private boolean flPrimeiroAcesso;
 
 	@Column( name = "NM_USUARIO" )
+	@XmlElement( name = "nomeusuario" )
 	private String nmUsuario;
 
 	@Column( name = "DC_USERNAME" )
+	@XmlElement( name = "usuario" )
 	private String dcUsername;
 
 	@Temporal( value = TemporalType.TIMESTAMP )
@@ -101,10 +114,11 @@ public class Usuario implements Serializable {
 	private Date ultimaTrocaSenha;
 
 	@Column( name = "NU_CPF" )
+	@XmlElement( name = "cpf" )
 	private String nuCpf;
 
 	@Column( name = "FL_APROVADO" )
-	private boolean flArovado;
+	private boolean flAprovado;
 
 	@Column( name = "FL_PRIMEIRO_ACESSO_SNOA" )
 	private boolean flPrimeiroAcessoSNOA;
@@ -143,6 +157,7 @@ public class Usuario implements Serializable {
 
 	@NotAudited
 	@ManyToMany
+	@Fetch( FetchMode.JOIN )
 	@JoinTable( name = "PRESTADORA_X_USUARIO", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_PRESTADORA" ) )
 	private List<Prestadora> prestadoras;
 
@@ -166,7 +181,6 @@ public class Usuario implements Serializable {
 		this.flEnviarDynamics = flEnviarDynamics;
 	}
 
-	@XmlElement( name = "id" )
 	public Long getId() {
 		return id;
 	}
@@ -183,7 +197,6 @@ public class Usuario implements Serializable {
 		this.ultimaTrocaSenha = ultimaTrocaSenha;
 	}
 
-	@XmlElement( name = "cargo" )
 	public String getDcCargo() {
 		return this.dcCargo;
 	}
@@ -192,7 +205,6 @@ public class Usuario implements Serializable {
 		this.dcCargo = dcCargo;
 	}
 
-	@XmlElement( name = "email" )
 	public String getDcEmail() {
 		return this.dcEmail;
 	}
@@ -201,7 +213,6 @@ public class Usuario implements Serializable {
 		this.dcEmail = dcEmail;
 	}
 
-	@XmlElement( name = "iporigem" )
 	public String getDcIpOrigem() {
 		return this.dcIpOrigem;
 	}
@@ -210,7 +221,6 @@ public class Usuario implements Serializable {
 		this.dcIpOrigem = dcIpOrigem;
 	}
 
-	@XmlElement( name = "senha" )
 	public String getDcSenha() {
 		return this.dcSenha;
 	}
@@ -235,7 +245,6 @@ public class Usuario implements Serializable {
 		this.dcSenhaAntiga = dcSenhaAntiga;
 	}
 
-	@XmlElement( name = "telefone" )
 	public String getDcTelefone() {
 		return dcTelefone;
 	}
@@ -244,7 +253,6 @@ public class Usuario implements Serializable {
 		this.dcTelefone = dcTelefone;
 	}
 
-	@XmlElement( name = "telefone2" )
 	public String getDcTelefoneFixo() {
 		return dcTelefoneFixo;
 	}
@@ -261,7 +269,6 @@ public class Usuario implements Serializable {
 		this.flMaster = flMaster;
 	}
 
-	@XmlElement( name = "bloqueado" )
 	public BloqueioUsuario getFlBloqueio() {
 		return flBloqueio;
 	}
@@ -270,7 +277,6 @@ public class Usuario implements Serializable {
 		this.flBloqueio = flBloqueio;
 	}
 
-	@XmlElement( name = "nomeusuario" )
 	public String getNmUsuario() {
 		return this.nmUsuario;
 	}
@@ -279,7 +285,6 @@ public class Usuario implements Serializable {
 		this.nmUsuario = nmUsuario;
 	}
 
-	@XmlElement( name = "usuario" )
 	public String getDcUsername() {
 		return dcUsername;
 	}
@@ -288,12 +293,12 @@ public class Usuario implements Serializable {
 		this.dcUsername = dcUsername;
 	}
 
-	@XmlElement( name = "cpf" )
 	public String getNuCpf() {
-		if(this.nuCpf != null)
+		if ( this.nuCpf != null )
 			return this.nuCpf.replaceAll( "[^\\d]", "" );
-		
-		else return this.nuCpf;
+
+		else
+			return this.nuCpf;
 	}
 
 	public String getNuCpfWithMask() {
@@ -311,12 +316,12 @@ public class Usuario implements Serializable {
 		this.nuCpf = nuCpf;
 	}
 
-	public boolean getFlArovado() {
-		return flArovado;
+	public boolean getFlAprovado() {
+		return flAprovado;
 	}
 
-	public void setFlArovado( boolean flArovado ) {
-		this.flArovado = flArovado;
+	public void setFlAprovado( boolean flAprovado ) {
+		this.flAprovado = flAprovado;
 	}
 
 	public Usuario getDelegado() {
@@ -377,7 +382,6 @@ public class Usuario implements Serializable {
 		this.nivelEscalonamento = nivelEscalonamento;
 	}
 
-	@XmlElement
 	public String getSistema() {
 		return sistema;
 	}
@@ -429,7 +433,7 @@ public class Usuario implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flArovado + ", flPrimeiroAcessoSNOA=" + flPrimeiroAcessoSNOA + ", perfil=" + perfil + ", usuarios=" + usuarios + ", grupoPerfis=" + grupoPerfis + ", flEnvioEmail=" + flEnvioEmail + ", flUsuarioSistema=" + flUsuarioSistema + "]";
+		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flAprovado + ", flPrimeiroAcessoSNOA=" + flPrimeiroAcessoSNOA + ", perfil=" + perfil + ", usuarios=" + usuarios + ", grupoPerfis=" + grupoPerfis + ", flEnvioEmail=" + flEnvioEmail + ", flUsuarioSistema=" + flUsuarioSistema + "]";
 	}
 
 	public List<Integer> getGrupoPerfisIdList() {

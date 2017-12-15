@@ -3,6 +3,7 @@ package br.com.cleartech.pgmc.mgu.utils;
 public enum MappedViews {
 
 	LOGIN( "/login.html" ),
+	HOME( "/home.html" ),
 	USUARIO_CADASTRO( "/usuario/usuarioCadastro.html" ),
 	USUARIO_CONSULTA( "/usuario/usuarioConsulta.html" ),
 	GRUPO_PERFIL_CADASTRO( "/grupoPerfil/grupoPerfilCadastro.html" ),

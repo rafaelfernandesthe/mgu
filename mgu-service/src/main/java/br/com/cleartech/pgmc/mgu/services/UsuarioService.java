@@ -4,6 +4,11 @@ import br.com.cleartech.pgmc.mgu.entities.Usuario;
 
 public interface UsuarioService {
 
-	public Usuario salvar( Usuario usuario );
+	Usuario salvar( Usuario usuario );
+	
+	Usuario findByUsername( String username );
 
+	boolean existsByUsername( String username );
+
+	Usuario salvarUsuarioMaster( Usuario usuario ) throws Exception;
 }
