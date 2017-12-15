@@ -18,4 +18,9 @@ public class DelegadoServiceImpl implements DelegadoService {
 		return delegadoRepository.findByUsuarioComumDcUsernameAndPrestadoraId( comumUsername, idPrestadora );
 	}
 
+	@Override
+	public Delegado findByUsuarioComumDcUsername( String comumUsername ) {
+		return delegadoRepository.findByUsuarioComumDcUsername( comumUsername );
+	}
+
 }

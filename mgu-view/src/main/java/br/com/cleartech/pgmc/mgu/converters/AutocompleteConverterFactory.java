@@ -1,4 +1,4 @@
-package br.com.cleartech.pgmc.mgu.formatters;
+package br.com.cleartech.pgmc.mgu.converters;
 
 import java.lang.reflect.Method;
 

@@ -1,6 +1,5 @@
 package br.com.cleartech.pgmc.mgu.entities;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +35,7 @@ import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 @Table( name = "USUARIO" )
 @SequenceGenerator( name = "SEQ_USUARIO", sequenceName = "SEQ_USUARIO", initialValue = 1, allocationSize = 1 )
 @XmlRootElement( name = "usuario" )
-public class Usuario implements Serializable {
+public class Usuario {
 
 	private static final long serialVersionUID = -8589145118614631343L;
 

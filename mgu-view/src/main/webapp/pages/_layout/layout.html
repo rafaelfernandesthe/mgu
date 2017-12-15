@@ -24,13 +24,17 @@
 	            	 
 		    		<div class="user-box">
 		    			<div class="innerUser-box">
-
+			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
+			    				Usuário: <span th:text="${#authentication.principal.nmUsuario}"></span> 
+			    			</span>
 			    			<br/>
-			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;" >Usuário: Cleartech</span>
+			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
+			    				Empresa: <span th:text="${#authentication.principal.prestadora}"></span>
+			    			</span> 
 			    			<br/>
-			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">Empresa: Cleartech</span> 
-			    			<br/>
-			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">Grupo: Cleartech</span>
+			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
+			    				Grupo: <span th:text="${#authentication.principal.grupoPrestadora}"></span>
+			    			</span>
 		    			</div>
 		    		</div>
 		    	

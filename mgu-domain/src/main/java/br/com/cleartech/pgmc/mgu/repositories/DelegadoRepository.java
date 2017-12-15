@@ -8,4 +8,6 @@ public interface DelegadoRepository extends CrudRepository<Delegado, Long> {
 
 	Delegado findByUsuarioComumDcUsernameAndPrestadoraId( String comumUsername, Long idPrestadora );
 
+	Delegado findByUsuarioComumDcUsername( String comumUsername );
+
 }
