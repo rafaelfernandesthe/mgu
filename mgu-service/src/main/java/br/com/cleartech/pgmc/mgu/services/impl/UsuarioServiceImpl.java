@@ -3,6 +3,8 @@ package br.com.cleartech.pgmc.mgu.services.impl;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,7 +78,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 		try {
 			ldapService.createMasterUser( usuario.getDcUsername(), usuario.getDcSenha() );
 		} catch ( Exception e ) {
-			// usuarioRepository.deletarParaRollback( usuario );
 			throw new LdapException( "LDAP ERRO: Não Foi possivel criar o usuario \"" + usuario.getDcUsername() + "\"" );
 		}
 
@@ -84,18 +85,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
 			if ( dynamicsAtivo ) {
 				DadosRetorno retornoDynamics = dynamicsService.criarUsuario( usuario );
-				System.out.println( retornoDynamics.toString() );
 
 				if ( StatusDynamics.SUCESSO.getValue().equals( retornoDynamics.getId().getValue() ) ) {
 					if ( mensagensValidasDynamics.contains( retornoDynamics.getMensagem().getValue() ) ) {
-						if ( existsPerfilDynamics( usuario ) ) {
-							usuario.setFlEnviarDynamics( true );
-							usuarioRepository.save( usuario );
-						}
+						usuario.setFlEnviarDynamics( true );
+						usuarioRepository.save( usuario );
 					}
 				} else {
 					ldapService.deleteUser( usuario.getDcUsername(), true );
-					// usuarioRepository.deletarParaRollback( usuario );
 					throw new DynamicsException( "DYNAMICS ERRO: " + transformarMensagem( retornoDynamics.getMensagem().getValue() ) );
 				}
 			}
@@ -104,7 +101,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 			ldapService.deleteUser( usuario.getDcUsername(), true );
-			// usuarioRepository.deletarParaRollback( usuario );
 			throw new MguException( ERRO_CONEXAO_DYNAMICS );
 		}
 
@@ -112,8 +108,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 			usuario.setSenhaSemMD5( senha );
 			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.CRIAR_USUARIO );
 		} catch ( Exception e ) {
-			e.printStackTrace();
-			new MguException( "MGU ALERTA: Usuário criado com sucesso, porem não foi possivel enviar a senha para o e-mail \"" + usuario.getDcEmail() + "\" , favor entrar em contato com a central de serviços para solicitar a senha de acesso do usuário \"" + usuario.getDcUsername() + "\"\n\n" ).printStackTrace();
+			throw new MessagingException( "MGU ALERTA: Usuário criado com sucesso, porem não foi possível enviar a senha para o e-mail \"" + usuario.getDcEmail() + "\" , favor entrar em contato com a central de serviços para solicitar a senha de acesso do usuário \"" + usuario.getDcUsername() + "\"\n\n" );
 		}
 
 		return null;

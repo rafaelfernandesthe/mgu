@@ -3,6 +3,8 @@ package br.com.cleartech.pgmc.mgu.integration.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,6 +142,8 @@ public class MguIntegrationController {
 				mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_34, e.getMessage() );
 			} catch ( MguException e ) {
 				mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_6, e.getMessage() );
+			} catch ( MessagingException e ) {
+				mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_35, e.getMessage() );
 			} catch ( Exception e ) {
 				mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_6 );
 			}

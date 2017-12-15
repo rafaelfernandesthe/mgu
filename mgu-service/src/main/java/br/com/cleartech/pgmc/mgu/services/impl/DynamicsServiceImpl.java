@@ -84,7 +84,9 @@ public class DynamicsServiceImpl implements DynamicsService {
 
 		IUsuarioPgmc enviar = new UsuarioPgmc( url ).getBasicHttpBindingIUsuarioPgmc();
 
-		return enviar.cadastrar( d );
+		DadosRetorno retorno = enviar.cadastrar( d );
+		logger.info( "Retorno Dynamics: {}", retorno );
+		return retorno;
 	}
 
 	@Override

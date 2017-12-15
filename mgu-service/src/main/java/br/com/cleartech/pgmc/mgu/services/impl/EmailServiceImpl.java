@@ -1,12 +1,18 @@
 package br.com.cleartech.pgmc.mgu.services.impl;
 
+import java.util.Date;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import br.com.cleartech.pgmc.mgu.dtos.EmailDTO;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.AssuntoEnum;
 import br.com.cleartech.pgmc.mgu.services.EmailService;
@@ -20,7 +26,7 @@ public class EmailServiceImpl implements EmailService {
 	private JavaMailSender javaMailsSender;
 
 	@Override
-	public void enviaByUsuarioAndAssunto( Usuario usuario, AssuntoEnum assunto ) {
+	public void enviaByUsuarioAndAssunto( Usuario usuario, AssuntoEnum assunto ) throws MessagingException {
 		StringBuilder corpoEmail = new StringBuilder( getEmailHeader() );
 		String cabecalho = null;
 		switch ( assunto ) {
@@ -32,8 +38,21 @@ public class EmailServiceImpl implements EmailService {
 				break;
 		}
 
-		EmailDTO email = new EmailDTO( usuario.getDcEmail(), cabecalho, corpoEmail.toString() );
-		// sendEmail( email );
+		sendEmail( usuario.getDcEmail(), cabecalho, corpoEmail.toString() );
+	}
+
+	private void sendEmail( String destinatario, String cabecalho, String conteudo ) throws MessagingException {
+		logger.info( "Enviando e-mail para {}", destinatario );
+
+		MimeMessage email = javaMailsSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper( email );
+		helper.setTo( destinatario );
+		helper.setSubject( cabecalho );
+		helper.setText( conteudo, true );
+		helper.setSentDate( new Date() );
+		javaMailsSender.send( email );
+
+		logger.info( "E-mail enviado para {}", destinatario );
 	}
 
 	// private void sendEmail( EmailDTO email ) throws MessagingException {

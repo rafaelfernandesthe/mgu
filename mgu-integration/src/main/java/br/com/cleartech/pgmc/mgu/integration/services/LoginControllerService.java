@@ -135,7 +135,7 @@ public class LoginControllerService {
 				return mguResponse;
 			}
 
-			if ( usuario.getFlAprovado().equals( false ) && SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) ) {
+			if ( !usuario.getFlAprovado() && SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) ) {
 				List<PerfilDTO> perfisUsuario = new ArrayList<PerfilDTO>();
 				for ( Prestadora prestadora : usuario.getPrestadoras() ) {
 					PerfilDTO perfil = new PerfilDTO( 666L, "SOLICITANTE", prestadora.getId(), prestadora.getNoPrestadora() );
@@ -148,7 +148,7 @@ public class LoginControllerService {
 			if ( usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_NAO ) ) {
 
 				List<PerfilDTO> perfis = new ArrayList<PerfilDTO>();
-				if ( usuario.getFlMaster().equals( true ) && SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) ) {
+				if ( usuario.getFlMaster() && SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) ) {
 					perfis = perfilService.findPerfisMasterByUsernameAndSistema( usuario.getDcUsername(), sistemaUsuario );
 				} else {
 					perfis = perfilService.findByUsernameAndSistema( usuario.getDcUsername(), sistemaUsuario );
@@ -194,9 +194,9 @@ public class LoginControllerService {
 	}
 
 	private Object responseValidaDynamicsECredenciamento( Usuario usuarioRequest, String sistemaUsuario, Usuario usuario ) {
-		if ( SistemaUtils.DYNAMICS.equalsIgnoreCase( sistemaUsuario ) && usuario.getFlEnviarDynamics().equals( false ) ) {
+		if ( SistemaUtils.DYNAMICS.equalsIgnoreCase( sistemaUsuario ) && !usuario.getFlEnviarDynamics() ) {
 			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_26 );
-		} else if ( !SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) && usuario.getFlAprovado().equals( false ) ) {
+		} else if ( !SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) && !usuario.getFlAprovado() ) {
 			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_8 );
 		}
 		return null;
