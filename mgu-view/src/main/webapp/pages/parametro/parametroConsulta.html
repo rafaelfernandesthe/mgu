@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/_layout/layout.html}">
+
+<body>
+
+	<div layout:fragment="content">
+
+
+		<ul class="pui-breadcrumb">
+			<li><a href="#">Home</a></li>
+			<li><a href="#">Cadastro</a></li>
+			<li><a href="#">Parâmetro Sistema</a></li>
+		</ul>
+
+		<div class="painel-primary pui-panel"
+			th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
+			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}"
+				th:object="${usuario}">
+
+				<div th:include="~{/_layout/mensagem.html}"></div>
+
+
+				<div class="row">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="nome"
+							th:text="#{parametros.prazo}"> <span
+							style="color: red !important; font-weight: bold;">*</span>
+						</label>
+					</div>
+					<div class="col-sm-3 form-group">
+						<input class="form-control input-sm" id="nome"
+							th:field="*{dcUsername}" required="required" readonly="true" />
+					</div>
+
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="username"
+							th:text="#{parametros.senha.nunca.expira}">Senha Expira:
+						</label>
+					</div>
+					<div class="col-sm-1 form-group">
+						<select class="form-control input-sm" id="nivelEscalonamento"
+							th:field="*{nivelEscalonamento}" required>
+							<option value="">Sim</option>
+							<option value="">Não</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="nome"
+							th:text="#{parametros.bloquear.usuario}"> <span
+							style="color: red !important; font-weight: bold;">*</span>
+						</label>
+					</div>
+					<div class="col-sm-3 form-group">
+						<input class="form-control input-sm" id="nome"
+							th:field="*{dcUsername}" required="required" readonly="true" />
+					</div>
+
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="username"
+							th:text="#{parametros.senha.nunca.bloqueia}">Senha
+							Expira: </label>
+					</div>
+					<div class="col-sm-1 form-group">
+						<select class="form-control input-sm" id="nivelEscalonamento"
+							th:field="*{nivelEscalonamento}" required>
+							<option value="">Sim</option>
+							<option value="">Não</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="nome"
+							th:text="#{parametros.qtd.erro.senha}"> <span
+							style="color: red !important; font-weight: bold;">*</span>
+						</label>
+					</div>
+					<div class="col-sm-3 form-group">
+						<input class="form-control input-sm" id="nome"
+							th:field="*{dcUsername}" required="required" autofocus />
+					</div>
+
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="username"
+							th:text="#{parametros.limite.erro}">Limite erro: </label>
+					</div>
+					<div class="col-sm-1 form-group">
+						<select class="form-control input-sm" id="nivelEscalonamento"
+							th:field="*{nivelEscalonamento}" required>
+							<option value="">Não</option>
+							<option value="">Sim</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="username"
+							th:text="#{parametros.grupo.prestadora}">Grupo
+							Prestadora: </label>
+					</div>
+					<div class="col-sm-2 form-group">
+						<select class="form-control input-sm" id="nivelEscalonamento"
+							th:field="*{nivelEscalonamento}" required>
+							<option value="">Telmex</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="username"
+							th:text="#{parametros.acesso.simultaneo}">Acesso
+							Simultaneo: </label>
+					</div>
+					<div class="col-sm-1 form-group">
+						<select class="form-control input-sm" id="nivelEscalonamento"
+							th:field="*{nivelEscalonamento}" required>
+							<option value="">Não</option>
+							<option value="">Sim</option>
+						</select>
+					</div>
+				</div>
+
+
+				<div class="form-group buttonsGroup">
+					<button class="pui-button" type="submit">
+						<label th:text="#{botao.cadastrar}"></label>
+					</button>
+					<a class="pui-button" th:href="@{'/usuarioCadastro'}"> <label
+						th:text="#{botao.limpar}"></label>
+					</a>
+				</div>
+
+			</form>
+		</div>
+
+	</div>
+
+	<div layout:fragment="javascript-support">
+		<script type="text/javascript" src="../../resources/js/jquery.mask.js"
+			th:src="@{/resources/js/jquery.mask.js}"></script>
+
+		<script>
+			$(function (){
+			  	var sourceData = [(${grupoPerfisSourceJSON})];
+			  	var targetData = [(${grupoPerfisTargetJSON})];
+				$('#listaGrupoPerfil').puipicklist({
+			        sourceCaption: 'Disponíveis',
+			        targetCaption: 'Selecionados',
+			        filter: true,
+			        filterMatchMode: 'contains',
+			        sourceData: sourceData,
+			        targetData: targetData,
+			        reponsive: true,
+				});
+				
+				$('#telefoneFixo').mask('(00) 0000-0000');
+				$('#telefone').mask('(00) 00000-0000');
+				$('#cpf').mask('999.999.999-99' );
+			});
+			
+		</script>
+	</div>
+
+</body>
+</html>
