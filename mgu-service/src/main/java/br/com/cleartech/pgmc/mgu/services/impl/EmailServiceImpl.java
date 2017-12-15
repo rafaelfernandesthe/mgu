@@ -1,18 +1,9 @@
 package br.com.cleartech.pgmc.mgu.services.impl;
 
-import java.util.Date;
-
-import javax.annotation.Resource;
-import javax.mail.Address;
-import javax.mail.MessagingException;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMessage.RecipientType;
-
-import org.jboss.logging.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import br.com.cleartech.pgmc.mgu.dtos.EmailDTO;
@@ -25,11 +16,11 @@ public class EmailServiceImpl implements EmailService {
 
 	private static final Logger logger = LoggerFactory.getLogger( EmailServiceImpl.class );
 
-	@Resource( mappedName = "java:jboss/mail/HP" )
-	private javax.mail.Session mailSession;
+	@Autowired
+	private JavaMailSender javaMailsSender;
 
 	@Override
-	public void enviaByUsuarioAndAssunto( Usuario usuario, AssuntoEnum assunto ) throws MessagingException {
+	public void enviaByUsuarioAndAssunto( Usuario usuario, AssuntoEnum assunto ) {
 		StringBuilder corpoEmail = new StringBuilder( getEmailHeader() );
 		String cabecalho = null;
 		switch ( assunto ) {
@@ -42,21 +33,22 @@ public class EmailServiceImpl implements EmailService {
 		}
 
 		EmailDTO email = new EmailDTO( usuario.getDcEmail(), cabecalho, corpoEmail.toString() );
-		sendEmail( email );
+		// sendEmail( email );
 	}
 
-	private void sendEmail( EmailDTO email ) throws MessagingException {
-		logger.debug( "Enviando email para {}", email.getDestinatario() );
-		MimeMessage message = new MimeMessage( mailSession );
-		Address[] to = new InternetAddress[] { new InternetAddress( email.getDestinatario() ) };
-		message.setRecipients( RecipientType.TO, to );
-		message.setSubject( email.getCabecalho() );
-		message.setSentDate( new Date() );
-		message.setContent( email.getConteudo(), "text/html" );
-		Transport.send( message );
-		logger.debug( "Email enviado para {}", email.getDestinatario() );
-
-	}
+	// private void sendEmail( EmailDTO email ) throws MessagingException {
+	// logger.debug( "Enviando email para {}", email.getDestinatario() );
+	// MimeMessage message = new MimeMessage( mailSession );
+	// Address[] to = new InternetAddress[] { new InternetAddress(
+	// email.getDestinatario() ) };
+	// message.setRecipients( RecipientType.TO, to );
+	// message.setSubject( email.getCabecalho() );
+	// message.setSentDate( new Date() );
+	// message.setContent( email.getConteudo(), "text/html" );
+	// Transport.send( message );
+	// logger.debug( "Email enviado para {}", email.getDestinatario() );
+	//
+	// }
 
 	private String getEmailHeader() {
 		StringBuilder emailHeader = new StringBuilder();

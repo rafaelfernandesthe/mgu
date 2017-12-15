@@ -34,65 +34,61 @@ public class DynamicsServiceImpl implements DynamicsService {
 	private ParametrizacaoService parametrizacaoService;
 
 	@Override
-	public DadosRetorno criarUsuario( Usuario usuario ) throws JAXBException {
+	public DadosRetorno criarUsuario( Usuario usuario ) throws Exception {
 		JGet.tryUrl( getEndpoint() );
-		try {
-			DadosUsuarioPgmc d = new DadosUsuarioPgmc();
 
-			JAXBContext context = JAXBContext.newInstance( "br.com.cleartech.pgmc.mgu.wsdl.dynamics" );
-			Marshaller marshaller = context.createMarshaller();
-			JAXBElement<String> cpf = new ObjectFactory().createDadosUsuarioPgmcCpf( FormatterUtils.format( FormatterUtils.CPF, usuario.getNuCpf().replace( ".", "" ).replace( "-", "" ) ) );
-			d.setCpf( cpf );
-			marshaller.marshal( cpf, System.out );
+		DadosUsuarioPgmc d = new DadosUsuarioPgmc();
 
-			JAXBElement<String> login = new ObjectFactory().createDadosUsuarioPgmcLogin( usuario.getDcUsername() );
-			marshaller.marshal( login, System.out );
-			d.setLogin( login );
+		JAXBContext context = JAXBContext.newInstance( "br.com.cleartech.pgmc.mgu.wsdl.dynamics" );
+		Marshaller marshaller = context.createMarshaller();
+		JAXBElement<String> cpf = new ObjectFactory().createDadosUsuarioPgmcCpf( FormatterUtils.format( FormatterUtils.CPF, usuario.getNuCpf().replace( ".", "" ).replace( "-", "" ) ) );
+		d.setCpf( cpf );
+		marshaller.marshal( cpf, System.out );
 
-			JAXBElement<String> nomeUsuario = new ObjectFactory().createDadosUsuarioPgmcNome( usuario.getNmUsuario() );
-			marshaller.marshal( nomeUsuario, System.out );
-			d.setNome( nomeUsuario );
+		JAXBElement<String> login = new ObjectFactory().createDadosUsuarioPgmcLogin( usuario.getDcUsername() );
+		marshaller.marshal( login, System.out );
+		d.setLogin( login );
 
-			JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadoras().get( 0 ).getNoPrestadora() );
-			marshaller.marshal( prest, System.out );
-			d.setNomePrestadora( prest );
+		JAXBElement<String> nomeUsuario = new ObjectFactory().createDadosUsuarioPgmcNome( usuario.getNmUsuario() );
+		marshaller.marshal( nomeUsuario, System.out );
+		d.setNome( nomeUsuario );
 
-			JAXBElement<String> tel = new ObjectFactory().createDadosUsuarioPgmcTelefoneCelular( usuario.getDcTelefone() );
-			marshaller.marshal( tel, System.out );
-			d.setTelefoneCelular( tel );
+		JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadoras().get( 0 ).getNoPrestadora() );
+		marshaller.marshal( prest, System.out );
+		d.setNomePrestadora( prest );
 
-			JAXBElement<String> telC = null;
-			if ( usuario.getDcTelefoneFixo() != null && !usuario.getDcTelefoneFixo().trim().equals( "" ) ) {
-				telC = new ObjectFactory().createDadosUsuarioPgmcTelefoneComercial( usuario.getDcTelefoneFixo() );
-				marshaller.marshal( telC, System.out );
-				d.setTelefoneComercial( telC );
-			} else {
-				telC = new ObjectFactory().createDadosUsuarioPgmcTelefoneComercial( usuario.getDcTelefone() );
-				marshaller.marshal( telC, System.out );
-				d.setTelefoneComercial( telC );
-			}
+		JAXBElement<String> tel = new ObjectFactory().createDadosUsuarioPgmcTelefoneCelular( usuario.getDcTelefone() );
+		marshaller.marshal( tel, System.out );
+		d.setTelefoneCelular( tel );
 
-			JAXBElement<String> email = new ObjectFactory().createDadosUsuarioPgmcEmail( usuario.getDcEmail() );
-			marshaller.marshal( email, System.out );
-			d.setEmail( email );
-
-			JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadoras().get( 0 ).getId() ) );
-			marshaller.marshal( spid, System.out );
-			d.setSpidPrestadora( spid );
-
-			URL url = new URL( UsuarioPgmc.class.getResource( "." ), getEndpoint() );
-
-			IUsuarioPgmc enviar = new UsuarioPgmc( url ).getBasicHttpBindingIUsuarioPgmc();
-
-			return enviar.cadastrar( d );
-		} catch ( MalformedURLException e ) {
-			e.printStackTrace();
+		JAXBElement<String> telC = null;
+		if ( usuario.getDcTelefoneFixo() != null && !usuario.getDcTelefoneFixo().trim().equals( "" ) ) {
+			telC = new ObjectFactory().createDadosUsuarioPgmcTelefoneComercial( usuario.getDcTelefoneFixo() );
+			marshaller.marshal( telC, System.out );
+			d.setTelefoneComercial( telC );
+		} else {
+			telC = new ObjectFactory().createDadosUsuarioPgmcTelefoneComercial( usuario.getDcTelefone() );
+			marshaller.marshal( telC, System.out );
+			d.setTelefoneComercial( telC );
 		}
-		return null;
+
+		JAXBElement<String> email = new ObjectFactory().createDadosUsuarioPgmcEmail( usuario.getDcEmail() );
+		marshaller.marshal( email, System.out );
+		d.setEmail( email );
+
+		JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadoras().get( 0 ).getId() ) );
+		marshaller.marshal( spid, System.out );
+		d.setSpidPrestadora( spid );
+
+		URL url = new URL( UsuarioPgmc.class.getResource( "." ), getEndpoint() );
+
+		IUsuarioPgmc enviar = new UsuarioPgmc( url ).getBasicHttpBindingIUsuarioPgmc();
+
+		return enviar.cadastrar( d );
 	}
 
 	@Override
-	public void alterar( Usuario usuario, boolean removerAcesso ) throws JAXBException {
+	public void alterar( Usuario usuario, boolean removerAcesso ) throws JAXBException, Exception {
 		JGet.tryUrl( getEndpoint() );
 		try {
 			DadosUsuarioPgmc d = new DadosUsuarioPgmc();
@@ -158,7 +154,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 	}
 
 	@Override
-	public void desativarUsuario( String login, String email ) {
+	public void desativarUsuario( String login, String email ) throws Exception {
 		JGet.tryUrl( getEndpoint() );
 		try {
 			URL url = new URL( UsuarioPgmc.class.getResource( "." ), getEndpoint() );
@@ -170,7 +166,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 
 	}
 
-	private String getEndpoint(){
+	private String getEndpoint() {
 		return "http://10.200.21.3:8091/UsuarioPgmc.svc?wsdl"; // LOCAL
 		// return parametrizacaoService.findByDcParametro(
 		// ParametrizacaoEnum.DYNAMICS_URL.getDcParametro() );
