@@ -39,7 +39,7 @@ public class MguDomainApplication {
 		jpaProperties.setProperty( "org.hibernate.envers.revision_field_name", "CD_REVISAO" );
 		jpaProperties.setProperty( "org.hibernate.envers.revision_type_field_name", "CD_TIPO_REVISAO" );
 		jpaProperties.setProperty( "hibernate.dialect", "org.hibernate.dialect.OracleDialect" );
-		jpaProperties.setProperty( "hibernate.show_sql", "false" );
+		jpaProperties.setProperty( "hibernate.show_sql", "true" );
 		jpaProperties.setProperty( "hibernate.format_sql", "true" );
 		jpaProperties.setProperty( "hibernate.hbm2ddl.auto", "none" );
 

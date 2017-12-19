@@ -182,6 +182,9 @@ public class Usuario implements Serializable {
 	// Utilizado no envio de e-mail
 	private String senhaSemMD5;
 
+	@Transient
+	private Boolean usuarioLogado = false;
+
 	public Usuario() {}
 
 	public boolean getFlEnviarDynamics() {
@@ -460,6 +463,14 @@ public class Usuario implements Serializable {
 
 	public void setGrupos( GrupoPrestadora grupos ) {
 		this.grupos = grupos;
+	}
+
+	public Boolean getUsuarioLogado() {
+		return usuarioLogado;
+	}
+
+	public void setUsuarioLogado( Boolean usuarioLogado ) {
+		this.usuarioLogado = usuarioLogado;
 	}
 
 	@Override

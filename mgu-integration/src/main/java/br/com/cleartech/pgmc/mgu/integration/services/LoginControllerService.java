@@ -76,7 +76,6 @@ public class LoginControllerService {
 	private LoginControllerService loginControllerService;
 
 	public Object processarLoginIntegracao( Usuario usuarioRequest ) throws Exception {
-		boolean usuarioLogado = false;
 		Boolean valido = ldapService.existeUsuario( usuarioRequest.getDcUsername(), usuarioRequest.getDcSenha() );
 		String sistemaUsuario = usuarioRequest.getSistema();
 		Usuario usuario = usuarioService.findByUsername( usuarioRequest.getDcUsername() );
@@ -96,15 +95,15 @@ public class LoginControllerService {
 				}
 
 				if ( usuario.getFlUsuarioSistema().equals( 1 ) ) {
-					return loginAgrupadoResponse( usuario, perfis, sistemaUsuario, usuarioLogado );
+					return loginAgrupadoResponse( usuario, perfis, sistemaUsuario, usuario.getUsuarioLogado() );
 				}
 
-				mguResponse = responseValidaParametroSistema( usuarioLogado, sistemaUsuario, usuario, perfis );
+				mguResponse = responseValidaParametroSistema( sistemaUsuario, usuario, perfis );
 				if ( mguResponse != null ) {
 					return mguResponse;
 				}
 
-				return loginResponse( usuario, perfis, sistemaUsuario, usuarioLogado );
+				return loginResponse( usuario, perfis, sistemaUsuario, usuario.getUsuarioLogado() );
 
 			} else {
 				// USUARIO_BLOQUEADO
@@ -122,7 +121,6 @@ public class LoginControllerService {
 	}
 
 	public Object processarLoginIntegracaoPerfil( Usuario usuarioRequest ) throws Exception {
-		boolean usuarioLogado = false;
 		Boolean valido = ldapService.existeUsuario( usuarioRequest.getDcUsername(), usuarioRequest.getDcSenha() );
 		String sistemaUsuario = usuarioRequest.getSistema();
 		Usuario usuario = usuarioService.findByUsername( usuarioRequest.getDcUsername() );
@@ -142,7 +140,7 @@ public class LoginControllerService {
 					perfisUsuario.add( perfil );
 				}
 
-				return loginAgrupadoResponse( usuario, perfisUsuario, sistemaUsuario, usuarioLogado );
+				return loginAgrupadoResponse( usuario, perfisUsuario, sistemaUsuario, usuario.getUsuarioLogado() );
 			}
 
 			if ( usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_NAO ) ) {
@@ -164,15 +162,15 @@ public class LoginControllerService {
 					Prestadora prestadora = usuario.getPrestadoras().get( 0 );
 					perfis = new ArrayList<PerfilDTO>();
 					perfis.add( new PerfilDTO( administrador.getId(), administrador.getDcPerfil(), prestadora.getId(), prestadora.getNoPrestadora() ) );
-					return loginAgrupadoResponse( usuario, perfis, sistemaUsuario, usuarioLogado );
+					return loginAgrupadoResponse( usuario, perfis, sistemaUsuario, usuario.getUsuarioLogado() );
 				}
 
-				mguResponse = responseValidaParametroSistema( usuarioLogado, sistemaUsuario, usuario, perfis );
+				mguResponse = responseValidaParametroSistema( sistemaUsuario, usuario, perfis );
 				if ( mguResponse != null ) {
 					return mguResponse;
 				}
 
-				return loginAgrupadoResponse( usuario, perfis, sistemaUsuario, usuarioLogado );
+				return loginAgrupadoResponse( usuario, perfis, sistemaUsuario, usuario.getUsuarioLogado() );
 
 			} else {
 				// USUARIO_BLOQUEADO
@@ -222,7 +220,7 @@ public class LoginControllerService {
 		return null;
 	}
 
-	private Object responseValidaParametroSistema( boolean usuarioLogado, String sistemaUsuario, Usuario usuario, List<PerfilDTO> perfis ) {
+	private Object responseValidaParametroSistema( String sistemaUsuario, Usuario usuario, List<PerfilDTO> perfis ) {
 		ParametroSistema parametroSistema = parametroSistemaService.findByGrupoPrestadoraId( usuario.getPrestadoras().get( 0 ).getGrupoPrestadora().getId() );
 
 		if ( parametroSistema != null ) {
@@ -255,7 +253,8 @@ public class LoginControllerService {
 
 			try {
 				if ( parametroSistema.getFlAcessoSimultaneo().equals( 0 ) ) {
-					usuarioLogado = acessoSimultaneoService.existsByUsername( usuario.getDcUsername() );
+					boolean usuarioLogado = acessoSimultaneoService.existsByUsername( usuario.getDcUsername() );
+					usuario.setUsuarioLogado( usuarioLogado );
 					acessoSimultaneoService.salvarByUsuario( usuario );
 				}
 			} catch ( Exception e ) {

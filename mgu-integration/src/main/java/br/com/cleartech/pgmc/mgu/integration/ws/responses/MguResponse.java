@@ -25,6 +25,12 @@ public class MguResponse {
 	@XmlElement( name = "perfil" )
 	private List<Perfil> perfis;
 
+	@XmlElement( name = "dados" )
+	private String dados;
+
+	@XmlElement( name = "idPerfil" )
+	private Long idPerfil;
+
 	public Integer getRetorno() {
 		return retorno;
 	}
@@ -59,6 +65,22 @@ public class MguResponse {
 
 	public void addPerfil( Perfil p ) {
 		this.perfis.add( p );
+	}
+
+	public String getDados() {
+		return dados;
+	}
+
+	public void setDados( String dados ) {
+		this.dados = dados;
+	}
+
+	public Long getIdPerfil() {
+		return idPerfil;
+	}
+
+	public void setIdPerfil( Long idPerfil ) {
+		this.idPerfil = idPerfil;
 	}
 
 }

@@ -12,6 +12,10 @@ public class XmlUtils {
 
 	public static String cdataWrapper( Object value ) {
 
+		if ( value == null ) {
+			return null;
+		}
+
 		if ( StringUtils.isEmpty( value ) ) {
 			return String.valueOf( value );
 		}

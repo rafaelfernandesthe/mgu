@@ -7,20 +7,24 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cleartech.pgmc.mgu.dtos.PerfilDTO;
+import br.com.cleartech.pgmc.mgu.entities.AcessoOperadora;
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
 import br.com.cleartech.pgmc.mgu.entities.PerfilAcessoOperadora;
 import br.com.cleartech.pgmc.mgu.entities.Prestadora;
 import br.com.cleartech.pgmc.mgu.entities.Sistema;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.TipoOperadora;
+import br.com.cleartech.pgmc.mgu.repositories.AcessoOperadoraRepository;
 import br.com.cleartech.pgmc.mgu.repositories.PerfilRepository;
 import br.com.cleartech.pgmc.mgu.repositories.UsuarioRepository;
 import br.com.cleartech.pgmc.mgu.services.ParametrizacaoService;
 import br.com.cleartech.pgmc.mgu.services.PerfilService;
 
 @Service
+@Transactional
 public class PerfilServiceImpl implements PerfilService {
 
 	@Autowired
@@ -31,6 +35,9 @@ public class PerfilServiceImpl implements PerfilService {
 
 	@Autowired
 	private ParametrizacaoService parametrizacaoService;
+
+	@Autowired
+	private AcessoOperadoraRepository acessoOperadoraRepository;
 
 	@Override
 	public List<Perfil> findByPrestadora( Long idPrestadora ) {
@@ -75,7 +82,45 @@ public class PerfilServiceImpl implements PerfilService {
 
 	@Override
 	public Perfil findByDcPerfilAndSistemaDcSistema( String perfil, String sistema ) {
-		return perfilRepository.findByDcPerfilAndSistemaDcSistema( perfil, sistema );
+		return perfilRepository.findByDcPerfilAndSistema( perfil, sistema );
 	}
 
+	@Override
+	public Perfil criarPerfil( String nomePerfil, Sistema sistema ) {
+		Perfil perfil = new Perfil();
+		perfil.setDcPerfil( nomePerfil );
+		String descr = nomePerfil + " (Criado pelo sistema " + sistema.getDcSistema().trim() + ")";
+		if ( descr.length() > 50 ) {
+			descr = descr.substring( 0, 50 );
+		}
+		perfil.setDcDescricao( descr );
+		perfil.setSistema( sistema );
+		return perfilRepository.save( perfil );
+	}
+
+	@Override
+	public Perfil criarPerfiOperadora( String nomePerfil, Sistema sistema, List<TipoOperadora> tipoOperadoras ) {
+		Perfil perfil = criarPerfil( nomePerfil, sistema );
+
+		for ( TipoOperadora tipoOperadora : tipoOperadoras ) {
+			AcessoOperadora acessoOperadora = acessoOperadoraRepository.findByTipoOperadora( tipoOperadora );
+			PerfilAcessoOperadora perfilAcessoOperadora = new PerfilAcessoOperadora();
+			perfilAcessoOperadora.setPerfil( perfil );
+			perfilAcessoOperadora.setAcessoOperadora( acessoOperadora );
+			perfil.getPerfilAcessoOperadoras().add( perfilAcessoOperadora );
+		}
+		return perfilRepository.save( perfil );
+	}
+
+
+	@Override
+	public boolean deletarPerfil( String nomePerfil, String sistema ) {
+		Perfil perfil = perfilRepository.findByDcPerfilAndSistema( nomePerfil, sistema );
+		if ( perfil != null ) {
+			perfilRepository.delete( perfil );
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

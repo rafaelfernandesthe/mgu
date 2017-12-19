@@ -9,7 +9,7 @@ public interface UsuarioService {
 	
 	Usuario findByUsername( String username );
 
-	boolean existsByUsername( String username );
+	boolean existsByUsernameIgnoreCase( String username );
 
 	Usuario findUsuarioMasterByUsernameAndIdPrestadora( String username, Long idPrestadora );
 

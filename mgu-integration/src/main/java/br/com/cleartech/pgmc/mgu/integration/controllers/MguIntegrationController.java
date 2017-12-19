@@ -20,19 +20,23 @@ import br.com.cleartech.pgmc.mgu.entities.Sistema;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 import br.com.cleartech.pgmc.mgu.enums.CodigoMensagem;
+import br.com.cleartech.pgmc.mgu.enums.TipoOperadora;
 import br.com.cleartech.pgmc.mgu.exceptions.DynamicsException;
 import br.com.cleartech.pgmc.mgu.exceptions.LdapException;
 import br.com.cleartech.pgmc.mgu.exceptions.MguException;
 import br.com.cleartech.pgmc.mgu.integration.services.LoginControllerService;
 import br.com.cleartech.pgmc.mgu.integration.utils.ResponseUtils;
 import br.com.cleartech.pgmc.mgu.integration.ws.requests.LogoutRequest;
-import br.com.cleartech.pgmc.mgu.integration.ws.requests.PerfilOperadoraBean;
+import br.com.cleartech.pgmc.mgu.integration.ws.requests.PerfilOperadoraRequest;
 import br.com.cleartech.pgmc.mgu.integration.ws.requests.PerfilRequest;
+import br.com.cleartech.pgmc.mgu.integration.ws.requests.TipoOperadoraBean;
 import br.com.cleartech.pgmc.mgu.integration.ws.requests.UsuarioMasterRequest;
 import br.com.cleartech.pgmc.mgu.integration.ws.responses.MguResponse;
+import br.com.cleartech.pgmc.mgu.services.AcessoSimultaneoService;
 import br.com.cleartech.pgmc.mgu.services.LdapService;
 import br.com.cleartech.pgmc.mgu.services.PerfilService;
 import br.com.cleartech.pgmc.mgu.services.PrestadoraService;
+import br.com.cleartech.pgmc.mgu.services.SistemaService;
 import br.com.cleartech.pgmc.mgu.services.UsuarioService;
 import br.com.cleartech.pgmc.mgu.utils.XmlUtils;
 
@@ -56,6 +60,12 @@ public class MguIntegrationController {
 
 	@Autowired
 	private UsuarioService usuarioService;
+
+	@Autowired
+	private AcessoSimultaneoService acessoSimultaneoService;
+
+	@Autowired
+	private SistemaService sistemaService;
 
 	@GetMapping( "/status" )
 	public Object status() {
@@ -129,7 +139,7 @@ public class MguIntegrationController {
 
 				usuario.getPrestadoras().add( prestadora );
 
-				Boolean valor = usuarioService.existsByUsername( usuario.getDcUsername() );
+				Boolean valor = usuarioService.existsByUsernameIgnoreCase( usuario.getDcUsername() );
 				if ( valor ) {
 					return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_5 );
 				}
@@ -169,7 +179,7 @@ public class MguIntegrationController {
 
 			try {
 
-				if ( ldapService.existeUsuario( usuarioMasterNovoRequest.getUserName() ) || usuarioService.existsByUsername( usuarioMasterNovoRequest.getUserName() ) ) {
+				if ( ldapService.existeUsuario( usuarioMasterNovoRequest.getUserName() ) || usuarioService.existsByUsernameIgnoreCase( usuarioMasterNovoRequest.getUserName() ) ) {
 					return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_5 );
 				}
 			} catch ( LdapException e ) {
@@ -200,7 +210,6 @@ public class MguIntegrationController {
 		return mguResponse;
 	}
 
-
 	@PostMapping( "/aprovarusuario" )
 	public Object aprovarUsuario( @RequestBody UsuarioMasterRequest usuarioMasterRequest ) throws Exception {
 		Object mguResponse = null;
@@ -220,65 +229,67 @@ public class MguIntegrationController {
 	}
 
 	@PostMapping( "/logout" )
-	public String logout( @RequestBody LogoutRequest logoutBean ) throws Exception {
-		return null;
+	public Object logout( @RequestBody LogoutRequest logoutRequest ) throws Exception {
+		acessoSimultaneoService.deletarByUsername( logoutRequest.getUsuario() );
 
+		MguResponse mguResponse = new MguResponse();
+		mguResponse.setRetorno( 0 );
+		mguResponse.setDescricao( XmlUtils.cdataWrapper( "Usuário " + logoutRequest.getUsuario() + " efetuou o logout com sucesso!" ) );
+
+		return mguResponse;
 	}
 
 	@PostMapping( "/consultaUsuario" )
-	public String consultaUsuario( @RequestBody UsuarioMasterRequest usuarioMaster ) throws Exception {
-		return null;
+	public Object consultaUsuario( @RequestBody UsuarioMasterRequest usuarioMasterRequest ) throws Exception {
+		boolean usuarioExiste = usuarioService.existsByUsernameIgnoreCase( usuarioMasterRequest.getUserName() );
+		MguResponse mguResponse = new MguResponse();
+		if ( usuarioExiste ) {
+			mguResponse.setRetorno( 0 );
+			mguResponse.setDescricao( XmlUtils.cdataWrapper( usuarioMasterRequest.getUserName() + " existe no banco de dados!" ) );
+		} else {
+			mguResponse.setRetorno( 1 );
+			mguResponse.setDescricao( XmlUtils.cdataWrapper( usuarioMasterRequest.getUserName() + " não existe no banco de dados!" ) );
+		}
+		return mguResponse;
 
 	}
 
 	@PostMapping( "/criarperfil" )
-	public String criarPerfil( @RequestBody PerfilRequest perfil ) throws Exception {
-		return null;
-
+	public Object criarPerfil( @RequestBody PerfilRequest perfilRequest ) throws Exception {
+		Sistema sistema = sistemaService.findByDcSistemaIgnoreCase( perfilRequest.getSistema().getNome() );
+		if ( sistema != null ) {
+			perfilService.criarPerfil( perfilRequest.getNome(), sistema );
+			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_10 );
+		} else {
+			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_19 );
+		}
 	}
 
-	/**
-	 * Cria um perfil com os tipos de operadoras definidos
-	 * 
-	 * @param perfilOperadora
-	 * @return XML
-	 * @throws Exception
-	 */
 	@PostMapping( "/criarperfiloperadora" )
-	public String criarPerfilOperadora( @RequestBody PerfilOperadoraBean perfilOperadora ) throws Exception {
-		return null;
+	public Object criarPerfilOperadora( @RequestBody PerfilOperadoraRequest perfilOperadoraRequest ) throws Exception {
+		Sistema sistema = sistemaService.findByDcSistemaIgnoreCase( perfilOperadoraRequest.getSistema().getNome() );
+		if ( sistema != null ) {
+			List<TipoOperadora> tipoOperadoras = new ArrayList<TipoOperadora>();
+			for ( TipoOperadoraBean tipo : perfilOperadoraRequest.getTipoOperadoras() ) {
+				tipoOperadoras.add( TipoOperadora.valueOf( tipo.getNome() ) );
+			}
+			Perfil perfil = perfilService.criarPerfiOperadora( perfilOperadoraRequest.getNome(), sistema, tipoOperadoras );
+			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_10, perfil.getId() );
+		} else {
+			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_19 );
+		}
 
 	}
 
 	@PostMapping( "/deletarperfil" )
-	public String deletarPerfil( @RequestBody PerfilRequest perfil ) throws Exception {
-		return null;
+	public Object deletarPerfil( @RequestBody PerfilRequest perfilRequest ) throws Exception {
+		boolean deletado = perfilService.deletarPerfil( perfilRequest.getNome(), perfilRequest.getSistema().getNome() );
+		if ( deletado ) {
+			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_11 );
+		} else {
+			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_13 );
+		}
 
-	}
-
-	private static String retornaMensagem( CodigoMensagem codigo, String complemento ) {
-		StringBuilder ret = new StringBuilder();
-		ret.append( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
-		ret.append( "<mgu><retorno>" );
-		ret.append( codigo.getCodigo() );
-		ret.append( "</retorno><descricao>" );
-		// ret.append( XmlUtils.cdataWrapper( codigo.getDescricao() + "\n" +
-		// complemento ) );
-		ret.append( "</descricao></mgu>" );
-		return ret.toString();
-	}
-
-	private static String retornaMensagemIdPerfil( CodigoMensagem codigo, Long idPerfil ) {
-		StringBuilder ret = new StringBuilder();
-		ret.append( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
-		ret.append( "<mgu><retorno>" );
-		ret.append( codigo.getCodigo() );
-		ret.append( "</retorno><dados>" );
-		// ret.append( XmlUtils.cdataWrapper( codigo.getDescricao() ) );
-		ret.append( "</dados><idPerfil>" );
-		ret.append( idPerfil );
-		ret.append( "</idPerfil></mgu>" );
-		return ret.toString();
 	}
 
 }

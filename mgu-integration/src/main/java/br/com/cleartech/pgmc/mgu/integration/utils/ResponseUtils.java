@@ -8,19 +8,23 @@ public class ResponseUtils {
 
 
 	public static Object mguResponse( CodigoMensagem codigo ) {
-		return response( codigo, codigo.getDescricao() );
+		return response( codigo, codigo.getDescricao(), null, null );
+	}
+
+	public static Object mguResponse( CodigoMensagem codigo, Long idPerfil ) {
+		return response( codigo, null, codigo.getDescricao(), idPerfil );
 	}
 
 	public static Object mguResponse( CodigoMensagem codigo, String complemento ) {
-		return response( codigo, codigo.getDescricao() + "\n" + complemento );
+		return response( codigo, codigo.getDescricao() + "\n" + complemento, null, null );
 	}
 
-	private static Object response( CodigoMensagem codigo, Object descricao ) {
-		MguResponse mguResposta = new MguResponse();
-		mguResposta.setRetorno( codigo.getCodigo() );
-		if ( descricao != null ) {
-			mguResposta.setDescricao( XmlUtils.cdataWrapper( descricao ) );
-		}
-		return mguResposta;
+	private static Object response( CodigoMensagem codigo, Object descricao, String dados, Long idPerfil ) {
+		MguResponse mguResponse = new MguResponse();
+		mguResponse.setRetorno( codigo.getCodigo() );
+		mguResponse.setDescricao( XmlUtils.cdataWrapper( descricao ) );
+		mguResponse.setDados( XmlUtils.cdataWrapper( dados ) );
+		mguResponse.setIdPerfil( idPerfil );
+		return mguResponse;
 	}
 }

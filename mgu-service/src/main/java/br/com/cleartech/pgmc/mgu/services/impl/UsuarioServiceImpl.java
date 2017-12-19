@@ -74,7 +74,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
-	public boolean existsByUsername( String username ) {
+	public boolean existsByUsernameIgnoreCase( String username ) {
 		return usuarioRepository.findByUsernameIgnoreCase( username ) != null ? true : false;
 	}
 
