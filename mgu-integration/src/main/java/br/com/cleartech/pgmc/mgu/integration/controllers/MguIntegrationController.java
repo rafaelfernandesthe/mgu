@@ -104,8 +104,8 @@ public class MguIntegrationController {
 
 	@PostMapping( "/criarusuariomaster" )
 	public Object criarUsuarioMaster( @RequestBody UsuarioMasterRequest usuarioMaster ) {
-		Object mguResponse = null;
-		Usuario usuario = null;
+		Object mguResponse;
+		Usuario usuario;
 		Boolean existeUsuario;
 		if ( XmlUtils.contemCaracterEspecial( usuarioMaster.getUserName() ) ) {
 			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_27 );
@@ -154,14 +154,69 @@ public class MguIntegrationController {
 	}
 
 	@PostMapping( "/trocarusuariomaster" )
-	public String trocarUsuarioMaster( @RequestBody UsuarioMasterRequest usuarioMaster ) {
+	public Object trocarUsuarioMaster( @RequestBody UsuarioMasterRequest usuarioMasterNovoRequest ) {
+		Object mguResponse;
+		try {
 
-		return null;
+			if ( XmlUtils.contemCaracterEspecial( usuarioMasterNovoRequest.getUserName() ) ) {
+				return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_27 );
+			}
+
+			Prestadora prestadora = prestadoraService.findById( usuarioMasterNovoRequest.getIdPrestadora() );
+			if ( prestadora == null ) {
+				return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_6 );
+			}
+
+			try {
+
+				if ( ldapService.existeUsuario( usuarioMasterNovoRequest.getUserName() ) || usuarioService.existsByUsername( usuarioMasterNovoRequest.getUserName() ) ) {
+					return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_5 );
+				}
+			} catch ( LdapException e ) {
+				return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_6 );
+			}
+
+			Usuario usuarioMasterNovo = usuarioMasterNovoRequest.masterToUsuario();
+			usuarioMasterNovo.getPrestadoras().add( prestadora );
+			usuarioMasterNovo.setFlMaster( true );
+			usuarioMasterNovo.setFlBloqueio( BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO );
+			usuarioMasterNovo.setFlAprovado( true );
+
+			usuarioService.substituirUsuarioMaster( usuarioMasterNovo, usuarioMasterNovoRequest.getUserNameAnterior() );
+
+			mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_2 );
+
+		} catch ( LdapException e ) {
+			mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_33, e.getMessage() );
+		} catch ( DynamicsException e ) {
+			mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_34, e.getMessage() );
+		} catch ( MguException e ) {
+			mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_6, e.getMessage() );
+		} catch ( MessagingException e ) {
+			mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_2, e.getMessage() );
+		} catch ( Exception e ) {
+			mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_6 );
+		}
+		return mguResponse;
 	}
 
+
 	@PostMapping( "/aprovarusuario" )
-	public String aprovarUsuario( @RequestBody UsuarioMasterRequest usuarioMaster ) throws Exception {
-		return null;
+	public Object aprovarUsuario( @RequestBody UsuarioMasterRequest usuarioMasterRequest ) throws Exception {
+		Object mguResponse = null;
+		try {
+			Usuario usuario = usuarioService.findByUsername( usuarioMasterRequest.getUserName() );
+			if ( usuario != null ) {
+				usuario.setFlAprovado( true );
+				usuarioService.alteraBloqueioUsuario( usuario, BloqueioUsuario.BLOQUEADO_NAO, "rest" );
+				mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_3 );
+			} else {
+				mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_7 );
+			}
+		} catch ( MessagingException e ) {
+			mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_3, e.getMessage() );
+		}
+		return mguResponse;
 	}
 
 	@PostMapping( "/logout" )

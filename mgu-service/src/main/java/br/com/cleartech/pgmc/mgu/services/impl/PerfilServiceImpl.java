@@ -55,7 +55,7 @@ public class PerfilServiceImpl implements PerfilService {
 	@Override
 	public List<PerfilDTO> findPerfisMasterByUsernameAndSistema( String username, String sistema ) {
 		List<Perfil> perfis = perfilRepository.findPerfisMasterByUsernameAndSistema( username, sistema );
-		Usuario usuario = usuarioRepository.findByDcUsername( username );
+		Usuario usuario = usuarioRepository.findByUsername( username );
 
 		Set<PerfilDTO> perfisDTO = new HashSet<PerfilDTO>();
 		for ( Prestadora prestadora : usuario.getPrestadoras() ) {

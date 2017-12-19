@@ -8,13 +8,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.BaseLdapPathContextSource;
 import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager;
+import org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy;
+import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
+import org.springframework.transaction.interceptor.TransactionProxyFactoryBean;
+
+import br.com.cleartech.pgmc.mgu.services.LdapService;
+import br.com.cleartech.pgmc.mgu.services.impl.LdapServiceImpl;
+import br.com.cleartech.pgmc.mgu.services.impl.UsuarioServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -78,9 +85,45 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	//@formatter:on
 	}
 
+	// @Bean
+	// public TransactionAwareContextSourceProxy
+	// transactionAwareContextSourceProxy() {
+	// return new TransactionAwareContextSourceProxy( ldapContextSource() );
+	// }
+
+	// @Bean
+	// public ContextSourceTransactionManager transactionManager() {
+	// ContextSourceTransactionManager transactionManager = new
+	// ContextSourceTransactionManager();
+	// transactionManager.setRenamingStrategy( new
+	// DefaultTempEntryRenamingStrategy() );
+	// transactionManager.setContextSource( ldapContextSource() );
+	// return transactionManager;
+	// }
+
 	@Bean
 	public LdapTemplate ldapTemplate() {
 		return new LdapTemplate( ldapContextSource() );
 	}
+
+	// @Bean
+	// public TransactionProxyFactoryBean dataAcessObject() {
+	// TransactionProxyFactoryBean transactionFactory = new
+	// TransactionProxyFactoryBean();
+	// transactionFactory.setTarget( ldapService() );
+	// transactionFactory.setTransactionManager( transactionManager() );
+	// // Properties prop = new Properties();
+	// // prop.put( "*", "PROPAGATION_REQUIRED" );
+	// //
+	// // transactionFactory.setTransactionAttributes( prop );
+	// transactionFactory.setTransactionAttributeSource( new
+	// AnnotationTransactionAttributeSource() );
+	// return transactionFactory;
+	// }
+	//
+	// @Bean
+	// public LdapService ldapService() {
+	// return new LdapServiceImpl();
+	// }
 
 }

@@ -158,14 +158,9 @@ public class DynamicsServiceImpl implements DynamicsService {
 	@Override
 	public void desativarUsuario( String login, String email ) throws Exception {
 		JGet.tryUrl( getEndpoint() );
-		try {
-			URL url = new URL( UsuarioPgmc.class.getResource( "." ), getEndpoint() );
-			IUsuarioPgmc enviar = new UsuarioPgmc( url ).getBasicHttpBindingIUsuarioPgmc();
-			enviar.desativar( login, email );
-		} catch ( MalformedURLException e ) {
-			e.printStackTrace();
-		}
-
+		URL url = new URL( UsuarioPgmc.class.getResource( "." ), getEndpoint() );
+		IUsuarioPgmc enviar = new UsuarioPgmc( url ).getBasicHttpBindingIUsuarioPgmc();
+		enviar.desativar( login, email );
 	}
 
 	private String getEndpoint() {

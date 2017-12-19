@@ -1,6 +1,9 @@
 package br.com.cleartech.pgmc.mgu.services.impl;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -10,14 +13,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
+import br.com.cleartech.pgmc.mgu.entities.LogSenhaUsuario;
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.AssuntoEnum;
+import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
 import br.com.cleartech.pgmc.mgu.enums.StatusDynamics;
 import br.com.cleartech.pgmc.mgu.exceptions.DynamicsException;
 import br.com.cleartech.pgmc.mgu.exceptions.LdapException;
 import br.com.cleartech.pgmc.mgu.exceptions.MguException;
+import br.com.cleartech.pgmc.mgu.repositories.LogSenhaUsuarioRepository;
 import br.com.cleartech.pgmc.mgu.repositories.UsuarioRepository;
 import br.com.cleartech.pgmc.mgu.services.DynamicsService;
 import br.com.cleartech.pgmc.mgu.services.EmailService;
@@ -54,6 +60,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Autowired
 	private EmailService emailService;
 
+	@Autowired
+	private LogSenhaUsuarioRepository logSenhaUsuarioRepository;
+
 	@Override
 	public Usuario salvar( Usuario usuario ) {
 		return usuarioRepository.save( usuario );
@@ -61,16 +70,21 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Override
 	public Usuario findByUsername( String username ) {
-		return usuarioRepository.findByDcUsername( username );
+		return usuarioRepository.findByUsername( username );
 	}
 
 	@Override
 	public boolean existsByUsername( String username ) {
-		return usuarioRepository.findByDcUsername( username ) != null ? true : false;
+		return usuarioRepository.findByUsernameIgnoreCase( username ) != null ? true : false;
 	}
 
 	@Override
-	public Usuario salvarUsuarioMaster( Usuario usuario ) throws Exception {
+	public Usuario findUsuarioMasterByUsernameAndIdPrestadora( String username, Long idPrestadora ) {
+		return usuarioRepository.findUsuarioMasterByUsernameAndIdPrestadora( username, idPrestadora );
+	}
+
+	@Override
+	public void salvarUsuarioMaster( Usuario usuario ) throws Exception {
 		String senha = GeradorSenha.getRandomPassword( 8 );
 		usuario.setDcSenha( GeradorSenha.md5( senha ) );
 		usuarioRepository.save( usuario );
@@ -78,6 +92,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		try {
 			ldapService.createMasterUser( usuario.getDcUsername(), usuario.getDcSenha() );
 		} catch ( Exception e ) {
+			e.printStackTrace();
 			throw new LdapException( "LDAP ERRO: Não Foi possivel criar o usuario \"" + usuario.getDcUsername() + "\"" );
 		}
 
@@ -108,10 +123,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 			usuario.setSenhaSemMD5( senha );
 			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.CRIAR_USUARIO );
 		} catch ( Exception e ) {
-			throw new MessagingException( "MGU ALERTA: Usuário criado com sucesso, porem não foi possível enviar a senha para o e-mail \"" + usuario.getDcEmail() + "\" , favor entrar em contato com a central de serviços para solicitar a senha de acesso do usuário \"" + usuario.getDcUsername() + "\"\n\n" );
+			throw new MessagingException( "MGU ALERTA: Usuário criado com sucesso porém não foi possível enviar a senha para o e-mail \"" + usuario.getDcEmail() + "\", favor entrar em contato com a central de serviços para solicitar a senha de acesso do usuário \"" + usuario.getDcUsername() + "\"\n\n" );
 		}
 
-		return null;
 	}
 
 	private boolean existsPerfilDynamics( Usuario usuario ) {
@@ -133,6 +147,78 @@ public class UsuarioServiceImpl implements UsuarioService {
 		}
 
 		return mensagem;
+	}
+
+	@Override
+	public void substituirUsuarioMaster( Usuario usuarioMasterNovo, String usernameAnterior ) throws Exception {
+		// Atribuindo o perfil do usuário antigo para o novo e excluindo o
+		// perfil do antigo.
+		Usuario usuarioMasterAntigo = findUsuarioMasterByUsernameAndIdPrestadora( usernameAnterior, usuarioMasterNovo.getPrestadoras().get( 0 ).getId() );
+		if ( usuarioMasterAntigo != null ) {
+			// usuario novo deve assumir mesmo valor de fl_aprovado do
+			// usuario antigo
+			usuarioMasterNovo.setFlAprovado( usuarioMasterAntigo.getFlAprovado() );
+
+			usuarioMasterNovo.getGrupoPerfis().addAll( new ArrayList<GrupoPerfil>( usuarioMasterAntigo.getGrupoPerfis() ) );
+
+			// usuarioXGrupoPerfilService.deletarPorUsuario( usuarioMasterAntigo
+			bloquear( usuarioMasterAntigo, true );
+		}
+
+		usuarioMasterNovo.setFlMaster( true );
+		usuarioMasterNovo.setFlBloqueio( BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO );
+		salvarUsuarioMaster( usuarioMasterNovo );
+
+	}
+
+	@Override
+	public void bloquear( Usuario usuario, boolean removerMaster ) throws Exception {
+		usuario.setFlEnviarDynamics( false );
+		usuario.setFlBloqueio( BloqueioUsuario.BLOQUEADO_ADM );
+		usuarioRepository.save( usuario );
+
+		try {
+			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
+			if ( dynamicsAtivo ) {
+				dynamicsService.desativarUsuario( usuario.getDcUsername(), usuario.getDcEmail() );
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new MguException( ERRO_CONEXAO_DYNAMICS );
+		}
+
+		if ( removerMaster ) {
+			usuario.setFlMaster( false );
+			usuarioRepository.save( usuario );
+		}
+
+		try {
+			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.BLOQUEAR_USUARIO );
+		} catch ( Exception e ) {
+			// TODO: Verificar se deve retornar
+			new MessagingException( "MGU ALERTA: Não foi possivel enviar email de bloqueio para o usuario \"" + usuario.getDcUsername() + "\"" ).printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void alteraBloqueioUsuario( Usuario usuario, BloqueioUsuario bloqueio, String usuarioAlterando ) throws Exception {
+		usuario.setFlBloqueio( bloqueio );
+		usuarioRepository.save( usuario );
+
+		LogSenhaUsuario log = new LogSenhaUsuario();
+		log.setDataAlteracao( new Timestamp( new Date().getTime() ) );
+		log.setUsuario( usuario );
+		log.setIpAlteracao( usuario.getDcIpOrigem() );
+		log.setNomeUsuarioAlteracao( usuarioAlterando );
+		logSenhaUsuarioRepository.save( log );
+
+		try {
+			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.DESBLOQUEAR_USUARIO );
+		} catch ( MessagingException e ) {
+			throw new MessagingException( "MGU ALERTA: Usuário desbloqueado com sucesso porém não foi possível enviar a senha para o e-mail \"" + usuario.getDcUsername() + "\"" );
+		}
+
 	}
 
 }

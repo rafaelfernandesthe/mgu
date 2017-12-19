@@ -149,7 +149,7 @@ public class Usuario implements Serializable {
 
 	@NotAudited
 	@ManyToMany
-	@JoinTable( name = "usuario_x_grupo_perfil", joinColumns = @JoinColumn( name = "pk_id_usuario" ), inverseJoinColumns = @JoinColumn( name = "pk_id_grupo_perfil" ) )
+	@JoinTable( name = "USUARIO_X_GRUPO_PERFIL_TEMP", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_GRUPO_PERFIL" ) )
 	private List<GrupoPerfil> grupoPerfis;
 
 	@Transient

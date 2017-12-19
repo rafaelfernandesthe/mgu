@@ -31,7 +31,7 @@ public class PrestadoraRepositoryImpl extends QuerydslJpaRepositoryAux<Prestador
 	@Override
 	public Prestadora prestadoraPorUsername( String dcUsername ) {
 		BooleanBuilder bb = new BooleanBuilder();
-		Usuario usuario = usuarioRepository.findByDcUsername( dcUsername );
+		Usuario usuario = usuarioRepository.findByUsername( dcUsername );
 		if ( usuario.getFlMaster() ) {
 			bb.and( qPrestadora.usuarios.any().dcUsername.eq( dcUsername ) );
 		} else {
