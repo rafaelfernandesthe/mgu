@@ -14,7 +14,7 @@ $('#dlg').puidialog({
     effectSpeed: 'slow',
     closable: false,
     draggable: false,
-		resizable: false,
+	resizable: false,
     minimizable: false,
     maximizable: false,
     responsive: true,

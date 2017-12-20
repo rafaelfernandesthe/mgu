@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.NivelEscalonamento;
+import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 
 public class UsuarioCadastroDTO implements Serializable {
@@ -49,6 +50,23 @@ public class UsuarioCadastroDTO implements Serializable {
 	private Boolean flEnvioEmail = false;
 
 	public UsuarioCadastroDTO() {}
+
+	public Usuario getUsuario() {
+		Usuario usuario = new Usuario();
+		usuario.setId( this.getId() );
+		usuario.setNmUsuario( this.getNmUsuario() );
+		usuario.setDcUsername( this.getDcUsername() );
+		usuario.setDcEmail( this.getDcEmail() );
+		usuario.setDcCargo( this.getDcCargo() );
+		usuario.setDcTelefone( this.getDcTelefone() );
+		usuario.setDcTelefoneFixo( this.getDcTelefoneFixo() );
+		usuario.setNuCpf( this.getNuCpf() );
+		usuario.setNivelEscalonamento( this.getNivelEscalonamento() );
+		usuario.setGrupoPerfis( this.getGrupoPerfis() );
+		usuario.setFlBloqueio( this.getFlBloqueio() );
+		usuario.setFlEnvioEmail( this.getFlEnvioEmail() );
+		return usuario;
+	}
 
 	public Long getId() {
 		return id;
