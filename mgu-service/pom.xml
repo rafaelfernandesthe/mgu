@@ -6,14 +6,13 @@
 	<parent>
 		<groupId>br.com.cleartech.pgmc</groupId>
 		<artifactId>mgu</artifactId>
-		<version>${current.version}</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>br.com.cleartech.pgmc</groupId>
 			<artifactId>mgu-domain</artifactId>
-			<version>${current.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>

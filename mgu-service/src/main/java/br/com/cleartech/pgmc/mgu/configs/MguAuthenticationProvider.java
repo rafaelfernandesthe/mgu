@@ -8,6 +8,8 @@ import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -27,6 +29,7 @@ import br.com.cleartech.pgmc.mgu.services.LdapService;
 import br.com.cleartech.pgmc.mgu.services.UsuarioService;
 
 @Component
+@PropertySource( "classpath:version.properties" )
 public class MguAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger( MguAuthenticationProvider.class );
@@ -39,6 +42,9 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 
 	@Autowired
 	private DelegadoService delegadoService;
+
+	@Value( "${version.label}" )
+	private String versionLabel;
 
 	@Override
 	protected MguUserDetails retrieveUser( String username, UsernamePasswordAuthenticationToken authentication ) throws AuthenticationException {

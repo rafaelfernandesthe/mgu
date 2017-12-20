@@ -3,11 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.cleartech.pgmc</groupId>
 	<artifactId>mgu</artifactId>
-	<version>${current.version}</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<properties>
-		<current.version>1.0.0</current.version>
+		<version.project>4.0.0</version.project>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+				
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
@@ -16,10 +18,6 @@
 		<hibernate.envers.version>4.1.0.Final</hibernate.envers.version>
 		<spring.version>4.3.13.RELEASE</spring.version>
 		<spring.security.version>4.2.3.RELEASE</spring.security.version>
-
-		<context.view>mgu-cleartech</context.view><!--Mudar para profiles  -->
-		<context.integration>mgu-cleartech-ws</context.integration><!--Mudar para profiles  -->
-		
 	</properties>
 
 	<modules>
@@ -30,7 +28,42 @@
 		<module>mgu-integration</module>
 	</modules>
 
+	<profiles>
+		<profile>
+			<id>desenvolvimento</id>
+			<properties>
+				<jndi.name>java:/MguDS-CLEARTECH</jndi.name>
+				<context.view>mgu-cleartech</context.view>
+				<context.integration>mgu-cleartech-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>producao</id>
+			<properties>
+				<jndi.name>java:/MguDS-CLEARTECH-prod</jndi.name>
+				<context.view>mgu-cleartech</context.view>
+				<context.integration>mgu-cleartech-ws</context.integration>
+			</properties>
+		</profile>
+	</profiles>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>br.com.cleartech.pgmc</groupId>
+				<artifactId>mgu-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>br.com.cleartech.pgmc</groupId>
+				<artifactId>mgu-domain</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
+		<finalName>${context.view}-${version.project}</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
