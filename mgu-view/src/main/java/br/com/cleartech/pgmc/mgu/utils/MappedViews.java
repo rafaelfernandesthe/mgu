@@ -13,7 +13,7 @@ public enum MappedViews {
 	/**
 	 * Mostra a mensagem "Operação Realizada com Sucesso"
 	 */
-	SUCESS_PARAMETER( "?sucess=1" ),
+	SUCESS_PARAMETER( "?success=1" ),
 
 	;
 
