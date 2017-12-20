@@ -149,7 +149,7 @@ public class Usuario implements Serializable {
 
 	@NotAudited
 	@ManyToMany
-	@JoinTable( name = "usuario_x_grupo_perfil", joinColumns = @JoinColumn( name = "pk_id_usuario" ), inverseJoinColumns = @JoinColumn( name = "pk_id_grupo_perfil" ) )
+	@JoinTable( name = "USUARIO_X_GRUPO_PERFIL_TEMP", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_GRUPO_PERFIL" ) )
 	private List<GrupoPerfil> grupoPerfis;
 
 	@Transient
@@ -181,6 +181,9 @@ public class Usuario implements Serializable {
 	@Transient
 	// Utilizado no envio de e-mail
 	private String senhaSemMD5;
+
+	@Transient
+	private Boolean usuarioLogado = false;
 
 	public Usuario() {}
 
@@ -468,6 +471,14 @@ public class Usuario implements Serializable {
 
 	public void setGrupos( GrupoPrestadora grupos ) {
 		this.grupos = grupos;
+	}
+
+	public Boolean getUsuarioLogado() {
+		return usuarioLogado;
+	}
+
+	public void setUsuarioLogado( Boolean usuarioLogado ) {
+		this.usuarioLogado = usuarioLogado;
 	}
 
 	@Override

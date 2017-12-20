@@ -3,18 +3,23 @@ package br.com.cleartech.pgmc.mgu.services.impl;
 import java.util.List;
 
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
-import javax.naming.directory.SearchControls;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
+import javax.naming.ldap.LdapName;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.filter.AndFilter;
-import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.query.ContainerCriteria;
 import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.query.SearchScope;
+import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
 import br.com.cleartech.pgmc.mgu.exceptions.LdapException;
@@ -22,6 +27,7 @@ import br.com.cleartech.pgmc.mgu.services.LdapService;
 import br.com.cleartech.pgmc.mgu.services.ParametrizacaoService;
 
 @Service
+@Transactional
 public class LdapServiceImpl implements LdapService {
 
 	@Autowired
@@ -50,19 +56,42 @@ public class LdapServiceImpl implements LdapService {
 
 	@Override
 	public void deleteUser( String usuario, boolean isMaster ) throws LdapException {
-		// TODO Auto-generated method stub
+		LdapName dn = LdapNameBuilder.newInstance().add( getUserDn() ).add( "cn", usuario ).build();
+		ldapTemplate.unbind( dn );
 
+		Attribute attr = new BasicAttribute( "uniqueMember", dn.toString() + "," + getLdapRoot() );
+		ModificationItem item = new ModificationItem( DirContext.REMOVE_ATTRIBUTE, attr );
+		if ( isMaster ) {
+			ldapTemplate.modifyAttributes( getGrupoDnMaster(), new ModificationItem[] { item } );
+		} else {
+			ldapTemplate.modifyAttributes( getGrupoDnUsuario(), new ModificationItem[] { item } );
+		}
 	}
 
 	@Override
 	public void createUser( String usuario, String password ) throws LdapException {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	@Override
 	public void createMasterUser( String usuario, String password ) throws LdapException {
-		// TODO Auto-generated method stub
+		try {
+			Attributes attrs = new BasicAttributes();
+			attrs.put( "objectclass", "person" );
+			attrs.put( "cn", usuario );
+			attrs.put( "sn", usuario );
+			attrs.put( "userpassword", password );
+			LdapName dn = LdapNameBuilder.newInstance().add( getUserDn() ).add( "cn", usuario ).build();
+			ldapTemplate.bind( dn, null, attrs );
+
+			Attribute attr = new BasicAttribute( "uniqueMember", dn.toString() + "," + getLdapRoot() );
+			ModificationItem item = new ModificationItem( DirContext.ADD_ATTRIBUTE, attr );
+			ldapTemplate.modifyAttributes( getGrupoDnMaster(), new ModificationItem[] { item } );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new LdapException();
+		}
 
 	}
 
@@ -76,7 +105,7 @@ public class LdapServiceImpl implements LdapService {
 	public Boolean existeUsuario( String usuario ) throws LdapException {
 		//@formatter:off
 				ContainerCriteria query = LdapQueryBuilder.query()
-						.base( getUserDnBase() )
+						.base( getUserDn() )
 						.searchScope( SearchScope.SUBTREE )
 						.attributes( "cn" )
 						.where( "cn" ).is( usuario );
@@ -95,12 +124,12 @@ public class LdapServiceImpl implements LdapService {
 	public Boolean existeUsuario( String usuario, String senha ) throws LdapException {
 		//@formatter:off
 		ContainerCriteria query = LdapQueryBuilder.query()
-				.base( getUserDnBase() )
+				.base( getUserDn() )
 				.searchScope( SearchScope.SUBTREE )
 				.attributes( "cn" )
-				.where( "cn" ).is( usuario ).and( "userPassword" ).is( senha );
+				.where( "cn" ).is( usuario ).and( "userpassword" ).is( senha );
 		//@formatter:on
-		
+
 		// AndFilter filter = new AndFilter();
 		// String getAttrs[] = { "cn" };
 		// filter.and( new EqualsFilter( "cn", usuario ) );
@@ -123,15 +152,26 @@ public class LdapServiceImpl implements LdapService {
 		return true;
 	}
 
-
-
 	@Override
 	public Boolean contemSenhaNoHistorico( String usuario, String senhaNova ) throws LdapException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private String getUserDnBase() {
-		return parametrizacaoService.findByDcParametro( ParametrizacaoEnum.USER_DN_PATH_BASE.getDcParametro() );
+	private String getUserDn() {
+		return parametrizacaoService.findByDcParametro( ParametrizacaoEnum.USER_DN_PATH.getDcParametro() );
 	}
+
+	private String getGrupoDnUsuario() {
+		return parametrizacaoService.findByDcParametro( ParametrizacaoEnum.GRUPO_DN_USUARIO.getDcParametro() );
+	}
+
+	private String getGrupoDnMaster() {
+		return parametrizacaoService.findByDcParametro( ParametrizacaoEnum.GRUPO_DN_MASTER.getDcParametro() );
+	}
+
+	private String getLdapRoot() {
+		return parametrizacaoService.findByDcParametro( ParametrizacaoEnum.LDAP_ROOT.getDcParametro() );
+	}
+
 }

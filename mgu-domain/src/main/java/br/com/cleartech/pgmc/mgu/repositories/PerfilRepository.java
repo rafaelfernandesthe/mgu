@@ -22,6 +22,6 @@ public interface PerfilRepository extends CrudRepository<Perfil, Long> {
 
 	public List<Perfil> findPerfisMasterByUsernameAndSistema( String username, String sistema );
 
-	public Perfil findByDcPerfilAndSistemaDcSistema( String perfil, String sistema );
+	public Perfil findByDcPerfilAndSistema( String perfil, String sistema );
 
 }

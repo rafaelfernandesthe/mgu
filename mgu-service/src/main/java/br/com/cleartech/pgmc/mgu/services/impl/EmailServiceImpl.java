@@ -34,6 +34,14 @@ public class EmailServiceImpl implements EmailService {
 				cabecalho = "Credenciamento ESOA - Credenciais de acesso";
 				corpoEmail.append( getEmailBody( usuario.getNmUsuario(), usuario.getDcUsername(), usuario.getSenhaSemMD5(), "Credenciamento ESOA &#45; Credenciais de acesso", "A cria&ccedil;&atilde;o do seu usu&aacute;rio foi um sucesso. Seguem os dados de acesso:" ) );
 				break;
+			case BLOQUEAR_USUARIO:
+				cabecalho = "Bloqueio de usuário";
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Bloqueio de usu&aacute;rio", "O usu&aacute;rio <b>" + usuario.getNmUsuario() + "</b> foi bloqueado pelo administrador do sistema" ) );
+				break;
+			case DESBLOQUEAR_USUARIO:
+				cabecalho = "Usuário desbloqueado";
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Usu&aacute;rio desbloqueado", "O usu&aacute;rio <b>" + usuario.getNmUsuario() + "</b> foi desbloqueado pelo administrador do sistema" ) );
+				break;
 			default:
 				break;
 		}
@@ -42,10 +50,11 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	private void sendEmail( String destinatario, String cabecalho, String conteudo ) throws MessagingException {
-		logger.info( "Enviando e-mail para {}", destinatario );
+		logger.info( "Enviando e-mail de {} para {}", cabecalho, destinatario );
 
 		MimeMessage email = javaMailsSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper( email );
+		helper.setFrom( new InternetAddress( "no_reply@cleartech.com.br" ) );
 		helper.setTo( destinatario );
 		helper.setSubject( cabecalho );
 		helper.setText( conteudo, true );
@@ -54,20 +63,6 @@ public class EmailServiceImpl implements EmailService {
 
 		logger.info( "E-mail enviado para {}", destinatario );
 	}
-
-	// private void sendEmail( EmailDTO email ) throws MessagingException {
-	// logger.debug( "Enviando email para {}", email.getDestinatario() );
-	// MimeMessage message = new MimeMessage( mailSession );
-	// Address[] to = new InternetAddress[] { new InternetAddress(
-	// email.getDestinatario() ) };
-	// message.setRecipients( RecipientType.TO, to );
-	// message.setSubject( email.getCabecalho() );
-	// message.setSentDate( new Date() );
-	// message.setContent( email.getConteudo(), "text/html" );
-	// Transport.send( message );
-	// logger.debug( "Email enviado para {}", email.getDestinatario() );
-	//
-	// }
 
 	private String getEmailHeader() {
 		StringBuilder emailHeader = new StringBuilder();
@@ -149,7 +144,7 @@ public class EmailServiceImpl implements EmailService {
 		return emailBody.toString();
 	}
 
-	public static String getEmailSemDadosBody( String nmUsuario, String titulo, String msg ) {
+	private String getEmailSemDadosBody( String nmUsuario, String titulo, String msg ) {
 		StringBuilder emailBody = new StringBuilder();
 
 		emailBody.append( "<body lang=PT-BR>" );

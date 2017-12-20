@@ -2,11 +2,14 @@ package br.com.cleartech.pgmc.mgu.configs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.BaseLdapPathContextSource;
 import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -36,16 +39,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return bean;
 	}
 
-	@Bean
-	public LdapTemplate ldapTemplate() {
-		return new LdapTemplate( ldapContextSource() );
-	}
 
 	@Override
 	protected void configure( HttpSecurity http ) throws Exception {
 		//@formatter:off
         http
-        .csrf().ignoringAntMatchers( "/logout", "/login" ).and()
             .authorizeRequests()
                 .antMatchers("/resources/js/*","/resources/img/*","/resources/img/login/*",
                 			"/resources/css/*").permitAll()
@@ -62,5 +60,64 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             ;
     	//@formatter:on
 	}
+
+	@Autowired
+	public void configureGlobal( AuthenticationManagerBuilder auth ) throws Exception {
+
+		// auth.inMemoryAuthentication()
+		// .withUser("user1").password("pass1").roles("USER");
+
+		//@formatter:off
+		auth.ldapAuthentication()
+			.userDnPatterns( "cn={0},ou=usuarios,ou="+ldapProfile )
+			.groupSearchBase("ou=grupos,ou="+ldapProfile )
+		.contextSource( ldapContextSource() )
+    	.passwordCompare()
+    		.passwordEncoder( new  Md5PasswordEncoder() )
+    		.passwordAttribute( "userPassword" )
+    	;
+    	//@formatter:on
+	}
+
+	// @Bean
+	// public TransactionAwareContextSourceProxy
+	// transactionAwareContextSourceProxy() {
+	// return new TransactionAwareContextSourceProxy( ldapContextSource() );
+	// }
+
+	// @Bean
+	// public ContextSourceTransactionManager transactionManager() {
+	// ContextSourceTransactionManager transactionManager = new
+	// ContextSourceTransactionManager();
+	// transactionManager.setRenamingStrategy( new
+	// DefaultTempEntryRenamingStrategy() );
+	// transactionManager.setContextSource( ldapContextSource() );
+	// return transactionManager;
+	// }
+
+	@Bean
+	public LdapTemplate ldapTemplate() {
+		return new LdapTemplate( ldapContextSource() );
+	}
+
+	// @Bean
+	// public TransactionProxyFactoryBean dataAcessObject() {
+	// TransactionProxyFactoryBean transactionFactory = new
+	// TransactionProxyFactoryBean();
+	// transactionFactory.setTarget( ldapService() );
+	// transactionFactory.setTransactionManager( transactionManager() );
+	// // Properties prop = new Properties();
+	// // prop.put( "*", "PROPAGATION_REQUIRED" );
+	// //
+	// // transactionFactory.setTransactionAttributes( prop );
+	// transactionFactory.setTransactionAttributeSource( new
+	// AnnotationTransactionAttributeSource() );
+	// return transactionFactory;
+	// }
+	//
+	// @Bean
+	// public LdapService ldapService() {
+	// return new LdapServiceImpl();
+	// }
 
 }
