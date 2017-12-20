@@ -1,12 +1,18 @@
 package br.com.cleartech.pgmc.mgu.config;
 
+import java.util.Locale;
+
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 
 import br.com.cleartech.pgmc.mgu.converters.NivelEscalonamentoConverter2Controller;
 import br.com.cleartech.pgmc.mgu.converters.NivelEscalonamentoConverter2Page;
@@ -44,4 +50,21 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	// public AutocompleteConverterFactory autocompleteConverterFactory() {
 	// return new AutocompleteConverterFactory();
 	// }
+
+	@Bean
+	public LocaleResolver localeResolver() {
+		return new FixedLocaleResolver( new Locale( "pt", "BR" ) );
+	}
+
+	@Bean
+	public MessageSource messageSource() {
+		ReloadableResourceBundleMessageSource bundle = new ReloadableResourceBundleMessageSource();
+
+		bundle.setBasename( "classpath:Mensagens" );
+		bundle.setDefaultEncoding( "UTF-8" );
+		bundle.setCacheSeconds( 1 );
+
+		return bundle;
+	}
+
 }

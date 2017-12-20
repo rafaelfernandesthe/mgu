@@ -66,8 +66,10 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 
 			if ( usuario.getFlMaster() == false ) {
 				Delegado delegado = delegadoService.findByUsuarioComumDcUsername( usuario.getDcUsername() );
-				usuario.getPrestadoras().clear();
-				usuario.getPrestadoras().add( delegado.getPrestadora() );
+				if(delegado != null){
+					usuario.getPrestadoras().clear();
+					usuario.getPrestadoras().add( delegado.getPrestadora() );
+				}
 			}
 
 			if ( usuario.getFlAprovado() == false ) {

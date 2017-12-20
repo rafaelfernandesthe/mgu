@@ -97,37 +97,14 @@
 		</div>
 
 		<div class="pui-panel-toggleable" th:title="#{tabela.resultados}">
-			<div class="pui-datatableResult" id="tableGrupoPerfil"></div>
+			
 		</div>
 	</div>
 
 	<div layout:fragment="javascript-support">
 		<script>
 			$(function (){
-			  	var localData = [(${grupoPerfisJSON})];
-				$('#tableGrupoPerfil').puidatatable({
-					emptyMessage: 'Nenhum Registro Encontrado',
-					responsive: true,
-					paginator: {
-				        rows: 20
-				    },
-			        columns: [
-						{field: '', headerText: ''},
-						{field: '', headerText: ''},
-						{field: '', headerText: ''},
-						{field: '', headerText: ''},
-			        	{field: '', headerText: 'Nome'},
-			        	{field: '', headerText: 'Usuário Acesso'},
-			            {field: '', headerText: 'Email'},
-			            {field: '', headerText: 'Cargo'},
-			            {field: '', headerText: 'Telefone'},
-			            {field: '', headerText: 'CPF'},
-			            {field: '', headerText: 'Status'},
-			            {field: '', headerText: 'Grupo Perfil'},
-			           
-			        ],
-			        datasource: localData,
-				});
+			  	
 			});
 		</script>
 	</div>

@@ -156,3 +156,17 @@ img, .row-fluid {
 #ui-id-5 {
 	width: 100px;
 }
+
+.required:after {
+  content:" *"; 
+  color: red;
+}
+
+label.control-label {
+	width : 100%;
+	text-align: right;
+} 
+
+.field-error {
+    border-color: #a94442 !important;
+}

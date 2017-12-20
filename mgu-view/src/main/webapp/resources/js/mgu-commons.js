@@ -12,3 +12,24 @@ function getUrlParams( prop ) {
 
     return ( prop && prop in params ) ? params[ prop ] : null;
 }
+
+function puipicklist_refresh( value ){
+	var selectedOptions = $(value).get(0).options;
+	for(var i = 0; i < selectedOptions.length; i++){
+		selectedOptions[i].setAttribute('selected','selected');
+	}
+}
+
+function declare_puipicklist(identifierPicklist, sourceData, targetData, fieldName){
+	$(identifierPicklist).puipicklist({
+        sourceCaption: 'Disponíveis',
+        targetCaption: 'Selecionados',
+        filter: true,
+        filterMatchMode: 'contains',
+        sourceData: sourceData,
+        targetData: targetData,
+        reponsive: true,
+	});
+	puipicklist_refresh("#"+fieldName);
+	
+}

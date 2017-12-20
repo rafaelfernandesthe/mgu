@@ -2,11 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 	
-	<div class="alert alert-danger alert-dismissible fade in" th:if="${#fields.hasGlobalErrors()}">
+<!-- 	<div class="alert alert-danger alert-dismissible fade in" th:if="${#fields.hasGlobalErrors()}"> -->
+<!-- 		<button type="button" class="close" data-dismiss="alert" aria-label="Close"> -->
+<!-- 			<span aria-hidden="true">×</span> -->
+<!-- 		</button> -->
+<!-- 		<p class="messageError" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p> -->
+<!-- 	</div> -->
+	
+	<div class="alert alert-danger alert-dismissible fade in" th:if="${#fields.hasErrors('*')}">
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 			<span aria-hidden="true">×</span>
 		</button>
-		<p class="messageError" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+		<p class="messageError" th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
 	</div>
 	
 </html>

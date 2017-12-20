@@ -37,7 +37,20 @@
 
 		<div class="pui-panel-toggleable" th:title="#{tabela.resultados}">
 			<div class="pui-datatableResult" id="tableGrupoPerfil"></div>
+			
+			<table border=1>
+			  <tr>
+			    <th>Opções</th>
+			    <th>Nome</th>
+			  </tr>
+			  <tr th:each="gp,iterStat : ${grupoPerfis}" th:class="${iterStat.odd}? 'odd'">
+			    <td>aaa</td>
+			    <td th:text="${gp.noGrupoPerfil}">2.41</td>
+			  </tr>
+			</table>
 		</div>
+		
+		
 	</div>
 
 	<div layout:fragment="javascript-support">
@@ -51,12 +64,18 @@
 				        rows: 20
 				    },
 			        columns: [
-			        	{field: '', headerText: 'Opções'},
+			        	{'<button>asdf</button>'},
 			            {field: 'noGrupoPerfil', headerText: 'Nome'},
 			        ],
 			        datasource: localData,
 				});
 			});
+			
+// 			var txt1 = "<button>Text.</button>";
+// 			var options = $('.options');
+// 			for(var i = 0;i < options.length; i++){
+// 				options.get(i).append(txt1);
+// 			}
 		</script>
 	</div>
 
