@@ -8,8 +8,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import br.com.cleartech.pgmc.mgu.formatters.NivelEscalonamentoConverter2Controller;
-import br.com.cleartech.pgmc.mgu.formatters.NivelEscalonamentoConverter2Page;
+import br.com.cleartech.pgmc.mgu.converters.NivelEscalonamentoConverter2Controller;
+import br.com.cleartech.pgmc.mgu.converters.NivelEscalonamentoConverter2Page;
 
 @Configuration
 @EnableWebMvc

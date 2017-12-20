@@ -23,8 +23,9 @@ public class GrupoPerfilConsultaController {
 	private GrupoPerfilService grupoPerfilService;
 
 	@GetMapping
-	public String init( GrupoPerfil grupoPerfil, Model model ) {
+	public String init( Model model ) {
 		model.addAttribute( "grupoPerfisJSON", new ArrayList<>() );
+		model.addAttribute( "grupoPerfil", new GrupoPerfil() );
 		return MappedViews.GRUPO_PERFIL_CONSULTA.getPath();
 	}
 

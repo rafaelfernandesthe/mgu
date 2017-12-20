@@ -8,20 +8,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.BaseLdapPathContextSource;
 import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.ldap.transaction.compensating.manager.ContextSourceTransactionManager;
-import org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy;
-import org.springframework.ldap.transaction.compensating.support.DefaultTempEntryRenamingStrategy;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
-import org.springframework.transaction.interceptor.TransactionProxyFactoryBean;
-
-import br.com.cleartech.pgmc.mgu.services.LdapService;
-import br.com.cleartech.pgmc.mgu.services.impl.LdapServiceImpl;
-import br.com.cleartech.pgmc.mgu.services.impl.UsuarioServiceImpl;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -47,6 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return bean;
 	}
 
+
 	@Override
 	protected void configure( HttpSecurity http ) throws Exception {
 		//@formatter:off
@@ -59,10 +52,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin()
 	            .loginPage("/login").permitAll()
             	.defaultSuccessUrl( "/home" )
-            	.failureUrl( "/login-error" ).permitAll()
+            	.failureHandler( new SimpleUrlAuthenticationFailureHandler("/login") )
                 .and()
             .logout()
             	.logoutSuccessUrl( "/login" ).permitAll()
+            	.logoutSuccessHandler( new MguLogoutSuccessHandler() )
             ;
     	//@formatter:on
 	}

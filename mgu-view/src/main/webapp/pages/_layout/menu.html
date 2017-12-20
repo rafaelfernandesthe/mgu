@@ -41,10 +41,19 @@
 							data-toggle="dropdown" href="#" data-icon="fa fa-wrench"
 							th:text="#{configuracao}"> Configuração <span class="caret"></span>
 						</a>
-							<ul class="dropdown-menu">
-								<li><a href="#" th:href="@{/parametro}" th:text="#{parametros}">Parametro do sistema </a></li>
-							</ul></li>
+						<ul class="dropdown-menu">
+							<li><a href="#" th:href="@{/parametro}" th:text="#{parametros}">Parametro do sistema </a></li>
+						</ul>
+						</li>
 					</ul>
+					
+					<div class="btn-group" style="margin-top: 10px; margin-right: 10px; float:right; ">
+						<form id="logout" th:action="@{/logout}" method="POST" >
+				     		<a class="btn menu-link" onclick="javascript:document.getElementById('logout').submit()" >Sair
+				     			<span class="fa fa-sign-out"></span>
+				     		</a>
+						</form>
+			         </div>
 				</div>
 				<!-- /.navbar-collapse -->
 			<!-- /.container-fluid -->

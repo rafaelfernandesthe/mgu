@@ -39,9 +39,6 @@ public class UsuarioCadastroController {
 	@Autowired
 	private NivelEscalonamentoService nivelEscalonamentoService;
 
-	@Autowired
-	private AutenticacaoController autenticacaoController;
-
 	private Usuario usuario;
 
 	@GetMapping
@@ -92,8 +89,7 @@ public class UsuarioCadastroController {
 	}
 
 	private List<GrupoPerfil> getGrupoPerfilList() {
-//		return grupoPerfilService.findByPrestadora( autenticacaoController.getIdPrestadora() );
-		return grupoPerfilService.findByPrestadora( 1630l );
+		return grupoPerfilService.findByPrestadora( MguUtils.getUsuarioLogado().getIdPrestadora() );
 	}
 
 	public Usuario getUsuario() {
