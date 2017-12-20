@@ -8,6 +8,7 @@
 		<ldap.profile>cleartech</ldap.profile>
 		<thymeleaf.version>3.0.3.RELEASE</thymeleaf.version>
 		<thymeleaf-layout-dialect.version>2.2.1</thymeleaf-layout-dialect.version>
+		<build>${maven.build.timestamp}</build>
 	</properties>
 
 	<parent>
@@ -86,13 +87,6 @@
 				<version>3.2.0</version>
 			</plugin>
 		</plugins>
-
-		<resources>
-			<resource>
-				<filtering>true</filtering>
-				<directory>src/main/resources</directory>
-			</resource>
-		</resources>
 	</build>
 
 </project>

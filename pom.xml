@@ -9,7 +9,7 @@
 	<properties>
 		<version.project>4.0.0</version.project>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
-				
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
@@ -33,16 +33,120 @@
 			<id>desenvolvimento</id>
 			<properties>
 				<jndi.name>java:/MguDS-CLEARTECH</jndi.name>
-				<context.view>mgu-cleartech</context.view>
-				<context.integration>mgu-cleartech-ws</context.integration>
+				<context.view>mgu-dev</context.view>
+				<context.integration>mgu-dev-ws</context.integration>
 			</properties>
 		</profile>
 		<profile>
 			<id>producao</id>
 			<properties>
-				<jndi.name>java:/MguDS-CLEARTECH-prod</jndi.name>
+				<jndi.name>java:/PGMC_MGU_DS</jndi.name>
+				<context.view>mgu</context.view>
+				<context.integration>mgu-integracao-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>cleartech</id>
+			<properties>
+				<jndi.name>java:/MguDS-CLEARTECH</jndi.name>
 				<context.view>mgu-cleartech</context.view>
 				<context.integration>mgu-cleartech-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>analises</id>
+			<properties>
+				<jndi.name>java:/PGMC_MGU_DS</jndi.name>
+				<context.view>mgu-analises</context.view>
+				<context.integration>mgu-analises-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>ficticia_153</id>
+			<properties>
+				<jndi.name>java:/MguDS-CLARO</jndi.name>
+				<context.view>mgu-ficticia-153</context.view>
+				<context.integration>mgu-ficticia-153-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>ficticia_154</id>
+			<properties>
+				<jndi.name>java:/MguDS-OI</jndi.name>
+				<context.view>mgu-ficticia-154</context.view>
+				<context.integration>mgu-ficticia-154-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>abrt</id>
+			<properties>
+				<jndi.name>java:/MguDS-ABRT</jndi.name>
+				<context.view>mgu-abrt</context.view>
+				<context.integration>mgu-abrt-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>industria</id>
+			<properties>
+				<jndi.name>java:/MguDS-INDUSTRIA</jndi.name>
+				<context.view>mgu-industria</context.view>
+				<context.integration>mgu-industria-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>vivo</id>
+			<properties>
+				<jndi.name>java:/MguDS-VIVO</jndi.name>
+				<context.view>mgu-vivo</context.view>
+				<context.integration>mgu-vivo-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>claro</id>
+			<properties>
+				<jndi.name>java:/MguDS-CLARO</jndi.name>
+				<context.view>mgu-claro</context.view>
+				<context.integration>mgu-claro-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>tim</id>
+			<properties>
+				<jndi.name>java:/MguDS-TIM</jndi.name>
+				<context.view>mgu-tim</context.view>
+				<context.integration>mgu-tim-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>oi</id>
+			<properties>
+				<jndi.name>java:/MguDS-OI</jndi.name>
+				<context.view>mgu-oi</context.view>
+				<context.integration>mgu-oi-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>algar</id>
+			<properties>
+				<jndi.name>java:/MguDS-ALGAR</jndi.name>
+				<context.view>mgu-algar</context.view>
+				<context.integration>mgu-algar-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>sercomtel</id>
+			<properties>
+				<jndi.name>java:/MguDS-SERCOMTEL</jndi.name>
+				<context.view>mgu-sercomtel</context.view>
+				<context.integration>mgu-sercomtel-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>copel</id>
+			<properties>
+				<jndi.name>java:/MguDS-COPEL</jndi.name>
+				<context.view>mgu-copel</context.view>
+				<context.integration>mgu-copel-ws</context.integration>
 			</properties>
 		</profile>
 	</profiles>
@@ -73,5 +177,12 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 	</build>
 </project>

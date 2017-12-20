@@ -81,7 +81,7 @@
     <footer>
     	<div class="footer">
 	        <label style="float: left;">Sistema MGU</label>
-	        <label style="float: center;">Versão XXX</label>
+	      	<label th:if="${session.versionLabel}" th:text="${session.versionLabel}"/>
 	        <label style="float: right;">ABR Telecom © 2017</label>
     	</div>
 	</footer>

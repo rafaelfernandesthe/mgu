@@ -29,7 +29,6 @@ import br.com.cleartech.pgmc.mgu.services.LdapService;
 import br.com.cleartech.pgmc.mgu.services.UsuarioService;
 
 @Component
-@PropertySource( "classpath:version.properties" )
 public class MguAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger( MguAuthenticationProvider.class );
@@ -42,9 +41,6 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 
 	@Autowired
 	private DelegadoService delegadoService;
-
-	@Value( "${version.label}" )
-	private String versionLabel;
 
 	@Override
 	protected MguUserDetails retrieveUser( String username, UsernamePasswordAuthenticationToken authentication ) throws AuthenticationException {
