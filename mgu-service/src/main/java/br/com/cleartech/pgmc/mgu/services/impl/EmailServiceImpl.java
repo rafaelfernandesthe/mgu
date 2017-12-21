@@ -1,12 +1,18 @@
 package br.com.cleartech.pgmc.mgu.services.impl;
 
+import java.util.Date;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import br.com.cleartech.pgmc.mgu.dtos.EmailDTO;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.AssuntoEnum;
 import br.com.cleartech.pgmc.mgu.services.EmailService;
@@ -20,7 +26,7 @@ public class EmailServiceImpl implements EmailService {
 	private JavaMailSender javaMailsSender;
 
 	@Override
-	public void enviaByUsuarioAndAssunto( Usuario usuario, AssuntoEnum assunto ) {
+	public void enviaByUsuarioAndAssunto( Usuario usuario, AssuntoEnum assunto ) throws MessagingException {
 		StringBuilder corpoEmail = new StringBuilder( getEmailHeader() );
 		String cabecalho = null;
 		switch ( assunto ) {
@@ -28,27 +34,35 @@ public class EmailServiceImpl implements EmailService {
 				cabecalho = "Credenciamento ESOA - Credenciais de acesso";
 				corpoEmail.append( getEmailBody( usuario.getNmUsuario(), usuario.getDcUsername(), usuario.getSenhaSemMD5(), "Credenciamento ESOA &#45; Credenciais de acesso", "A cria&ccedil;&atilde;o do seu usu&aacute;rio foi um sucesso. Seguem os dados de acesso:" ) );
 				break;
+			case BLOQUEAR_USUARIO:
+				cabecalho = "Bloqueio de usuário";
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Bloqueio de usu&aacute;rio", "O usu&aacute;rio <b>" + usuario.getNmUsuario() + "</b> foi bloqueado pelo administrador do sistema" ) );
+				break;
+			case DESBLOQUEAR_USUARIO:
+				cabecalho = "Usuário desbloqueado";
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Usu&aacute;rio desbloqueado", "O usu&aacute;rio <b>" + usuario.getNmUsuario() + "</b> foi desbloqueado pelo administrador do sistema" ) );
+				break;
 			default:
 				break;
 		}
 
-		EmailDTO email = new EmailDTO( usuario.getDcEmail(), cabecalho, corpoEmail.toString() );
-		// sendEmail( email );
+		sendEmail( usuario.getDcEmail(), cabecalho, corpoEmail.toString() );
 	}
 
-	// private void sendEmail( EmailDTO email ) throws MessagingException {
-	// logger.debug( "Enviando email para {}", email.getDestinatario() );
-	// MimeMessage message = new MimeMessage( mailSession );
-	// Address[] to = new InternetAddress[] { new InternetAddress(
-	// email.getDestinatario() ) };
-	// message.setRecipients( RecipientType.TO, to );
-	// message.setSubject( email.getCabecalho() );
-	// message.setSentDate( new Date() );
-	// message.setContent( email.getConteudo(), "text/html" );
-	// Transport.send( message );
-	// logger.debug( "Email enviado para {}", email.getDestinatario() );
-	//
-	// }
+	private void sendEmail( String destinatario, String cabecalho, String conteudo ) throws MessagingException {
+		logger.info( "Enviando e-mail de {} para {}", cabecalho, destinatario );
+
+		MimeMessage email = javaMailsSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper( email );
+		helper.setFrom( new InternetAddress( "no_reply@cleartech.com.br" ) );
+		helper.setTo( destinatario );
+		helper.setSubject( cabecalho );
+		helper.setText( conteudo, true );
+		helper.setSentDate( new Date() );
+		javaMailsSender.send( email );
+
+		logger.info( "E-mail enviado para {}", destinatario );
+	}
 
 	private String getEmailHeader() {
 		StringBuilder emailHeader = new StringBuilder();
@@ -130,7 +144,7 @@ public class EmailServiceImpl implements EmailService {
 		return emailBody.toString();
 	}
 
-	public static String getEmailSemDadosBody( String nmUsuario, String titulo, String msg ) {
+	private String getEmailSemDadosBody( String nmUsuario, String titulo, String msg ) {
 		StringBuilder emailBody = new StringBuilder();
 
 		emailBody.append( "<body lang=PT-BR>" );

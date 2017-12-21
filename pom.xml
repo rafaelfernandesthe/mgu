@@ -3,11 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.cleartech.pgmc</groupId>
 	<artifactId>mgu</artifactId>
-	<version>${current.version}</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<properties>
-		<current.version>1.0.0</current.version>
+		<version.project>4.0.0</version.project>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
@@ -16,10 +18,6 @@
 		<hibernate.envers.version>4.1.0.Final</hibernate.envers.version>
 		<spring.version>4.3.13.RELEASE</spring.version>
 		<spring.security.version>4.2.3.RELEASE</spring.security.version>
-
-		<context.view>mgu-cleartech</context.view><!--Mudar para profiles  -->
-		<context.integration>mgu-cleartech-ws</context.integration><!--Mudar para profiles  -->
-		
 	</properties>
 
 	<modules>
@@ -30,7 +28,130 @@
 		<module>mgu-integration</module>
 	</modules>
 
+	<profiles>
+		<profile>
+			<id>desenvolvimento</id>
+			<properties>
+				<jndi.name>java:/MguDS-CLEARTECH</jndi.name>
+				<context.view>mgu-dev</context.view>
+				<context.integration>mgu-dev-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>producao</id>
+			<properties>
+				<jndi.name>java:/PGMC_MGU_DS</jndi.name>
+				<context.view>mgu</context.view>
+				<context.integration>mgu-integracao-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>cleartech</id>
+			<properties>
+				<jndi.name>java:/MguDS-CLEARTECH</jndi.name>
+				<context.view>mgu-cleartech</context.view>
+				<context.integration>mgu-cleartech-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>analises</id>
+			<properties>
+				<jndi.name>java:/PGMC_MGU_DS</jndi.name>
+				<context.view>mgu-analises</context.view>
+				<context.integration>mgu-analises-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>abrt</id>
+			<properties>
+				<jndi.name>java:/MguDS-ABRT</jndi.name>
+				<context.view>mgu-abrt</context.view>
+				<context.integration>mgu-abrt-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>industria</id>
+			<properties>
+				<jndi.name>java:/MguDS-INDUSTRIA</jndi.name>
+				<context.view>mgu-industria</context.view>
+				<context.integration>mgu-industria-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>vivo</id>
+			<properties>
+				<jndi.name>java:/MguDS-VIVO</jndi.name>
+				<context.view>mgu-vivo</context.view>
+				<context.integration>mgu-vivo-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>claro</id>
+			<properties>
+				<jndi.name>java:/MguDS-CLARO</jndi.name>
+				<context.view>mgu-claro</context.view>
+				<context.integration>mgu-claro-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>tim</id>
+			<properties>
+				<jndi.name>java:/MguDS-TIM</jndi.name>
+				<context.view>mgu-tim</context.view>
+				<context.integration>mgu-tim-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>oi</id>
+			<properties>
+				<jndi.name>java:/MguDS-OI</jndi.name>
+				<context.view>mgu-oi</context.view>
+				<context.integration>mgu-oi-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>algar</id>
+			<properties>
+				<jndi.name>java:/MguDS-ALGAR</jndi.name>
+				<context.view>mgu-algar</context.view>
+				<context.integration>mgu-algar-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>sercomtel</id>
+			<properties>
+				<jndi.name>java:/MguDS-SERCOMTEL</jndi.name>
+				<context.view>mgu-sercomtel</context.view>
+				<context.integration>mgu-sercomtel-ws</context.integration>
+			</properties>
+		</profile>
+		<profile>
+			<id>copel</id>
+			<properties>
+				<jndi.name>java:/MguDS-COPEL</jndi.name>
+				<context.view>mgu-copel</context.view>
+				<context.integration>mgu-copel-ws</context.integration>
+			</properties>
+		</profile>
+	</profiles>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>br.com.cleartech.pgmc</groupId>
+				<artifactId>mgu-service</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>br.com.cleartech.pgmc</groupId>
+				<artifactId>mgu-domain</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
+		<finalName>${context.view}-${version.project}</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
@@ -40,5 +161,12 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 	</build>
 </project>

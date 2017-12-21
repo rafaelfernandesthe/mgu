@@ -8,4 +8,6 @@ public interface AcessoSimultaneoService {
 	boolean existsByUsername( String username );
 
 	AcessoSimultaneo salvarByUsuario( Usuario usuario );
+
+	void deletarByUsername( String username );
 }

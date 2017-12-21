@@ -109,11 +109,11 @@ public class PerfilRepositoryImpl extends QuerydslJpaRepositoryAux<Perfil, Long>
 	}
 
 	@Override
-	public Perfil findByDcPerfilAndSistemaDcSistema( String perfil, String sistema ) {
+	public Perfil findByDcPerfilAndSistema( String perfil, String sistema ) {
 		JPAQuery query = new JPAQuery( getEm() ).from( qPerfil );
 
 		BooleanBuilder bb = new BooleanBuilder();
-		bb.and( qPerfil.dcPerfil.eq( perfil ) );
+		bb.and( qPerfil.dcPerfil.equalsIgnoreCase( perfil ) );
 		bb.and( qPerfil.sistema.dcSistema.equalsIgnoreCase( sistema ) );
 
 		return query.where( bb ).uniqueResult( qPerfil );

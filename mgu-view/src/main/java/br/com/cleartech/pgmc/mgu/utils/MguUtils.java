@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.thymeleaf.util.ListUtils;
@@ -12,6 +13,7 @@ import org.thymeleaf.util.ListUtils;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
+import br.com.cleartech.pgmc.mgu.configs.MguAuthenticationProvider.MguUserDetails;
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 
 public class MguUtils {
@@ -64,6 +66,10 @@ public class MguUtils {
 			result.add( new GrupoPerfil( Long.parseLong( id.toString() ), "" ) );
 		}
 		return result;
+	}
+
+	public static MguUserDetails getUsuarioLogado() {
+		return (MguUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
 }

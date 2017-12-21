@@ -7,13 +7,13 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mysema.query.BooleanBuilder;
+
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.QGrupoPerfil;
 import br.com.cleartech.pgmc.mgu.repositories.GrupoPerfilRepository;
 import br.com.cleartech.pgmc.mgu.repositories.util.QuerydslJpaRepositoryAux;
 import br.com.cleartech.pgmc.mgu.utils.QueryUtils;
-
-import com.mysema.query.BooleanBuilder;
 
 @Repository
 @Transactional( readOnly = true )

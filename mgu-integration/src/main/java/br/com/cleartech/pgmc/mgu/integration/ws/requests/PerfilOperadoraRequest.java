@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "perfilOperadora")
-public class PerfilOperadoraBean {
+public class PerfilOperadoraRequest {
 	private Long id;
 	private String nome;
 	private SistemaBean sistema;

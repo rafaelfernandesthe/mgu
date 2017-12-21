@@ -49,6 +49,11 @@ body {
     padding-top: 10px;
 }
 
+#version {
+    padding-top: 10px;
+    text-align: center;
+}
+
 #conteudo-form {
     background-image: url(../img/login/login-bottom-bg.png);
     background-attachment: scroll;
@@ -60,7 +65,7 @@ body {
     background-clip: border-box;
     background-color: transparent;
     border-radius: 0 0 10px 10px;
-    height: 110px;
+    height: auto;
     width: 470px;
     font-family: Calibri;
     color: #FFFFFF !important;

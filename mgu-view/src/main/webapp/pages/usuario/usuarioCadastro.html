@@ -14,37 +14,35 @@
 
 		<div class="painel-primary pui-panel"
 			th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
-			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}" th:object="${usuario}">
+			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}" th:object="${usuario}" >
 
 				<div th:include="~{/_layout/mensagem.html}"></div>
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome" th:text="#{usuario.nome}"> 
-							<span style="color: red !important; font-weight: bold;">*</span>
-						</label>
+						<label class="control-label required" for="nome" th:text="#{nmUsuario}">Nome</label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="nome" th:field="*{nmUsuario}" required="required" autofocus />
+						<input id="nome" class="form-control input-sm" th:errorclass="field-error" th:field="*{nmUsuario}" autofocus />
 					</div>
 
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="username" th:text="#{usuario.usuarioAcesso}">Usuário Acesso: </label>
+						<label class="control-label required" for="username" th:text="#{dcUsername}">Usuário Acesso: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="username" th:field="*{dcUsername}" required="required" />
+						<input class="form-control input-sm" id="username" th:errorclass="field-error" th:field="*{dcUsername}" />
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="email" th:text="#{usuario.email}">Email: </label>
+						<label class="control-label required" for="email" th:text="#{dcEmail}">Email: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="email" th:field="*{dcEmail}" required="required" />
+						<input class="form-control input-sm" id="email" th:errorclass="field-error" th:field="*{dcEmail}" />
 					</div>
 
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="cargo" th:text="#{usuario.cargo}">Cargo: </label>
+						<label class="control-label" for="cargo" th:text="#{dcCargo}">Cargo: </label>
 					</div>
 					<div class="col-sm-4 form-group">
 						<input class="form-control input-sm" id="cargo" th:field="*{dcCargo}" />
@@ -53,14 +51,14 @@
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome" th:text="#{usuario.telefone}">Telefone: </label>
+						<label class="control-label required" for="telefone" th:text="#{dcTelefone}">Telefone: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="telefone" th:field="*{dcTelefone}" required="required"  />
+						<input class="form-control input-sm" id="telefone" th:errorclass="field-error" th:field="*{dcTelefone}"  />
 					</div>
 
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="cargo" th:text="#{usuario.telefoneFixo}">Telefone Fixo: </label>
+						<label class="control-label" for="telefoneFixo" th:text="#{dcTelefoneFixo}">Telefone Fixo: </label>
 					</div>
 					<div class="col-sm-4 form-group">
 						<input class="form-control input-sm" id="telefoneFixo" th:field="*{dcTelefoneFixo}" />
@@ -69,20 +67,20 @@
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome" th:text="#{usuario.cpf}">Cpf</label>
+						<label class="control-label required" for="cpf" th:text="#{nuCpf}">Cpf</label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input type="text" class="form-control input-sm CPF"
+						<input type="text" class="form-control input-sm CPF" th:errorclass="field-error"
 							maxlength="14" id="cpf" th:field="*{nuCpf}"
-							placeholder="___.___.___-__" required="required" />
+							placeholder="___.___.___-__" />
 					</div>
 
 
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nivelEscalonamento" th:text="#{usuario.nivelEscalonamento}">Nivel: </label>
+						<label class="control-label" for="nivelEscalonamento" th:text="#{nivelEscalonamento}">Nivel: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<select class="form-control input-sm" id="nivelsEscalonamento" th:field="*{nivelEscalonamento}" required>
+						<select class="form-control input-sm" id="nivelEscalonamento" th:field="*{nivelEscalonamento}" >
 							<option value="">Selecione</option> 
 							<option th:each="nvl : ${niveisEscalonamento}" 
 						          th:value="${{nvl}}" 
@@ -94,7 +92,7 @@
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="listaGrupoPerfil" th:text="#{grupoPerfil}">Grupo Perfil</label>
+						<label class="control-label required" for="listaGrupoPerfil" th:text="#{grupoPerfisIdList}">Grupo Perfil</label>
 					</div>
 					<div class="col-sm-10 form-group">
 						<div class="pui-picklist" id="listaGrupoPerfil">
@@ -106,27 +104,25 @@
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome" th:text="#{usuario.bloquado}">Bloqueado: </label>
+						<label class="control-label required" for="bloqueado" th:text="#{flBloqueio}">Bloqueado: </label>
 					</div>
-					<div class="col-sm-2 form-group">
-						<label class="radio-inline"> <input type="radio" name="bloqueado">Não</label> 
-						<label class="radio-inline"> <input type="radio" name="bloqueado">Sim</label>
+					<div id="bloqueado" class="col-sm-2 form-group">
+						<label class="radio-inline"> <input type="radio" th:value="BLOQUEADO_PRIMEIROACESSO" th:field="*{flBloqueio}">Não</label> 
+						<label class="radio-inline"> <input type="radio" th:value="BLOQUEADO_ADM" th:field="*{flBloqueio}">Sim</label>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome" th:text="#{usuario.enviaEmail}">Envia E-mail: </label>
+						<label class="control-label required" for="enviaEmail" th:text="#{flEnvioEmail}">Envia E-mail: </label>
 					</div>
-					<div class="col-sm-4 form-group">
-						<label class="radio-inline"> <input type="radio" name="enviaEmail">Não</label> 
-						<label class="radio-inline"> <input type="radio" name="enviaEmail">Sim</label>
+					<div id="enviaEmail" class="col-sm-4 form-group">
+						<label class="radio-inline"> <input type="radio" th:value="false" th:field="*{flEnvioEmail}">Não</label> 
+						<label class="radio-inline"> <input type="radio" th:value="true" th:field="*{flEnvioEmail}">Sim</label>
 					</div>
-					
-
 				</div>
 
 				<div class="form-group buttonsGroup">
-					<button class="pui-button" type="submit">
+					<button id="submitBt" class="pui-button" type="submit">
 						<label th:text="#{botao.cadastrar}"></label>
 					</button>
 					<a class="pui-button" th:href="@{'/usuarioCadastro'}"> 
@@ -136,9 +132,13 @@
 
 			</form>
 		</div>
+		
+		<div id="dlg">
+			<img th:src="@{/resources/img/carregando.gif}"/>
+		</div>
 
 	</div>
-
+	
 	<div layout:fragment="javascript-support">
 		<script type="text/javascript" src="../../resources/js/jquery.mask.js" th:src="@{/resources/js/jquery.mask.js}"></script>
 		
@@ -146,21 +146,22 @@
 			$(function (){
 			  	var sourceData = [(${grupoPerfisSourceJSON})];
 			  	var targetData = [(${grupoPerfisTargetJSON})];
-				$('#listaGrupoPerfil').puipicklist({
-			        sourceCaption: 'Disponíveis',
-			        targetCaption: 'Selecionados',
-			        filter: true,
-			        filterMatchMode: 'contains',
-			        sourceData: sourceData,
-			        targetData: targetData,
-			        reponsive: true,
-				});
+			  	declare_puipicklist('#listaGrupoPerfil', sourceData, targetData, 'grupoPerfisIdList');
 				
 				$('#telefoneFixo').mask('(00) 0000-0000');
 				$('#telefone').mask('(00) 00000-0000');
 				$('#cpf').mask('999.999.999-99' );
+				$('#username').keyup(function () { 
+					this.value = this.value.replace(/[^\w._-]/g,'');
+				});
+				
+				$('#submitBt').puibutton({
+				    click: function(event) {
+				    	 $('#dlg').puidialog('show');
+				    }
+				});
+				
 			});
-			
 		</script>
 	</div>
 

@@ -6,4 +6,6 @@ import br.com.cleartech.pgmc.mgu.entities.Sistema;
 
 public interface SistemaRepository extends CrudRepository<Sistema, Long> {
 
+	Sistema findByDcSistemaIgnoreCase( String sistema );
+
 }

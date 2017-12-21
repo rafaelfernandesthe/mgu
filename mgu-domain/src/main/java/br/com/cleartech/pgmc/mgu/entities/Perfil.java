@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -55,19 +56,19 @@ public class Perfil implements Serializable {
 
 	@NotAudited
 	@ManyToMany
-	@JoinTable( name = "grupo_perfil_x_perfil", joinColumns = @JoinColumn( name = "pk_id_perfil" ), inverseJoinColumns = @JoinColumn( name = "pk_id_grupo_perfil" ) )
+	@JoinTable( name = "GRUPO_PERFIL_X_PERFIL", joinColumns = @JoinColumn( name = "PK_ID_PERFIL" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_GRUPO_PERFIL" ) )
 	private List<GrupoPerfil> grupoPerfis;
 
 	// @NotAudited
 	// @ManyToMany
 	// @Fetch( FetchMode.SUBSELECT )
-	// @JoinTable( name = "PERFIL_ACESSO_OPER", joinColumns = @JoinColumn( name
-	// = "PK_ID_PERFIL" ), inverseJoinColumns = @JoinColumn( name =
-	// "PK_PERFIL_ACESSO_OPER" ) )
-	// private List<PerfilAcessoOperadora> perfilAcessoOperadoras;
+	// @JoinTable( name = "ACESSO_OPER", joinColumns = @JoinColumn( name =
+	// "PK_ID_PERFIL" ), inverseJoinColumns = @JoinColumn( name =
+	// "PK_ACESSO_OPER" ) )
+	// private List<AcessoOperadora> acessosOperadora;
 
 	@NotAudited
-	@OneToMany( mappedBy = "perfil" )
+	@OneToMany( mappedBy = "perfil", cascade = CascadeType.ALL )
 	@LazyCollection( LazyCollectionOption.FALSE )
 	private List<PerfilAcessoOperadora> perfilAcessoOperadoras;
 
@@ -135,7 +136,7 @@ public class Perfil implements Serializable {
 
 	public List<PerfilAcessoOperadora> getPerfilAcessoOperadoras() {
 		if ( perfilAcessoOperadoras == null )
-			return new ArrayList<PerfilAcessoOperadora>();
+			perfilAcessoOperadoras = new ArrayList<PerfilAcessoOperadora>();
 		return perfilAcessoOperadoras;
 	}
 
@@ -154,6 +155,18 @@ public class Perfil implements Serializable {
 	public void addPerfil( Perfil p ) {
 		this.listaPerfil.add( p );
 	}
+
+	// public List<AcessoOperadora> getAcessosOperadora() {
+	// if ( acessosOperadora == null ) {
+	// return new ArrayList<AcessoOperadora>();
+	// }
+	// return acessosOperadora;
+	// }
+	//
+	// public void setAcessosOperadora( List<AcessoOperadora> acessosOperadora )
+	// {
+	// this.acessosOperadora = acessosOperadora;
+	// }
 
 	@Override
 	public int hashCode() {

@@ -43,9 +43,9 @@ public class UsuarioConsultaController {
 	
 	@GetMapping( "/s" )
 	public String lista(Usuario usuario, Model model ) {
-		List<Usuario> usuarios = usuarioService.findByPrestadorasId(1630l);
+//		List<Usuario> usuarios = usuarioService.findByPrestadorasId(1630l);
 
-		model.addAttribute( "usuarios", usuarios);
+//		model.addAttribute( "usuarios", usuarios);
 		return MappedViews.USUARIO_CONSULTA.getPath();
 	}
 	

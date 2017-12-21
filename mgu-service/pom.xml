@@ -6,14 +6,13 @@
 	<parent>
 		<groupId>br.com.cleartech.pgmc</groupId>
 		<artifactId>mgu</artifactId>
-		<version>${current.version}</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>br.com.cleartech.pgmc</groupId>
 			<artifactId>mgu-domain</artifactId>
-			<version>${current.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -46,7 +45,11 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring.version}</version>
-<!-- 			<version>4.3.5.RELEASE</version> -->
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
 		</dependency>
 	</dependencies>
 

@@ -1,4 +1,4 @@
-package br.com.cleartech.pgmc.mgu.config;
+package br.com.cleartech.pgmc.mgu.configs;
 
 import java.io.IOException;
 
@@ -14,13 +14,13 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 
 public class MguLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler implements LogoutSuccessHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger( MguLogoutSuccessHandler.class );
+	private static final Logger logger = LoggerFactory.getLogger( MguLogoutSuccessHandler.class );
 
 	@Override
 	public void onLogoutSuccess( HttpServletRequest request, HttpServletResponse response, Authentication authentication ) throws IOException, ServletException {
 
-		String refererUrl = request.getHeader( "Referer" );
-		LOGGER.info( "Logout from: " + refererUrl );
+		logger.info( "Logout {} ", authentication.getName() );
+		logger.info( request.getHeader( "Referer" ) );
 
 		super.onLogoutSuccess( request, response, authentication );
 	}

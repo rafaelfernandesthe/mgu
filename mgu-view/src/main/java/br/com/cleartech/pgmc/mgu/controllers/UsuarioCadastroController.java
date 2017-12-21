@@ -3,18 +3,21 @@ package br.com.cleartech.pgmc.mgu.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import br.com.cleartech.pgmc.mgu.dtos.UsuarioCadastroDTO;
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.NivelEscalonamento;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
@@ -23,6 +26,7 @@ import br.com.cleartech.pgmc.mgu.services.NivelEscalonamentoService;
 import br.com.cleartech.pgmc.mgu.services.UsuarioService;
 import br.com.cleartech.pgmc.mgu.utils.MappedViews;
 import br.com.cleartech.pgmc.mgu.utils.MguUtils;
+import br.com.cleartech.pgmc.mgu.utils.StringUtils;
 
 @Controller
 @RequestMapping( "/usuarioCadastro" )
@@ -39,41 +43,43 @@ public class UsuarioCadastroController {
 	@Autowired
 	private NivelEscalonamentoService nivelEscalonamentoService;
 
-	@Autowired
-	private AutenticacaoController autenticacaoController;
+	private CPFValidator cpfValidator = new CPFValidator();
 
 	private Usuario usuario;
 
 	@GetMapping
-	public String init( Usuario usuario, Model model ) {
+	public String init( Model model ) {
 		List<GrupoPerfil> listaGrupoPerfilTotal = getGrupoPerfilList();
 		model.addAttribute( "grupoPerfisSourceJSON", MguUtils.getVO2JSON( listaGrupoPerfilTotal, "id", "noGrupoPerfil" ) );
 		model.addAttribute( "grupoPerfisTargetJSON", MguUtils.getJSON( new ArrayList<GrupoPerfil>() ) );
+		model.addAttribute( "usuario", new UsuarioCadastroDTO() );
+
+		cpfValidator.initialize( null );
 
 		return MappedViews.USUARIO_CADASTRO.getPath();
 	}
 
 	@PostMapping( "/salvar" )
-	public String salvar( Usuario usuario, BindingResult bindingResult, Model model ) {
-
-		LOGGER.info( model.asMap() + "" );
-
-		if ( bindingResult.hasErrors() ) {
-			return MappedViews.USUARIO_CADASTRO.getPath();
-		}
-
-		if ( usuario.getGrupoPerfisIdList().isEmpty() ) {
-			bindingResult.addError( new ObjectError( "usuario.grupoPerfisIdList", "É necessário informar pelo menos um Perfil" ) );
-		}
+	public String salvar( @Validated @ModelAttribute( "usuario" ) UsuarioCadastroDTO usuario, BindingResult bindingResult, Model model ) {
 
 		// carregar grupos
 		List<GrupoPerfil> groupSelecteds = MguUtils.idListToGrupoPerfilList( usuario.getGrupoPerfisIdList() );
 		usuario.setGrupoPerfis( groupSelecteds );
-		if ( !bindingResult.hasErrors() ) {
 
-			// usuarioService.salvar( usuario );
+		if ( !cpfValidator.isValid( usuario.getNuCpf(), null ) ) {
+			bindingResult.addError( new FieldError( "usuario", "nuCpf", usuario.getNuCpf(), false, null, null, "CPF informado é inválido." ) );
+		}
+
+		if ( !StringUtils.isEmpty( usuario.getDcUsername() ) ) {
+			if ( !usuario.getDcUsername().replaceAll( "[\\w._-]", "" ).isEmpty() ) {
+				bindingResult.addError( new FieldError( "usuario", "dcUsername", usuario.getDcUsername(), false, null, null, "Usuário de Acesso deve conter apenas letras, números, ponto(.), underline(_) e traço(-)." ) );
+			}
+		}
+
+		if ( !bindingResult.hasErrors() ) {
+			// usuarioService.salvar( usuario.getUsuario() );
 			LOGGER.info( "salvando: " + usuario );
-			return "redirect:/grupoPerfilConsulta" + MappedViews.SUCESS_PARAMETER.getPath();
+			return "redirect:/usuarioConsulta" + MappedViews.SUCESS_PARAMETER.getPath();
 		} else {
 			List<GrupoPerfil> listaGrupoPerfilTotal = getGrupoPerfilList();
 			listaGrupoPerfilTotal.removeAll( groupSelecteds );
@@ -92,8 +98,7 @@ public class UsuarioCadastroController {
 	}
 
 	private List<GrupoPerfil> getGrupoPerfilList() {
-//		return grupoPerfilService.findByPrestadora( autenticacaoController.getIdPrestadora() );
-		return grupoPerfilService.findByPrestadora( 1630l );
+		return grupoPerfilService.findByPrestadora( MguUtils.getUsuarioLogado().getIdPrestadora() );
 	}
 
 	public Usuario getUsuario() {

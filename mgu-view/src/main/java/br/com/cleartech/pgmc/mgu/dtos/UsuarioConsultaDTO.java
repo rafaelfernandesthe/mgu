@@ -1,13 +1,12 @@
-package br.com.cleartech.pgmc.mgu.vo;
+package br.com.cleartech.pgmc.mgu.dtos;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
-import br.com.cleartech.pgmc.mgu.utils.EntityVOSearchBase;
+import br.com.cleartech.pgmc.mgu.utils.DTOSearchBase;
 
-public class UsuarioConsultaVO extends EntityVOSearchBase {
+public class UsuarioConsultaDTO extends DTOSearchBase {
 
 	private static final long serialVersionUID = -2539799703471445183L;
 
@@ -26,21 +25,21 @@ public class UsuarioConsultaVO extends EntityVOSearchBase {
 	private String nuCpf;
 
 	@Override
-	public List<EntityVOSearchBase> getVO(List<?> list) {
-		List<EntityVOSearchBase> result = new ArrayList<>();
+	public List<DTOSearchBase> getVO(List<?> list) {
+		List<DTOSearchBase> result = new ArrayList<>();
 		if (list != null)
 			for (Usuario item : (List<Usuario>) list) {
-				result.add(new UsuarioConsultaVO(item.getId(), item.getNmUsuario(), item.getDcUsername(), item.getDcEmail(), item.getDcCargo(), item
+				result.add(new UsuarioConsultaDTO(item.getId(), item.getNmUsuario(), item.getDcUsername(), item.getDcEmail(), item.getDcCargo(), item
 						.getDcTelefone(), item.getNuCpf()));
 			}
 		return result;
 	}
 
-	public UsuarioConsultaVO() {
+	public UsuarioConsultaDTO() {
 
 	}
 
-	public UsuarioConsultaVO(Long id,String nmUsuario, String dcUsername, String dcEmail,String dcCargo, String dcTelefone, String nuCpf){
+	public UsuarioConsultaDTO(Long id,String nmUsuario, String dcUsername, String dcEmail,String dcCargo, String dcTelefone, String nuCpf){
 		this.id = id;
 		this.nmUsuario = nmUsuario;
 		this.dcUsername = dcUsername;

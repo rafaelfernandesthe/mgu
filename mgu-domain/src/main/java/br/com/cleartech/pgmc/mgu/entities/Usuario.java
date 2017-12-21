@@ -55,7 +55,7 @@ public class Usuario implements Serializable {
 	private String dcEmail;
 
 	@Column( name = "FL_DYNAMICS" )
-	private Boolean flEnviarDynamics;
+	private boolean flEnviarDynamics;
 
 	@Column( name = "DC_IP_ORIGEM" )
 	@XmlElement( name = "iporigem" )
@@ -84,7 +84,7 @@ public class Usuario implements Serializable {
 	private String dcTelefoneFixo;
 
 	@Column( name = "FL_MASTER" )
-	private Boolean flMaster;
+	private boolean flMaster;
 
 	@Column( name = "FL_BLOQUEIO", precision = 1 )
 	@Enumerated( EnumType.ORDINAL )
@@ -92,7 +92,7 @@ public class Usuario implements Serializable {
 	private BloqueioUsuario flBloqueio = BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO;
 
 	@Column( name = "FL_PRIMEIRO_ACESSO" )
-	private Boolean flPrimeiroAcesso;
+	private boolean flPrimeiroAcesso;
 
 	@Column( name = "NM_USUARIO" )
 	@XmlElement( name = "nomeusuario" )
@@ -118,10 +118,10 @@ public class Usuario implements Serializable {
 	private String nuCpf;
 
 	@Column( name = "FL_APROVADO" )
-	private Boolean flAprovado;
+	private boolean flAprovado;
 
 	@Column( name = "FL_PRIMEIRO_ACESSO_SNOA" )
-	private Boolean flPrimeiroAcessoSNOA;
+	private boolean flPrimeiroAcessoSNOA;
 
 	// bi-directional many-to-one association to Usuario
 	@ManyToOne
@@ -149,7 +149,7 @@ public class Usuario implements Serializable {
 
 	@NotAudited
 	@ManyToMany
-	@JoinTable( name = "usuario_x_grupo_perfil", joinColumns = @JoinColumn( name = "pk_id_usuario" ), inverseJoinColumns = @JoinColumn( name = "pk_id_grupo_perfil" ) )
+	@JoinTable( name = "USUARIO_X_GRUPO_PERFIL_TEMP", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_GRUPO_PERFIL" ) )
 	private List<GrupoPerfil> grupoPerfis;
 
 	@Transient
@@ -158,7 +158,7 @@ public class Usuario implements Serializable {
 	@NotAudited
 	@ManyToMany
 	@Fetch( FetchMode.JOIN )
-	@JoinTable( name = "PRESTADORA_X_USUARIO", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_PRESTADORA" ) )
+	@JoinTable( name = "PRESTADORA_X_USUARIO_TEMP", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_PRESTADORA" ) )
 	private List<Prestadora> prestadoras;
 
 	@ManyToOne
@@ -166,7 +166,7 @@ public class Usuario implements Serializable {
 	private NivelEscalonamento nivelEscalonamento;
 
 	@Column( name = "FL_ENVIO_EMAIL" )
-	private Boolean flEnvioEmail;
+	private boolean flEnvioEmail;
 
 	@Column( name = "FL_USUARIO_SISTEMA" )
 	private Integer flUsuarioSistema;
@@ -182,6 +182,9 @@ public class Usuario implements Serializable {
 	// Utilizado no envio de e-mail
 	private String senhaSemMD5;
 
+	@Transient
+	private Boolean usuarioLogado = false;
+
 	public Usuario() {}
 	
 	public Usuario(String nmUsuario, String dcUsername, String dcEmail,String dcCargo, String dcTelefone, String nuCpf){
@@ -193,11 +196,11 @@ public class Usuario implements Serializable {
 		this.nuCpf = nuCpf;
 	}
 
-	public Boolean getFlEnviarDynamics() {
+	public boolean getFlEnviarDynamics() {
 		return flEnviarDynamics;
 	}
 
-	public void setFlEnviarDynamics( Boolean flEnviarDynamics ) {
+	public void setFlEnviarDynamics( boolean flEnviarDynamics ) {
 		this.flEnviarDynamics = flEnviarDynamics;
 	}
 
@@ -281,11 +284,11 @@ public class Usuario implements Serializable {
 		this.dcTelefoneFixo = dcTelefoneFixo;
 	}
 
-	public Boolean getFlMaster() {
+	public boolean getFlMaster() {
 		return flMaster;
 	}
 
-	public void setFlMaster( Boolean flMaster ) {
+	public void setFlMaster( boolean flMaster ) {
 		this.flMaster = flMaster;
 	}
 
@@ -336,11 +339,11 @@ public class Usuario implements Serializable {
 		this.nuCpf = nuCpf;
 	}
 
-	public Boolean getFlAprovado() {
+	public boolean getFlAprovado() {
 		return flAprovado;
 	}
 
-	public void setFlAprovado( Boolean flAprovado ) {
+	public void setFlAprovado( boolean flAprovado ) {
 		this.flAprovado = flAprovado;
 	}
 
@@ -412,11 +415,11 @@ public class Usuario implements Serializable {
 		this.sistema = sistema;
 	}
 
-	public Boolean getFlPrimeiroAcessoSNOA() {
+	public boolean getFlPrimeiroAcessoSNOA() {
 		return flPrimeiroAcessoSNOA;
 	}
 
-	public void setFlPrimeiroAcessoSNOA( Boolean flPrimeiroAcessoSNOA ) {
+	public void setFlPrimeiroAcessoSNOA( boolean flPrimeiroAcessoSNOA ) {
 		this.flPrimeiroAcessoSNOA = flPrimeiroAcessoSNOA;
 	}
 
@@ -426,6 +429,14 @@ public class Usuario implements Serializable {
 
 	public void setFlUsuarioSistema( Integer flUsuarioSistema ) {
 		this.flUsuarioSistema = flUsuarioSistema;
+	}
+
+	public boolean isFlEnvioEmail() {
+		return flEnvioEmail;
+	}
+
+	public void setFlEnvioEmail( boolean flEnvioEmail ) {
+		this.flEnvioEmail = flEnvioEmail;
 	}
 
 	public Perfil getPerfil() {
@@ -471,6 +482,14 @@ public class Usuario implements Serializable {
 		this.grupos = grupos;
 	}
 
+	public Boolean getUsuarioLogado() {
+		return usuarioLogado;
+	}
+
+	public void setUsuarioLogado( Boolean usuarioLogado ) {
+		this.usuarioLogado = usuarioLogado;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -498,7 +517,7 @@ public class Usuario implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flAprovado + ", flPrimeiroAcessoSNOA=" + getFlPrimeiroAcessoSNOA() + ", perfil=" + perfil + ", usuarios=" + usuarios + ", grupoPerfis=" + grupoPerfis + ", flEnvioEmail=" + flEnvioEmail + ", flUsuarioSistema=" + flUsuarioSistema + "]";
+		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flAprovado + ", flPrimeiroAcessoSNOA=" + getFlPrimeiroAcessoSNOA() + ", perfil=" + perfil + ", usuarios=" + usuarios + ", grupoPerfis=" + grupoPerfis + ", flEnvioEmail=" + isFlEnvioEmail() + ", flUsuarioSistema=" + flUsuarioSistema + "]";
 	}
 
 }
