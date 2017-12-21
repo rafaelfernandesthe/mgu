@@ -12,6 +12,7 @@
 		<link href="../../resources/css/primeui.min.css" th:href="@{/resources/css/primeui.min.css}" rel="stylesheet"/>
 		<link href="../../resources/css/style.css" th:href="@{/resources/css/style.css}" rel="stylesheet"/>
 		
+		
 		<title th:text="#{sistema.titulo}">Nome do Sistema</title>
 	</head>
   
@@ -88,6 +89,15 @@
 	<script type="text/javascript" src="../../resources/js/primeui.min.js" th:src="@{/resources/js/primeui.min.js}" ></script>
 	<script type="text/javascript" src="../../resources/js/primeui-default.js" th:src="@{/resources/js/primeui-default.js}"></script>
 	<script type="text/javascript" src="../../resources/js/mgu-commons.js" th:src="@{/resources/js/mgu-commons.js}"></script>
+	
+	<script type="text/javascript" src="../../resources/vendor/jquery/jquery.min.js" th:src="@{/resources/vendor/jquery/jquery.min.js}"></script>
+    <!-- Page level plugin JavaScript-->
+    <script type="text/javascript" src="../../resources/vendor/datatables/jquery.dataTables.js" th:src="@{/resources/vendor/datatables/jquery.dataTables.js}"></script>
+    <script type="text/javascript" src="../../resources/vendor/datatables/dataTables.bootstrap4.js" th:src="@{/resources/vendor/datatables/dataTables.bootstrap4.js}"></script>
+    <!-- Custom scripts for all pages-->
+    <script type="text/javascript" src="../../resources/js/sb-admin-datatables.min.js" th:src="@{/resources/js/sb-admin-datatables.min.js}"></script>
+	<script type="text/javascript" src="../../resources/js/sb-admin.min.js"            th:src="@{/resources/js/sb-admin.min.js}"></script>
+	
 	<script>
 		$(function (){
 			//usuario nao deve conseguir ver a pagina sendo 'montada'

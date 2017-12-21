@@ -183,6 +183,15 @@ public class Usuario implements Serializable {
 	private String senhaSemMD5;
 
 	public Usuario() {}
+	
+	public Usuario(String nmUsuario, String dcUsername, String dcEmail,String dcCargo, String dcTelefone, String nuCpf){
+		this.nmUsuario = nmUsuario;
+		this.dcUsername = dcUsername;
+		this.dcEmail = dcEmail;
+		this.dcCargo = dcCargo;
+		this.dcTelefone = dcTelefone;
+		this.nuCpf = nuCpf;
+	}
 
 	public Boolean getFlEnviarDynamics() {
 		return flEnviarDynamics;

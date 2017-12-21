@@ -1,13 +1,17 @@
 package br.com.cleartech.pgmc.mgu.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+import org.springframework.data.repository.CrudRepository;
 
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
-	Usuario findByDcUsername( String username );
+	Usuario findByDcUsername(String username);
 
-	Usuario findByDcUsernameIgnoreCase( String username );
+	Usuario findByDcUsernameIgnoreCase(String username);
+
+	List<Usuario> findByPrestadorasId(Long id);
 
 }

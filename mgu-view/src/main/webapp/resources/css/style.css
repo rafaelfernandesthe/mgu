@@ -74,9 +74,9 @@ body {
 	display: none;
 }
 
-.pui-datatableResult #ui-id-1 {
-	width: 10%;
-}
+
+/*Definindo largura das colunas*/
+
 
 .navbar {
 	margin-bottom: 5px;
@@ -153,6 +153,7 @@ img, .row-fluid {
 	
 }
 
-#ui-id-5 {
-	width: 100px;
+.acao{
+	width: 165px;
 }
+
