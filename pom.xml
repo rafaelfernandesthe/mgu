@@ -62,22 +62,6 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>ficticia_153</id>
-			<properties>
-				<jndi.name>java:/MguDS-CLARO</jndi.name>
-				<context.view>mgu-ficticia-153</context.view>
-				<context.integration>mgu-ficticia-153-ws</context.integration>
-			</properties>
-		</profile>
-		<profile>
-			<id>ficticia_154</id>
-			<properties>
-				<jndi.name>java:/MguDS-OI</jndi.name>
-				<context.view>mgu-ficticia-154</context.view>
-				<context.integration>mgu-ficticia-154-ws</context.integration>
-			</properties>
-		</profile>
-		<profile>
 			<id>abrt</id>
 			<properties>
 				<jndi.name>java:/MguDS-ABRT</jndi.name>

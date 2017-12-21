@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
 import br.com.cleartech.pgmc.mgu.services.ParametrizacaoService;
 
 @Configuration
@@ -20,15 +21,10 @@ public class MailConfig {
 	public JavaMailSender getJavaMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 	
-		mailSender.setHost( "smtp.cleartech.com.br" );
-		mailSender.setPort( 25 );
-		mailSender.setUsername( "svc_no_reply" );
-		mailSender.setPassword( "CTECH@noreply" );
-//		
-//		mailSender.setHost( "smtp.gmail.com" );
-//		mailSender.setPort( 587 );
-//		mailSender.setUsername( "pedrotomecm@gmail.com" );
-//		mailSender.setPassword( "ptcm1230" );
+		mailSender.setHost( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_HOST.getDcParametro() ) );
+		mailSender.setPort( Integer.valueOf( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_PORT.getDcParametro() ) ) );
+		mailSender.setUsername( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_USERNAME.getDcParametro() ) );
+		mailSender.setPassword( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_PASSWORD.getDcParametro() ) );
 
 		Properties props = mailSender.getJavaMailProperties();
 		props.put( "mail.transport.protocol", "smtp" );
