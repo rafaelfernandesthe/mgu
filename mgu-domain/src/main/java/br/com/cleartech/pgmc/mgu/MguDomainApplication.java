@@ -7,9 +7,11 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jndi.JndiTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -20,13 +22,17 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 @ComponentScan( "br.com.cleartech.pgmc" )
 @EnableJpaRepositories( "br.com.cleartech.pgmc" )
+@PropertySource( "classpath:datasource.properties" )
 public class MguDomainApplication {
+
+	@Value( "${jndi.name}" )
+	private String jndiName;
 
 	@Bean
 	@Autowired
 	public DataSource dataSource() throws NamingException {
 		JndiTemplate jndiTemplate = new JndiTemplate();
-		return (DataSource) jndiTemplate.lookup( "java:/MguDS-CLEARTECH" );
+		return (DataSource) jndiTemplate.lookup( jndiName );
 	}
 
 	@Bean

@@ -8,19 +8,19 @@
 		<ldap.profile>cleartech</ldap.profile>
 		<thymeleaf.version>3.0.3.RELEASE</thymeleaf.version>
 		<thymeleaf-layout-dialect.version>2.2.1</thymeleaf-layout-dialect.version>
+		<build>${maven.build.timestamp}</build>
 	</properties>
 
 	<parent>
 		<groupId>br.com.cleartech.pgmc</groupId>
 		<artifactId>mgu</artifactId>
-		<version>${current.version}</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>br.com.cleartech.pgmc</groupId>
 			<artifactId>mgu-service</artifactId>
-			<version>${current.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
@@ -79,7 +79,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>${context.view}-web-${current.version}</finalName>
+		<finalName>${context.view}-web-${version.project}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

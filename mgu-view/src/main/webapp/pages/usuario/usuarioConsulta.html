@@ -10,52 +10,62 @@
 			<li><a href="#">Grupo de Perfil</a></li>
 			<li><a href="#">Consulta</a></li>
 		</ul>
-
+ 
 		<div class="painel-primary pui-panel-toggleable"
 			th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
-			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}" th:object="${usuario}">
+			<form action="#" method="get" th:action="@{/usuarioConsulta/s}"
+				th:object="${usuario}">
 
 				<div th:include="~{/_layout/mensagem.html}"></div>
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome" th:text="#{usuario.nome}"> 
+						<label class="control-label" for="nome" th:text="#{usuario.nome}">
 							<span style="color: red !important; font-weight: bold;">*</span>
 						</label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="nome" th:field="*{nmUsuario}" required="required" autofocus />
+						<input class="form-control input-sm" id="nome"
+							th:field="*{nmUsuario}" autofocus />
 					</div>
 
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="username" th:text="#{usuario.usuarioAcesso}">Usuário Acesso: </label>
+						<label class="control-label" for="username"
+							th:text="#{usuario.usuarioAcesso}">Usuário Acesso: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="username" th:field="*{dcUsername}" required="required" />
+						<input class="form-control input-sm" id="username"
+							th:field="*{dcUsername}" />
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="email" th:text="#{usuario.email}">Email: </label>
+						<label class="control-label" for="email"
+							th:text="#{usuario.email}">Email: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="email" th:field="*{dcEmail}" required="required" />
+						<input class="form-control input-sm" id="email"
+							th:field="*{dcEmail}" />
 					</div>
 
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="cargo" th:text="#{usuario.cargo}">Cargo: </label>
+						<label class="control-label" for="cargo"
+							th:text="#{usuario.cargo}">Cargo: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="cargo" th:field="*{dcCargo}" />
+						<input class="form-control input-sm" id="cargo"
+							th:field="*{dcCargo}" />
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome" th:text="#{usuario.telefone}">Telefone: </label>
+						<label class="control-label" for="nome"
+							th:text="#{usuario.telefone}">Telefone: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="telefone" th:field="*{dcTelefone}" required="required"  />
+						<input class="form-control input-sm" id="telefone"
+							th:field="*{dcTelefone}" />
 					</div>
 
 					<div class="col-sm-2 form-group ">
@@ -64,50 +74,125 @@
 					<div class="col-sm-4 form-group">
 						<input type="text" class="form-control input-sm CPF"
 							maxlength="14" id="cpf" th:field="*{nuCpf}"
-							placeholder="___.___.___-__" required="required" />
+							placeholder="___.___.___-__" />
 					</div>
 				</div>
 
 
-				<div class="row">
-					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="listaGrupoPerfil" th:text="#{grupoPerfil}">Grupo Perfil</label>
-					</div>
-					<div class="col-sm-4 form-group">
-						<select class="form-control input-sm" id="nivelEscalonamento" th:field="*{nivelEscalonamento}" required>
-							<option value="">Todos	</option> 
-							<option th:each="grupo : ${grupoPerfis}" 
-						          th:value="${grupo}" 
-						          th:text="${grupo.noGrupoPerfil}">
-							</option>
-						</select>
-					</div>
-				</div>
+
+
+				<!-- 				<div class="row"> -->
+				<!-- 					<div class="col-sm-2 form-group "> -->
+				<!-- 						<label class="control-label" for="listaGrupoPerfil" th:text="#{grupoPerfil}">Grupo Perfil</label> -->
+				<!-- 					</div> -->
+				<!-- 					<div class="col-sm-4 form-group"> -->
+				<!-- 						<select class="form-control input-sm" id="nivelEscalonamento" th:field="*{perfil}" > -->
+				<!-- 							<option value="">Todos	</option>  -->
+				<!-- 							<option th:each="grupo : ${grupoPerfis}"  -->
+				<!-- 						          th:value="${grupo}"  -->
+				<!-- 						          th:text="${grupo.noGrupoPerfil}"> -->
+				<!-- 							</option> -->
+				<!-- 						</select> -->
+				<!-- 					</div> -->
+				<!-- 				</div> -->
 
 				<div class="form-group buttonsGroup">
 					<button class="pui-button" type="submit">
-						<label th:text="#{botao.cadastrar}"></label>
+						<label th:text="#{botao.consultar}"></label>
 					</button>
-					<a class="pui-button" th:href="@{'/usuarioCadastro'}"> 
-						<label th:text="#{botao.limpar}"></label>
+					<a class="pui-button" th:href="@{'/usuarioConsulta'}"> <label
+						th:text="#{botao.limpar}"></label>
 					</a>
 				</div>
 
 			</form>
 		</div>
+		<div class="container-fluid">
+			<div class="pui-panel-toggleable" th:title="#{tabela.resultados}">
+				<div class="pui-datatableResult" id="tableGrupoPerfil">
+					<div class="content-wrapper">
+						<!-- Example DataTables Card-->
+						<div class="card mb-3">
+							<div class="card-header">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="table table-bordered" id="dataTable"
+											width="100%" cellspacing="0">
+											<thead>
 
-		<div class="pui-panel-toggleable" th:title="#{tabela.resultados}">
+												<tr>
+													<th class="acao"></th>
+													<th>Nome</th>
+													<th>Usuário Acesso</th>
+													<th>Email</th>
+													<th>Cargo</th>
+													<th>Telefone</th>
+													<th>CPF</th>
+													<th>Status</th>
+													<th>Grupo Perfil</th>
+												</tr>
+											</thead>
+											<tfoot>
+												<tr>
+													<th></th>
+													<th>Nome</th>
+													<th>Usuário Acesso</th>
+													<th>Email</th>
+													<th>Cargo</th>
+													<th>Telefone</th>
+													<th>CPF</th>
+													<th>Status</th>
+													<th>Grupo Perfil</th>
+												</tr>
+											</tfoot>
+											<tbody th:each="user: ${usuarios}">
+											<tr >
+												<td><a href="#">
+																<button class="btn btn-primary btn-sm" data-title="Edit"
+																	data-toggle="modal" data-target="#edit">
+																	<span class="fa fa-pencil"></span>
+																</button>
+														</a> <a href="#">
+																<button class="btn btn-primary btn-sm" data-title="Edit"
+																	data-toggle="modal" data-target="#edit">
+																	<span class="fa fa-pencil"></span>
+																</button>
+														</a> <a href="#">
+																<button class="btn btn-primary btn-sm" data-title="Edit"
+																	data-toggle="modal" data-target="#edit">
+																	<span class="fa fa-pencil"></span>
+																</button>
+														</a> <a href="#">
+																<button class="btn btn-primary btn-sm" data-title="Edit"
+																	data-toggle="modal" data-target="#edit">
+																	<span class="fa fa-pencil"></span>
+																</button>
+														</a>
+												 </td>
+											      <td th:text="${user.nmUsuario}">Oranges</td>
+											      <td >0.99</td>
+											      <td>Accountant</td>
+														<td>Tokyo</td>
+														<td>33</td>
+														<td>2008/11/28</td>
+														<td>33</td>
+														<td>2008/11/28</td>
+										    </tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div layout:fragment="javascript-support">
+				<script>
 			
-		</div>
-	</div>
-
-	<div layout:fragment="javascript-support">
-		<script>
-			$(function (){
-			  	
-			});
 		</script>
-	</div>
 
+			</div>
 </body>
 </html>

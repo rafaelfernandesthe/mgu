@@ -2,6 +2,7 @@ package br.com.cleartech.pgmc.mgu.configs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.LdapTemplate;
@@ -12,27 +13,29 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
+import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
+import br.com.cleartech.pgmc.mgu.services.ParametrizacaoService;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger( WebSecurityConfig.class );
-
-	String ldapUrl = "ldap://10.100.103.150:389";
-	String ldapRoot = "dc=pgmchom";
-	String ldapPort = "389";
-	String ldapManagerDn = "cn=admin,dc=pgmchom";
-	String ldapManagerPassword = "1pgmchom55";
-	String ldapProfile = "cleartech";
+	
+	@Autowired
+	private ParametrizacaoService parametrizacaoService;
 
 	@Bean
 	public BaseLdapPathContextSource ldapContextSource() {
-		LOGGER.info( "LDAP: {}", ldapUrl );
 		LdapContextSource bean = new LdapContextSource();
+		String host = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.LDAP_HOST.getDcParametro() );
+		String port = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.LDAP_PORT.getDcParametro() );
+		String ldapUrl = String.format( "ldap://%s:%s", host, port );
+		LOGGER.info( "LDAP: {}", ldapUrl );
 		bean.setUrl( ldapUrl );
-		bean.setBase( ldapRoot );
-		bean.setUserDn( ldapManagerDn );
-		bean.setPassword( ldapManagerPassword );
+		bean.setBase( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.LDAP_ROOT.getDcParametro() ) );
+		bean.setUserDn( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.LDAP_MANAGER_LOGIN.getDcParametro() ) );
+		bean.setPassword( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.LDAP_MANAGER_PASSWORD.getDcParametro() ) );
 		return bean;
 	}
 

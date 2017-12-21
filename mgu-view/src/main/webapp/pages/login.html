@@ -53,7 +53,11 @@
 					<div class="row">
 						<p th:if="${loginError}" class="error" th:text="${loginError}">Erro de login!</p>
 					</div>
-					
+					<div class="row">
+						<div class="col-sm-12">
+							<p id="version" th:if="${session.versionLabel}" th:text="${session.versionLabel}"/>
+						</div>
+					</div>
 				</form>
 			</div>
 			

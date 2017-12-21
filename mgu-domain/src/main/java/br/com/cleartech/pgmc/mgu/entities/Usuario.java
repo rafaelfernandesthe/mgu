@@ -180,6 +180,15 @@ public class Usuario implements Serializable {
 	private Boolean usuarioLogado = false;
 
 	public Usuario() {}
+	
+	public Usuario(String nmUsuario, String dcUsername, String dcEmail,String dcCargo, String dcTelefone, String nuCpf){
+		this.nmUsuario = nmUsuario;
+		this.dcUsername = dcUsername;
+		this.dcEmail = dcEmail;
+		this.dcCargo = dcCargo;
+		this.dcTelefone = dcTelefone;
+		this.nuCpf = nuCpf;
+	}
 
 	public boolean getFlEnviarDynamics() {
 		return flEnviarDynamics;
