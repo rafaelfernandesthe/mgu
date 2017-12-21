@@ -69,13 +69,7 @@ public class LdapServiceImpl implements LdapService {
 	}
 
 	@Override
-	public void createUser( String usuario, String password ) throws LdapException {
-		
-
-	}
-
-	@Override
-	public void createMasterUser( String usuario, String password ) throws LdapException {
+	public void createUser( String usuario, String password, boolean master ) throws LdapException {
 		try {
 			Attributes attrs = new BasicAttributes();
 			attrs.put( "objectclass", "person" );
@@ -87,12 +81,15 @@ public class LdapServiceImpl implements LdapService {
 
 			Attribute attr = new BasicAttribute( "uniqueMember", dn.toString() + "," + getLdapRoot() );
 			ModificationItem item = new ModificationItem( DirContext.ADD_ATTRIBUTE, attr );
-			ldapTemplate.modifyAttributes( getGrupoDnMaster(), new ModificationItem[] { item } );
+			if ( master ) {
+				ldapTemplate.modifyAttributes( getGrupoDnMaster(), new ModificationItem[] { item } );
+			} else {
+				ldapTemplate.modifyAttributes( getGrupoDnUsuario(), new ModificationItem[] { item } );
+			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
 			throw new LdapException();
 		}
-
 	}
 
 	@Override

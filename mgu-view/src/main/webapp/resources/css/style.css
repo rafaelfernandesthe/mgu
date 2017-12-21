@@ -149,7 +149,7 @@ img, .row-fluid {
 }
 
 .ui-panel-titlebar-icon.ui-panel-titlebar-toggler.ui-corner-all.ui-state-default{
-	background: url (../img/btnBackground.png);
+	background: url('../img/btnBackground.png') !important;
 	
 }
 
@@ -169,4 +169,10 @@ label.control-label {
 
 .field-error {
     border-color: #a94442 !important;
+}
+
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+    border: 10px solid #e0f79b;
+    background: #e0f79b;
+    color: #000000;
 }

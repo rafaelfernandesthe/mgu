@@ -22,7 +22,7 @@ public class MailConfig {
 	
 		mailSender.setHost( "smtp.cleartech.com.br" );
 		mailSender.setPort( 25 );
-		mailSender.setUsername( "svc_no_reply" );
+		mailSender.setUsername( "svc_no_replys" );
 		mailSender.setPassword( "CTECH@noreply" );
 //		
 //		mailSender.setHost( "smtp.gmail.com" );

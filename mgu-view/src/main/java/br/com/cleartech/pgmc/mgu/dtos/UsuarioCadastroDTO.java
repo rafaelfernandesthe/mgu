@@ -1,6 +1,7 @@
 package br.com.cleartech.pgmc.mgu.dtos;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Email;
@@ -9,6 +10,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.NivelEscalonamento;
+import br.com.cleartech.pgmc.mgu.entities.Prestadora;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 
@@ -42,6 +44,8 @@ public class UsuarioCadastroDTO implements Serializable {
 
 	private List<GrupoPerfil> grupoPerfis;
 
+	private Prestadora prestadora;
+
 	@NotEmpty
 	private List<Integer> grupoPerfisIdList;
 
@@ -65,6 +69,7 @@ public class UsuarioCadastroDTO implements Serializable {
 		usuario.setGrupoPerfis( this.getGrupoPerfis() );
 		usuario.setFlBloqueio( this.getFlBloqueio() );
 		usuario.setFlEnvioEmail( this.getFlEnvioEmail() );
+		usuario.setPrestadoras( Arrays.asList( this.getPrestadora() ) );
 		return usuario;
 	}
 
@@ -170,6 +175,19 @@ public class UsuarioCadastroDTO implements Serializable {
 
 	public void setFlEnvioEmail( Boolean flEnvioEmail ) {
 		this.flEnvioEmail = flEnvioEmail;
+	}
+
+	@Override
+	public String toString() {
+		return "UsuarioCadastroDTO [id=" + id + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", dcEmail=" + dcEmail + ", dcCargo=" + dcCargo + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", nuCpf=" + nuCpf + ", nivelEscalonamento=" + nivelEscalonamento + ", grupoPerfisIdList=" + grupoPerfisIdList + ", flBloqueio=" + flBloqueio + ", flEnvioEmail=" + flEnvioEmail + "]";
+	}
+
+	public Prestadora getPrestadora() {
+		return prestadora;
+	}
+
+	public void setPrestadora( Prestadora prestadora ) {
+		this.prestadora = prestadora;
 	}
 
 }

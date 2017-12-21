@@ -3,6 +3,8 @@ package br.com.cleartech.pgmc.mgu.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +21,7 @@ import br.com.cleartech.pgmc.mgu.utils.MappedViews;
 import br.com.cleartech.pgmc.mgu.utils.MguUtils;
 
 @Controller
-@RequestMapping("/usuarioConsulta")
+@RequestMapping( "/usuarioConsulta" )
 public class UsuarioConsultaController {
 
 	@Autowired
@@ -32,16 +34,18 @@ public class UsuarioConsultaController {
 	private NivelEscalonamentoService nivelEscalonamentoService;
 
 	@GetMapping
-	public String init(Usuario usuario, Model model) {
+	public String init( Model model, HttpServletRequest request ) {
 		List<GrupoPerfil> listaGrupoPerfilTotal = getGrupoPerfilList();
-		model.addAttribute("grupoPerfisSourceJSON", MguUtils.getVO2JSON(listaGrupoPerfilTotal, "id", "noGrupoPerfil"));
-		model.addAttribute("grupoPerfisJSON", new ArrayList<>());
+		model.addAttribute( "grupoPerfisSourceJSON", MguUtils.getVO2JSON( listaGrupoPerfilTotal, "id", "noGrupoPerfil" ) );
+		model.addAttribute( "grupoPerfisJSON", new ArrayList<>() );
+		model.addAttribute( "usuario", new Usuario() );
+		model.addAttribute( "msgAlertaEmail", request.getParameter( "msgAlertaEmail" ) );
 		return MappedViews.USUARIO_CONSULTA.getPath();
 	}
 
-	@ModelAttribute("grupoPerfis")
+	@ModelAttribute( "grupoPerfis" )
 	private List<GrupoPerfil> getGrupoPerfilList() {
-		return grupoPerfilService.findByPrestadora(1630l);
+		return grupoPerfilService.findByPrestadora( 1630l );
 	}
 
 }
