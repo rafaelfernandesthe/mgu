@@ -69,6 +69,57 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
+	public Usuario salvar( Usuario usuario, boolean master ) throws Exception {
+		if ( !master ) {
+			usuario.setFlEnviarDynamics( false );
+		}
+		String senha = GeradorSenha.getRandomPassword( 8 );
+		usuario.setDcSenha( GeradorSenha.md5( senha ) );
+
+		try {
+			ldapService.createUser( usuario.getDcUsername(), usuario.getDcSenha(), master );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new LdapException( "LDAP ERRO: Não Foi possivel criar o usuario \"" + usuario.getDcUsername() + "\"" );
+		}
+
+		try {
+			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
+			if ( dynamicsAtivo ) {
+				DadosRetorno retornoDynamics = dynamicsService.criarUsuario( usuario );
+
+				if ( StatusDynamics.SUCESSO.getValue().equals( retornoDynamics.getId().getValue() ) ) {
+					if ( mensagensValidasDynamics.contains( retornoDynamics.getMensagem().getValue() ) ) {
+						if ( existsPerfilDynamics( usuario ) ) {
+							usuario.setFlEnviarDynamics( true );
+						}
+					}
+				} else {
+					ldapService.deleteUser( usuario.getDcUsername(), master );
+					throw new DynamicsException( "DYNAMICS ERRO: " + transformarMensagem( retornoDynamics.getMensagem().getValue() ) );
+				}
+			}
+		} catch ( DynamicsException e ) {
+			throw new DynamicsException( e.getMessage() );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			ldapService.deleteUser( usuario.getDcUsername(), master );
+			throw new MguException( ERRO_CONEXAO_DYNAMICS );
+		}
+
+		usuarioRepository.save( usuario );
+
+		try {
+			usuario.setSenhaSemMD5( senha );
+			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.CRIAR_USUARIO );
+		} catch ( Exception e ) {
+			throw new MessagingException( "MGU ALERTA: Usuário criado com sucesso porém não foi possível enviar a senha para o e-mail \"" + usuario.getDcEmail() + "\", favor entrar em contato com a central de serviços para solicitar a senha de acesso do usuário \"" + usuario.getDcUsername() + "\"" );
+		}
+
+		return usuario;
+	}
+
+	@Override
 	public Usuario findByUsername( String username ) {
 		return usuarioRepository.findByUsername( username );
 	}
@@ -83,56 +134,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return usuarioRepository.findUsuarioMasterByUsernameAndIdPrestadora( username, idPrestadora );
 	}
 
-	@Override
-	public void salvarUsuarioMaster( Usuario usuario ) throws Exception {
-		String senha = GeradorSenha.getRandomPassword( 8 );
-		usuario.setDcSenha( GeradorSenha.md5( senha ) );
-		usuarioRepository.save( usuario );
-
-		try {
-			ldapService.createMasterUser( usuario.getDcUsername(), usuario.getDcSenha() );
-		} catch ( Exception e ) {
-			e.printStackTrace();
-			throw new LdapException( "LDAP ERRO: Não Foi possivel criar o usuario \"" + usuario.getDcUsername() + "\"" );
-		}
-
-		try {
-			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
-			if ( dynamicsAtivo ) {
-				DadosRetorno retornoDynamics = dynamicsService.criarUsuario( usuario );
-
-				if ( StatusDynamics.SUCESSO.getValue().equals( retornoDynamics.getId().getValue() ) ) {
-					if ( mensagensValidasDynamics.contains( retornoDynamics.getMensagem().getValue() ) ) {
-						usuario.setFlEnviarDynamics( true );
-						usuarioRepository.save( usuario );
-					}
-				} else {
-					ldapService.deleteUser( usuario.getDcUsername(), true );
-					throw new DynamicsException( "DYNAMICS ERRO: " + transformarMensagem( retornoDynamics.getMensagem().getValue() ) );
-				}
-			}
-		} catch ( DynamicsException e ) {
-			throw new DynamicsException( e.getMessage() );
-		} catch ( Exception e ) {
-			e.printStackTrace();
-			ldapService.deleteUser( usuario.getDcUsername(), true );
-			throw new MguException( ERRO_CONEXAO_DYNAMICS );
-		}
-
-		try {
-			usuario.setSenhaSemMD5( senha );
-			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.CRIAR_USUARIO );
-		} catch ( Exception e ) {
-			throw new MessagingException( "MGU ALERTA: Usuário criado com sucesso porém não foi possível enviar a senha para o e-mail \"" + usuario.getDcEmail() + "\", favor entrar em contato com a central de serviços para solicitar a senha de acesso do usuário \"" + usuario.getDcUsername() + "\"\n\n" );
-		}
-
-	}
-
 	private boolean existsPerfilDynamics( Usuario usuario ) {
 		Perfil perfilDynamics = perfilService.findByDcPerfilAndSistemaDcSistema( "DYNAMICS", "DYNAMICS" );
-		for ( Long gpId : usuario.getListaGrupoPerfil() ) {
-			for ( GrupoPerfil gp : perfilDynamics.getGrupoPerfis() ) {
-				if ( gpId.equals( gp.getId() ) ) {
+		for ( GrupoPerfil gpUsuario : usuario.getGrupoPerfis() ) {
+			for ( GrupoPerfil gpDynamics : perfilDynamics.getGrupoPerfis() ) {
+				if ( gpUsuario.getId().equals( gpDynamics.getId() ) ) {
 					return true;
 				}
 			}
@@ -167,7 +173,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		usuarioMasterNovo.setFlMaster( true );
 		usuarioMasterNovo.setFlBloqueio( BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO );
-		salvarUsuarioMaster( usuarioMasterNovo );
+		salvar( usuarioMasterNovo, true );
 
 	}
 

@@ -143,7 +143,7 @@ public class MguIntegrationController {
 				if ( valor ) {
 					return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_5 );
 				}
-				usuarioService.salvarUsuarioMaster( usuario );
+				usuarioService.salvar( usuario, true );
 				mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_2 );
 
 			} catch ( LdapException e ) {

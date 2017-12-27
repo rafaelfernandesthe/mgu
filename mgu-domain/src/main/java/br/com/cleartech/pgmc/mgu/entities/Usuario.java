@@ -152,9 +152,6 @@ public class Usuario implements Serializable {
 	@JoinTable( name = "USUARIO_X_GRUPO_PERFIL_TEMP", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_GRUPO_PERFIL" ) )
 	private List<GrupoPerfil> grupoPerfis;
 
-	@Transient
-	private List<Integer> grupoPerfisIdList;
-
 	@NotAudited
 	@ManyToMany
 	@Fetch( FetchMode.JOIN )
@@ -172,9 +169,6 @@ public class Usuario implements Serializable {
 	private Integer flUsuarioSistema;
 
 	@Transient
-	private List<Long> listaGrupoPerfil;
-
-	@Transient
 	@XmlElement( name = "grupo_prestadora" )
 	private GrupoPrestadora grupos;
 
@@ -186,6 +180,15 @@ public class Usuario implements Serializable {
 	private Boolean usuarioLogado = false;
 
 	public Usuario() {}
+	
+	public Usuario(String nmUsuario, String dcUsername, String dcEmail,String dcCargo, String dcTelefone, String nuCpf){
+		this.nmUsuario = nmUsuario;
+		this.dcUsername = dcUsername;
+		this.dcEmail = dcEmail;
+		this.dcCargo = dcCargo;
+		this.dcTelefone = dcTelefone;
+		this.nuCpf = nuCpf;
+	}
 
 	public boolean getFlEnviarDynamics() {
 		return flEnviarDynamics;
@@ -438,31 +441,12 @@ public class Usuario implements Serializable {
 		this.perfil = perfil;
 	}
 
-	public List<Long> getListaGrupoPerfil() {
-		return listaGrupoPerfil;
-	}
-
-	public void setListaGrupoPerfil( List<Long> listaGrupoPerfil ) {
-		this.listaGrupoPerfil = listaGrupoPerfil;
-	}
-
 	public String getSenhaSemMD5() {
 		return senhaSemMD5;
 	}
 
 	public void setSenhaSemMD5( String senhaSemMD5 ) {
 		this.senhaSemMD5 = senhaSemMD5;
-	}
-
-	public List<Integer> getGrupoPerfisIdList() {
-		if ( grupoPerfisIdList == null ) {
-			grupoPerfisIdList = new ArrayList<Integer>();
-		}
-		return grupoPerfisIdList;
-	}
-
-	public void setGrupoPerfisIdList( List<Integer> grupoPerfisIdList ) {
-		this.grupoPerfisIdList = grupoPerfisIdList;
 	}
 
 	public GrupoPrestadora getGrupos() {

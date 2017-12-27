@@ -49,17 +49,7 @@ public interface LdapService {
 	 * @param password
 	 * @throws LdapException
 	 */
-	public void createUser( String usuario, String password );
-
-	/**
-	 * Cria o usuario Master no LDAP
-	 * 
-	 * @param usuario
-	 * @param password
-	 * @throws LdapException
-	 * @throws Exception
-	 */
-	public void createMasterUser( String usuario, String password ) throws LdapException;
+	public void createUser( String usuario, String password, boolean master ) throws LdapException;
 
 	/**
 	 * Retorna uma lista com todos os usuarios.
