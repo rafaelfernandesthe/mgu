@@ -293,16 +293,16 @@ public class LoginControllerService {
 			perfilResponse.setId( perfil.getIdPerfil() );
 			if ( SistemaUtils.SCADA.equalsIgnoreCase( sistemaUsuario ) ) {
 				if ( perfilService.checkIsPerfilABRTOrCTECH( perfil.getDcPerfil() ) ) {
-					perfilResponse.setNome( XmlUtils.cdataWrapper( perfil.getDcPerfil() + "_" + perfil.getNoRazaoSocial() ) );
+					perfilResponse.setNome( perfil.getDcPerfil() + "_" + perfil.getNoRazaoSocial() );
 				} else {
 					if ( !prestadoraPMSMercadoService.checkIsPrestadoraPMS( idPrestadoras ) ) {
-						perfilResponse.setNome( XmlUtils.cdataWrapper( "PGMC_PRESTADORA" ) );
+						perfilResponse.setNome( "PGMC_PRESTADORA" );
 					} else {
-						perfilResponse.setNome( XmlUtils.cdataWrapper( perfil.getDcPerfil() + "_" + perfil.getNoRazaoSocial() ) );
+						perfilResponse.setNome( perfil.getDcPerfil() + "_" + perfil.getNoRazaoSocial() );
 					}
 				}
 			} else {
-				perfilResponse.setNome( XmlUtils.cdataWrapper( perfil.getDcPerfil() ) );
+				perfilResponse.setNome( perfil.getDcPerfil() );
 			}
 
 			loginResponse.getDados().getPerfis().add( perfilResponse );
@@ -330,9 +330,9 @@ public class LoginControllerService {
 				PerfilResponse perfilResponse = new PerfilResponse();
 				perfilResponse.setId( perfil.getIdPerfil() );
 				if ( SistemaUtils.SCADA.equalsIgnoreCase( sistemaUsuario ) ) {
-					perfilResponse.setNome( XmlUtils.cdataWrapper( perfil.getDcPerfil() + "_" + perfil.getNoRazaoSocial() ) );
+					perfilResponse.setNome( perfil.getDcPerfil() + "_" + perfil.getNoRazaoSocial() );
 				} else {
-					perfilResponse.setNome( XmlUtils.cdataWrapper( perfil.getDcPerfil() ) );
+					perfilResponse.setNome( perfil.getDcPerfil() );
 				}
 				loginResponse.getDados().getUsuario().getPerfis().add( perfilResponse );
 			}
@@ -357,17 +357,17 @@ public class LoginControllerService {
 
 		if ( usuarioLogado && SistemaUtils.SNOA.equalsIgnoreCase( sistemaUsuario ) ) {
 			loginResponse.setRetorno( CodigoMensagem.RETORNO_30.getCodigo() );
-			loginResponse.setDescricao( XmlUtils.cdataWrapper( CodigoMensagem.RETORNO_30.getDescricao() ) );
+			loginResponse.setDescricao( CodigoMensagem.RETORNO_30.getDescricao() );
 		} else {
 			loginResponse.setRetorno( CodigoMensagem.RETORNO_0.getCodigo() );
-			loginResponse.setDescricao( XmlUtils.cdataWrapper( CodigoMensagem.RETORNO_0.getDescricao() ) );
+			loginResponse.setDescricao( CodigoMensagem.RETORNO_0.getDescricao() );
 		}
 
-		usuarioResponse.setNomeUsuario( XmlUtils.cdataWrapper( usuario.getNmUsuario() ) );
-		usuarioResponse.setTelefone( XmlUtils.cdataWrapper( usuario.getDcTelefone() ) );
-		usuarioResponse.setEmail( XmlUtils.cdataWrapper( usuario.getDcEmail() ) );
-		usuarioResponse.setIpOrigem( XmlUtils.cdataWrapper( usuario.getDcIpOrigem() != null ? usuario.getDcIpOrigem() : "nao cadastrado" ) );
-		usuarioResponse.setSituacao( XmlUtils.cdataWrapper( "ATIVO" ) );
+		usuarioResponse.setNomeUsuario( usuario.getNmUsuario() );
+		usuarioResponse.setTelefone( usuario.getDcTelefone() );
+		usuarioResponse.setEmail( usuario.getDcEmail() );
+		usuarioResponse.setIpOrigem( usuario.getDcIpOrigem() != null ? usuario.getDcIpOrigem() : "nao cadastrado" );
+		usuarioResponse.setSituacao( "ATIVO" );
 
 		if ( SistemaUtils.SNOA.equalsIgnoreCase( sistemaUsuario ) ) {
 			usuarioResponse.setPrimeiroAcesso( usuario.getFlPrimeiroAcessoSNOA() ? 1 : 0 );
@@ -386,7 +386,7 @@ public class LoginControllerService {
 					break;
 				} else {
 					grupoPrestadoraResponse.setIdGrupoPrestadora( prestadora.getGrupoPrestadora().getId() );
-					grupoPrestadoraResponse.setNomeGrupoPrestadora( XmlUtils.cdataWrapper( prestadora.getGrupoPrestadora().getNoGrupoPrestadora() ) );
+					grupoPrestadoraResponse.setNomeGrupoPrestadora( prestadora.getGrupoPrestadora().getNoGrupoPrestadora() );
 
 					if ( IDS_PMS.contains( prestadora.getGrupoPrestadora().getId() ) ) {
 						loginResponse.setIsPMS( true );
@@ -404,7 +404,7 @@ public class LoginControllerService {
 			if ( idPrestadoras != null && idPrestadoras.contains( prestadora.getId() ) ) {
 				PrestadoraResponse prestadoraResponse = new PrestadoraResponse();
 				prestadoraResponse.setId( prestadora.getId() );
-				prestadoraResponse.setNome( XmlUtils.cdataWrapper( prestadora.getNoPrestadora() ) );
+				prestadoraResponse.setNome( prestadora.getNoPrestadora() );
 				grupoPrestadoraResponse.getPrestadoras().add( prestadoraResponse );
 			}
 
@@ -416,7 +416,7 @@ public class LoginControllerService {
 						if ( imprimePrestadora ) {
 							PrestadoraResponse prestadoraResponse = new PrestadoraResponse();
 							prestadoraResponse.setId( prestadora.getId() );
-							prestadoraResponse.setNome( XmlUtils.cdataWrapper( prestadora.getNoPrestadora() ) );
+							prestadoraResponse.setNome( prestadora.getNoPrestadora() );
 							if ( SistemaUtils.SNOA.equalsIgnoreCase( sistemaUsuario ) ) {
 								if ( usuario.getFlMaster() == false ) {
 									Delegado delegado = delegadoService.findByUsuarioComumDcUsernameAndPrestadoraId( usuario.getDcUsername(), prestadora.getId() );

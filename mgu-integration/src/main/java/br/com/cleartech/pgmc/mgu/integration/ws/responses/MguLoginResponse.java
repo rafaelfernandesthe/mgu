@@ -4,6 +4,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+
 @XmlRootElement( name = "mgu" )
 public class MguLoginResponse {
 
@@ -11,6 +13,7 @@ public class MguLoginResponse {
 	private Integer retorno;
 
 	@XmlElement( name = "descricao" )
+	@JacksonXmlCData
 	private String descricao;
 
 	@XmlElement( name = "dados" )

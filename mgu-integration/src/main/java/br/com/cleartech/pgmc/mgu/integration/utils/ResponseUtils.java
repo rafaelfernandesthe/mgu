@@ -19,11 +19,11 @@ public class ResponseUtils {
 		return response( codigo, codigo.getDescricao() + "\n" + complemento, null, null );
 	}
 
-	private static Object response( CodigoMensagem codigo, Object descricao, String dados, Long idPerfil ) {
+	private static Object response( CodigoMensagem codigo, String descricao, String dados, Long idPerfil ) {
 		MguResponse mguResponse = new MguResponse();
 		mguResponse.setRetorno( codigo.getCodigo() );
-		mguResponse.setDescricao( XmlUtils.cdataWrapper( descricao ) );
-		mguResponse.setDados( XmlUtils.cdataWrapper( dados ) );
+		mguResponse.setDescricao( descricao );
+		mguResponse.setDados( dados );
 		mguResponse.setIdPerfil( idPerfil );
 		return mguResponse;
 	}

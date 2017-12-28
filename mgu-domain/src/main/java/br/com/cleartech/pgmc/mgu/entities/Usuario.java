@@ -155,7 +155,7 @@ public class Usuario implements Serializable {
 	@NotAudited
 	@ManyToMany
 	@Fetch( FetchMode.JOIN )
-	@JoinTable( name = "PRESTADORA_X_USUARIO_TEMP", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_PRESTADORA" ) )
+	@JoinTable( name = "USUARIO_PRESTADORA", joinColumns = @JoinColumn( name = "FK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "FK_ID_PRESTADORA" ) )
 	private List<Prestadora> prestadoras;
 
 	@ManyToOne

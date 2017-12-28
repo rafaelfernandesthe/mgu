@@ -7,13 +7,16 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+
 @XmlRootElement( name = "prestadora" )
 public class PrestadoraResponse {
 
 	@XmlElement( name = "id_prestadora" )
 	private Long id;
-	
+
 	@XmlElement( name = "nome_prestadora" )
+	@JacksonXmlCData
 	private String nome;
 
 	@XmlElement( name = "master" )

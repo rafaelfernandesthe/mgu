@@ -234,7 +234,7 @@ public class MguIntegrationController {
 
 		MguResponse mguResponse = new MguResponse();
 		mguResponse.setRetorno( 0 );
-		mguResponse.setDescricao( XmlUtils.cdataWrapper( "Usuário " + logoutRequest.getUsuario() + " efetuou o logout com sucesso!" ) );
+		mguResponse.setDescricao( "Usuário " + logoutRequest.getUsuario() + " efetuou o logout com sucesso!" );
 
 		return mguResponse;
 	}
@@ -245,10 +245,10 @@ public class MguIntegrationController {
 		MguResponse mguResponse = new MguResponse();
 		if ( usuarioExiste ) {
 			mguResponse.setRetorno( 0 );
-			mguResponse.setDescricao( XmlUtils.cdataWrapper( usuarioMasterRequest.getUserName() + " existe no banco de dados!" ) );
+			mguResponse.setDescricao( usuarioMasterRequest.getUserName() + " existe no banco de dados!" );
 		} else {
 			mguResponse.setRetorno( 1 );
-			mguResponse.setDescricao( XmlUtils.cdataWrapper( usuarioMasterRequest.getUserName() + " não existe no banco de dados!" ) );
+			mguResponse.setDescricao( usuarioMasterRequest.getUserName() + " não existe no banco de dados!" );
 		}
 		return mguResponse;
 
