@@ -7,22 +7,29 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+
 @XmlRootElement( name = "usuario" )
 public class UsuarioResponse {
 
 	@XmlElement( name = "nome" )
+	@JacksonXmlCData
 	private String nomeUsuario;
 
 	@XmlElement( name = "telefone" )
+	@JacksonXmlCData
 	private String telefone;
 
 	@XmlElement( name = "email" )
+	@JacksonXmlCData
 	private String email;
 
 	@XmlElement( name = "ip_origem" )
+	@JacksonXmlCData
 	private String ipOrigem;
 
 	@XmlElement( name = "situacao" )
+	@JacksonXmlCData
 	private String situacao;
 
 	@XmlElement( name = "primeiro_acesso" )

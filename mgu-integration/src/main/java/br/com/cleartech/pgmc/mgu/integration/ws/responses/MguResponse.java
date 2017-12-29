@@ -6,6 +6,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 
@@ -16,6 +18,7 @@ public class MguResponse {
 	private Integer retorno;
 
 	@XmlElement( name = "descricao" )
+	@JacksonXmlCData
 	private String descricao;
 
 	@XmlElement( name = "usuario" )
@@ -26,6 +29,7 @@ public class MguResponse {
 	private List<Perfil> perfis;
 
 	@XmlElement( name = "dados" )
+	@JacksonXmlCData
 	private String dados;
 
 	@XmlElement( name = "idPerfil" )
