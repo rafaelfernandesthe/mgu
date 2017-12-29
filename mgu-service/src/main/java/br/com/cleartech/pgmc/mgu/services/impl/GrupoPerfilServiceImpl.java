@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.repositories.GrupoPerfilRepository;
-import br.com.cleartech.pgmc.mgu.repositories.GrupoPerfilRepository;
 import br.com.cleartech.pgmc.mgu.services.GrupoPerfilService;
 
 @Component
@@ -44,6 +43,11 @@ public class GrupoPerfilServiceImpl implements GrupoPerfilService {
 			result.add( grupoPerfilRepository.findOne( item.getId() ) );
 		}
 		return result;
+	}
+
+	@Override
+	public List<GrupoPerfil> findByUsuario( Long idUsuario ) {
+		return grupoPerfilRepository.findByUsuario( idUsuario );
 	}
 
 }

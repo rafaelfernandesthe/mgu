@@ -1,4 +1,4 @@
-package br.com.cleartech.pgmc.mgu.utils;
+package br.com.cleartech.pgmc.mgu.view.utils;
 
 import java.io.Serializable;
 

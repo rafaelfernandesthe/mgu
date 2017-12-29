@@ -11,65 +11,52 @@
 			<li><a href="#">Consulta</a></li>
 		</ul>
  
-		<div class="painel-primary pui-panel-toggleable"
-			th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
-			<form action="#" method="get" th:action="@{/usuarioConsulta/s}"
-				th:object="${usuario}">
+		<div class="painel-primary pui-panel-toggleable" th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
+			<form action="#" method="get" th:action="@{/usuarioConsulta/s}" th:object="${usuario}">
 
 				<div th:include="~{/_layout/mensagem.html}"></div>
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome" th:text="#{usuario.nome}">
-							<span style="color: red !important; font-weight: bold;">*</span>
-						</label>
+						<label class="control-label" for="nome" th:text="#{nmUsuario}"></label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="nome"
-							th:field="*{nmUsuario}" autofocus />
+						<input class="form-control input-sm" id="nome" th:field="*{nmUsuario}" autofocus />
 					</div>
 
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="username"
-							th:text="#{usuario.usuarioAcesso}">Usuário Acesso: </label>
+						<label class="control-label" for="username" th:text="#{dcUsername}">Usuário Acesso: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="username"
-							th:field="*{dcUsername}" />
+						<input class="form-control input-sm" id="username" th:field="*{dcUsername}" />
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="email"
-							th:text="#{usuario.email}">Email: </label>
+						<label class="control-label" for="email" th:text="#{dcEmail}">Email: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="email"
-							th:field="*{dcEmail}" />
+						<input class="form-control input-sm" id="email" th:field="*{dcEmail}" />
 					</div>
 
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="cargo"
-							th:text="#{usuario.cargo}">Cargo: </label>
+						<label class="control-label" for="cargo" th:text="#{dcCargo}">Cargo: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="cargo"
-							th:field="*{dcCargo}" />
+						<input class="form-control input-sm" id="cargo" th:field="*{dcCargo}" />
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome"
-							th:text="#{usuario.telefone}">Telefone: </label>
+						<label class="control-label" for="nome" th:text="#{dcTelefone}">Telefone: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="telefone"
-							th:field="*{dcTelefone}" />
+						<input class="form-control input-sm" id="telefone" th:field="*{dcTelefone}" />
 					</div>
 
 					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome" th:text="#{usuario.cpf}">Cpf</label>
+						<label class="control-label" for="nome" th:text="#{nuCpf}">Cpf</label>
 					</div>
 					<div class="col-sm-4 form-group">
 						<input type="text" class="form-control input-sm CPF"
@@ -78,121 +65,138 @@
 					</div>
 				</div>
 
-
-
-
-				<!-- 				<div class="row"> -->
-				<!-- 					<div class="col-sm-2 form-group "> -->
-				<!-- 						<label class="control-label" for="listaGrupoPerfil" th:text="#{grupoPerfil}">Grupo Perfil</label> -->
-				<!-- 					</div> -->
-				<!-- 					<div class="col-sm-4 form-group"> -->
-				<!-- 						<select class="form-control input-sm" id="nivelEscalonamento" th:field="*{perfil}" > -->
-				<!-- 							<option value="">Todos	</option>  -->
-				<!-- 							<option th:each="grupo : ${grupoPerfis}"  -->
-				<!-- 						          th:value="${grupo}"  -->
-				<!-- 						          th:text="${grupo.noGrupoPerfil}"> -->
-				<!-- 							</option> -->
-				<!-- 						</select> -->
-				<!-- 					</div> -->
-				<!-- 				</div> -->
+				<div class="row">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="grupoPerfilFiltro" th:text="#{grupoPerfil}">Grupo Perfil</label>
+					</div>
+					<div class="col-sm-4 form-group">
+						<select class="form-control input-sm" id="grupoPerfilFiltro" th:field="*{grupoPerfilFiltro}" >
+							<option value="">Todos</option>
+							<option th:each="gp : ${grupoPerfis}" 
+					          th:value="${gp.id}" 
+					          th:text="${gp.noGrupoPerfil}">GP</option>
+						</select>
+					</div>
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="statusFiltro" th:text="#{statusFiltro}">Status</label>
+					</div>
+					<div class="col-sm-4 form-group">
+						<select class="form-control input-sm" id="statusFiltro" th:field="*{statusFiltro}" >
+							<option value="">Todos</option>
+							<option th:each="s : ${todosStatus}" 
+					          th:value="${s.value}" 
+					          th:text="${s.i18n}">GP</option>
+						</select>
+					</div>
+				</div>
 
 				<div class="form-group buttonsGroup">
-					<button class="pui-button" type="submit">
+					<button id="buttonFind" class="pui-button" type="submit"> 
 						<label th:text="#{botao.consultar}"></label>
 					</button>
-					<a class="pui-button" th:href="@{'/usuarioConsulta'}"> <label
-						th:text="#{botao.limpar}"></label>
+					<a class="pui-button" th:href="@{'/usuarioConsulta'}"> 
+						<label th:text="#{botao.limpar}"></label>
 					</a>
 				</div>
 
 			</form>
 		</div>
-		<div class="container-fluid">
-			<div class="pui-panel-toggleable" th:title="#{tabela.resultados}">
-				<div class="pui-datatableResult" id="tableGrupoPerfil">
-					<div class="content-wrapper">
-						<!-- Example DataTables Card-->
-						<div class="card mb-3">
-							<div class="card-header">
-								<div class="card-body">
-									<div class="table-responsive">
-										<table class="table table-bordered" id="dataTable"
-											width="100%" cellspacing="0">
-											<thead>
-
-												<tr>
-													<th class="acao"></th>
-													<th>Nome</th>
-													<th>Usuário Acesso</th>
-													<th>Email</th>
-													<th>Cargo</th>
-													<th>Telefone</th>
-													<th>CPF</th>
-													<th>Status</th>
-													<th>Grupo Perfil</th>
-												</tr>
-											</thead>
-											<tfoot>
-												<tr>
-													<th></th>
-													<th>Nome</th>
-													<th>Usuário Acesso</th>
-													<th>Email</th>
-													<th>Cargo</th>
-													<th>Telefone</th>
-													<th>CPF</th>
-													<th>Status</th>
-													<th>Grupo Perfil</th>
-												</tr>
-											</tfoot>
-											<tbody th:each="user: ${usuarios}">
-											<tr >
-												<td><a href="#">
-																<button class="btn btn-primary btn-sm" data-title="Edit"
-																	data-toggle="modal" data-target="#edit">
-																	<span class="fa fa-pencil"></span>
-																</button>
-														</a> <a href="#">
-																<button class="btn btn-primary btn-sm" data-title="Edit"
-																	data-toggle="modal" data-target="#edit">
-																	<span class="fa fa-pencil"></span>
-																</button>
-														</a> <a href="#">
-																<button class="btn btn-primary btn-sm" data-title="Edit"
-																	data-toggle="modal" data-target="#edit">
-																	<span class="fa fa-pencil"></span>
-																</button>
-														</a> <a href="#">
-																<button class="btn btn-primary btn-sm" data-title="Edit"
-																	data-toggle="modal" data-target="#edit">
-																	<span class="fa fa-pencil"></span>
-																</button>
-														</a>
-												 </td>
-											      <td th:text="${user.nmUsuario}">Oranges</td>
-											      <td >0.99</td>
-											      <td>Accountant</td>
-														<td>Tokyo</td>
-														<td>33</td>
-														<td>2008/11/28</td>
-														<td>33</td>
-														<td>2008/11/28</td>
-										    </tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div layout:fragment="javascript-support">
-				<script>
+		
+		<div class="container-fluid pui-panel-toggleable" th:title="#{tabela.resultados}">
+			<div class="pui-datatableResult" id="usuarios"></div>
+		</div>
+		
+		<div id="gruposUsuario" title="Grupos">
+			<div id="tabelaGruposUsuario"></div>
+		</div>
+	</div>
+	
+	<div layout:fragment="javascript-support">
+		<script>
+			$(function (){
+				$("#buttonFind").puibutton({
+				    click: function(event) {
+				    	 $('#dlg').puidialog('show');
+				    }
+				});
 			
+			  	var localData = [(${usuariosJSON})];
+				$('#usuarios').puidatatable({
+					emptyMessage: 'Nenhum Registro Encontrado',
+					responsive: true,
+			        columns: [
+			        	{headerText: 'Opções', bodyClass: 'buttonsGroup', 
+			        		content: function (linha){
+			        			return ""
+			        			+`<button id="botaoEditar${linha.id}" class='btn btn-primary btn-sm' onclick="editar(${linha.id});"><span class='fa fa-pencil'></span></button>`
+								+`<button id="botaoExcluir${linha.id}" class='btn btn-primary btn-sm'onclick="excluir(${linha.id});"><span class='fa fa-trash'></span></button>`;
+			        		}
+			        	},
+			            {field: 'nmUsuario', headerText: 'Nome'},
+			            {field: 'dcUsername', headerText: 'Usuário de Acesso'},
+			            {field: 'dcEmail', headerText: 'Email'},
+			            {field: 'dcCargo', headerText: 'Cargo'},
+			            {field: 'dcTelefone', headerText: 'Telefone'},
+			            {field: 'nuCpf', headerText: 'CPF'},
+			            {field: 'status', headerText: 'Status'},
+			            {headerText: 'Grupo Perfil', bodyClass: 'buttonsGroup', 
+			            	content: function (linha){
+			            		return ""
+			            		+`<button id="botaoVerGrupos${linha.id}" class='btn btn-primary btn-sm' onclick="mostraGrupos(${linha.id});"><span class='fa fa-bars'></span></button>`;
+			            	},
+			            }
+			        ],
+			        datasource: localData,
+			        paginator: {
+				        rows: 10
+				    },
+				});
+				
+				$('#grupoPerfilFiltro').puidropdown({
+		            filter: true
+		        });
+				
+				$('#gruposUsuario').puidialog({
+					showEffect: 'fade',
+				    hideEffect: 'fade',
+				    effectSpeed: 'slow',
+				    resizable: false,
+				    maximizable: false,
+					responsive: true,
+				    modal: false,
+				    title: 'Grupos de Perfil'
+				});
+				
+			});
+			
+			function mostraGrupos(idUsuario){
+				$('#tabelaGruposUsuario').puidatatable({
+					paginator: {
+		                rows: 10
+		            },
+		            columns: [
+		                {field: 'noGrupoPerfil', headerText: 'Nome do Grupo'},
+		            ],
+		            datasource: function(callback) {
+		                $.ajax({
+		                    type: "GET",
+		                    url: getAppPath() + '/usuarioConsulta/grupoPerfis/'+idUsuario,
+		                    dataType: "json",
+		                    context: this,
+		                    success: function(response) {
+		                        callback.call(this, response);
+		                    }
+		                });
+		            }
+		        });
+				
+				$('#gruposUsuario').puidialog('show');
+			}
+			
+			function editar(idUsuario){
+				document.location = getAppPath() + '/usuarioEdicao/'+idUsuario ;
+			}
 		</script>
-
-			</div>
+	</div>
 </body>
 </html>

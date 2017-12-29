@@ -79,6 +79,10 @@ body {
 	display: none;
 }
 
+#dlg {
+	display : none;
+}
+
 .pui-datatableResult #ui-id-1 {
 	width: 10%;
 }
@@ -184,4 +188,24 @@ label.control-label {
     border: 10px solid #e0f79b;
     background: #e0f79b;
     color: #000000;
+}
+
+.ui-dropdown {
+	width: 100%;
+}
+
+.ui-dropdown-trigger {
+	width: 30px !important;
+}
+
+.ui-dropdown-filter-container {
+	width: 100%;
+}
+
+.fa.fa-fw.fa-caret-down{
+	color:  black !important;
+}
+
+.ui-dropdown-label.ui-inputtext.ui-corner-all{
+	background-color: white;
 }

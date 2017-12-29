@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import br.com.cleartech.pgmc.mgu.utils.MappedViews;
+import br.com.cleartech.pgmc.mgu.view.utils.MappedViews;
 
 @Controller
 @PropertySource( "classpath:version.properties" )

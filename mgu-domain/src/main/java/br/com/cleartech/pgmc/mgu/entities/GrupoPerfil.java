@@ -55,6 +55,10 @@ public class GrupoPerfil implements Serializable {
 
 	public GrupoPerfil() {}
 
+	public GrupoPerfil( Long id ) {
+		this.id = id;
+	}
+
 	public GrupoPerfil( Long id, String noGrupoPerfil ) {
 		this.id = id;
 		this.noGrupoPerfil = noGrupoPerfil;

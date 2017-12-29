@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.cleartech.pgmc.mgu.entities.Delegado;
+import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.repositories.DelegadoRepository;
 import br.com.cleartech.pgmc.mgu.services.DelegadoService;
 
@@ -21,6 +22,17 @@ public class DelegadoServiceImpl implements DelegadoService {
 	@Override
 	public Delegado findByUsuarioComumDcUsername( String comumUsername ) {
 		return delegadoRepository.findByUsuarioComumDcUsername( comumUsername );
+	}
+
+	@Override
+	public void removerDelegadoDeUsuarioMaster( Usuario usuarioMaster ) {
+		Delegado delegado = delegadoRepository.findByUsuarioMasterIdAndUsuarioComumId( usuarioMaster.getId(), usuarioMaster.getDelegado().getId() );
+		delegadoRepository.delete( delegado.getId() );
+	}
+
+	@Override
+	public void salvar( Delegado delegado ) {
+		delegadoRepository.save( delegado );
 	}
 
 }

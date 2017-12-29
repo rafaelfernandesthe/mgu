@@ -1,4 +1,4 @@
-package br.com.cleartech.pgmc.mgu.utils;
+package br.com.cleartech.pgmc.mgu.view.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

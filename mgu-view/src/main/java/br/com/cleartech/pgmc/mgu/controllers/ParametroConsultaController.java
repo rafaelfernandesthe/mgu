@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.cleartech.pgmc.mgu.entities.ParametroSistema;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
-import br.com.cleartech.pgmc.mgu.utils.MappedViews;
+import br.com.cleartech.pgmc.mgu.view.utils.MappedViews;
 
 @Controller
 @RequestMapping( "/parametro" )

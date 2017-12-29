@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.cleartech.pgmc.mgu.entities.Delegado;
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.LogSenhaUsuario;
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
@@ -25,6 +26,7 @@ import br.com.cleartech.pgmc.mgu.exceptions.LdapException;
 import br.com.cleartech.pgmc.mgu.exceptions.MguException;
 import br.com.cleartech.pgmc.mgu.repositories.LogSenhaUsuarioRepository;
 import br.com.cleartech.pgmc.mgu.repositories.UsuarioRepository;
+import br.com.cleartech.pgmc.mgu.services.DelegadoService;
 import br.com.cleartech.pgmc.mgu.services.DynamicsService;
 import br.com.cleartech.pgmc.mgu.services.EmailService;
 import br.com.cleartech.pgmc.mgu.services.LdapService;
@@ -62,6 +64,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Autowired
 	private LogSenhaUsuarioRepository logSenhaUsuarioRepository;
+
+	@Autowired
+	private DelegadoService delegadoService;
 
 	@Override
 	public Usuario salvar( Usuario usuario ) {
@@ -111,12 +116,79 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		try {
 			usuario.setSenhaSemMD5( senha );
-			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.CRIAR_USUARIO );
+			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.CRIAR_USUARIO, null );
 		} catch ( Exception e ) {
 			throw new MessagingException( "MGU ALERTA: Usuário criado com sucesso porém não foi possível enviar a senha para o e-mail \"" + usuario.getDcEmail() + "\", favor entrar em contato com a central de serviços para solicitar a senha de acesso do usuário \"" + usuario.getDcUsername() + "\"" );
 		}
 
 		return usuario;
+	}
+
+	@Override
+	public Usuario salvarEditar( Usuario usuarioAtualizado, Usuario usuarioDB ) throws Exception {
+		usuarioAtualizado.setUltimoAcesso( usuarioDB.getUltimoAcesso() == null ? new Date() : usuarioDB.getUltimoAcesso() );
+		usuarioAtualizado.setUltimaTrocaSenha( usuarioDB.getUltimaTrocaSenha() == null ? new Date() : usuarioDB.getUltimaTrocaSenha() );
+
+		Boolean paraBloqueio = null;
+		if ( BloqueioUsuario.BLOQUEADO_ADM.equals( usuarioDB.getFlBloqueio() ) && BloqueioUsuario.BLOQUEADO_NAO.equals( usuarioAtualizado.getFlBloqueio() ) ) {
+			paraBloqueio = false;
+		} else if ( BloqueioUsuario.BLOQUEADO_NAO.equals( usuarioDB.getFlBloqueio() ) && BloqueioUsuario.BLOQUEADO_ADM.equals( usuarioAtualizado.getFlBloqueio() ) ) {
+			paraBloqueio = true;
+		}
+
+		if ( usuarioAtualizado.getFlMaster() ) {
+			boolean mudouDelegado = false;
+			if ( ( usuarioDB.getDelegado() == null && usuarioAtualizado.getDelegado() != null ) || ( usuarioDB.getDelegado() != null && !usuarioDB.equals( usuarioAtualizado.getDelegado() ) ) ) {
+				mudouDelegado = true;
+			}
+			if ( mudouDelegado && usuarioDB.getDelegado() != null ) {
+				if ( !usuarioDB.getDelegado().getFlMaster() ) {
+					ldapService.alterarMasterParaUsuario( usuarioAtualizado.getDelegado().getDcUsername() );
+				}
+				emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.REMOVER_DELEGADO, usuarioDB.getDelegado() );
+				delegadoService.removerDelegadoDeUsuarioMaster( usuarioDB );
+			}
+			if ( mudouDelegado && usuarioAtualizado.getDelegado() != null ) {
+				Delegado delegado = new Delegado();
+				delegado.setUsuarioMaster( usuarioAtualizado );
+				delegado.setUsuarioComum( usuarioAtualizado.getDelegado() );
+				delegado.setPrestadora( usuarioAtualizado.getPrestadoras().get( 0 ) );
+				delegadoService.salvar( delegado );
+				emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.ADICIONAR_DELEGADO, usuarioAtualizado.getDelegado() );
+				ldapService.alterarUsuarioParaMaster( usuarioAtualizado.getDelegado().getDcUsername() );
+			}
+		}
+
+		usuarioAtualizado.setFlEnviarDynamics( false );
+		if ( existsPerfilDynamics( usuarioAtualizado ) ) {
+			usuarioAtualizado.setFlEnviarDynamics( true );
+		}
+
+		usuarioRepository.save( usuarioAtualizado );
+
+		try {
+			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
+			if ( dynamicsAtivo ) {
+				dynamicsService.alterar( usuarioAtualizado, false );
+			}
+		} catch ( DynamicsException e ) {
+			throw new DynamicsException( e.getMessage() );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new MguException( ERRO_CONEXAO_DYNAMICS );
+		}
+
+		try {
+			if ( paraBloqueio ) {
+				emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.BLOQUEAR_USUARIO, null );
+			} else if ( !paraBloqueio ) {
+				emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.DESBLOQUEAR_USUARIO, null );
+			}
+		} catch ( Exception e ) {
+			throw new MessagingException( "MGU ALERTA: Usuário atualizado com sucesso porém não foi possível enviar o e-mail de bloqueio/desbloqueio para \"" + usuarioAtualizado.getDcEmail() + "\", favor entrar em contato com a central de serviços para informar o problema." );
+		}
+
+		return usuarioAtualizado;
 	}
 
 	@Override
@@ -199,7 +271,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		}
 
 		try {
-			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.BLOQUEAR_USUARIO );
+			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.BLOQUEAR_USUARIO, null );
 		} catch ( Exception e ) {
 			// TODO: Verificar se deve retornar
 			new MessagingException( "MGU ALERTA: Não foi possivel enviar email de bloqueio para o usuario \"" + usuario.getDcUsername() + "\"" ).printStackTrace();
@@ -220,11 +292,21 @@ public class UsuarioServiceImpl implements UsuarioService {
 		logSenhaUsuarioRepository.save( log );
 
 		try {
-			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.DESBLOQUEAR_USUARIO );
+			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.DESBLOQUEAR_USUARIO, null );
 		} catch ( MessagingException e ) {
 			throw new MessagingException( "MGU ALERTA: Usuário desbloqueado com sucesso porém não foi possível enviar a senha para o e-mail \"" + usuario.getDcUsername() + "\"" );
 		}
 
+	}
+
+	@Override
+	public List<Usuario> find( Usuario usuario ) {
+		return usuarioRepository.find( usuario );
+	}
+
+	@Override
+	public Usuario find( Long idUsuario ) {
+		return usuarioRepository.findOne( idUsuario );
 	}
 
 }

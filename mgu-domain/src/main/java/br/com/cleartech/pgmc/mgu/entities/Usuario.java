@@ -91,6 +91,9 @@ public class Usuario implements Serializable {
 	@XmlElement( name = "bloqueado" )
 	private BloqueioUsuario flBloqueio = BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO;
 
+	@Transient
+	private String status;
+
 	@Column( name = "FL_PRIMEIRO_ACESSO" )
 	private boolean flPrimeiroAcesso;
 
@@ -155,7 +158,7 @@ public class Usuario implements Serializable {
 	@NotAudited
 	@ManyToMany
 	@Fetch( FetchMode.JOIN )
-	@JoinTable( name = "PRESTADORA_X_USUARIO_TEMP", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_PRESTADORA" ) )
+	@JoinTable( name = "USUARIO_PRESTADORA", joinColumns = @JoinColumn( name = "FK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "FK_ID_PRESTADORA" ) )
 	private List<Prestadora> prestadoras;
 
 	@ManyToOne
@@ -180,14 +183,17 @@ public class Usuario implements Serializable {
 	private Boolean usuarioLogado = false;
 
 	public Usuario() {}
-	
-	public Usuario(String nmUsuario, String dcUsername, String dcEmail,String dcCargo, String dcTelefone, String nuCpf){
+
+	public Usuario( Long id, String nmUsuario, String dcUsername, String dcEmail, String dcCargo, String dcTelefone, String nuCpf, BloqueioUsuario flBloqueio ) {
+		this.id = id;
 		this.nmUsuario = nmUsuario;
 		this.dcUsername = dcUsername;
 		this.dcEmail = dcEmail;
 		this.dcCargo = dcCargo;
 		this.dcTelefone = dcTelefone;
 		this.nuCpf = nuCpf;
+		this.flBloqueio = flBloqueio;
+		this.status = flBloqueio.getI18n();
 	}
 
 	public boolean getFlEnviarDynamics() {
@@ -493,6 +499,15 @@ public class Usuario implements Serializable {
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flAprovado + ", flPrimeiroAcessoSNOA=" + getFlPrimeiroAcessoSNOA() + ", perfil=" + perfil + ", usuarios=" + usuarios + ", grupoPerfis=" + grupoPerfis + ", flEnvioEmail=" + isFlEnvioEmail() + ", flUsuarioSistema=" + flUsuarioSistema + "]";
+	}
+
+	public String getStatus() {
+		status = getFlBloqueio().getI18n();
+		return status;
+	}
+
+	public void setStatus( String status ) {
+		this.status = status;
 	}
 
 }

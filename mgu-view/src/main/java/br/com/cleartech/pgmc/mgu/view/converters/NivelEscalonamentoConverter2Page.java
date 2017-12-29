@@ -1,4 +1,4 @@
-package br.com.cleartech.pgmc.mgu.converters;
+package br.com.cleartech.pgmc.mgu.view.converters;
 
 import org.springframework.core.convert.converter.Converter;
 

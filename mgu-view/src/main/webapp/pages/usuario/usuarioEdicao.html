@@ -9,13 +9,15 @@
 		<ul class="pui-breadcrumb">
 			<li><a href="#">Home</a></li>
 			<li><a href="#">Usuário</a></li>
-			<li><a href="#">Cadastro</a></li>
+			<li><a href="#">Editar</a></li>
 		</ul>
 
-		<div class="painel-primary pui-panel" th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
-			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}" th:object="${usuario}" >
+		<div class="painel-primary pui-panel" th:title="#{pagina.edicao}+' '+#{grupoPerfil}">
+			<form action="#" method="post" th:action="@{/usuarioEdicao/salvar}" th:object="${usuario}" >
 
 				<div th:include="~{/_layout/mensagem.html}"></div>
+
+				<input type="hidden" th:field="*{id}" />
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
@@ -29,7 +31,7 @@
 						<label class="control-label required" for="username" th:text="#{dcUsername}">Usuário Acesso: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="username" th:errorclass="field-error" th:field="*{dcUsername}" />
+						<input class="form-control input-sm" id="username" disabled th:errorclass="field-error" th:field="*{dcUsername}" />
 					</div>
 				</div>
 				<div class="row">

@@ -1,3 +1,7 @@
+function getAppPath(){
+	return window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/'));
+}
+
 function getUrlParams( prop ) {
     var params = {};
     var search =  window.location.href.slice( window.location.href.indexOf( '?' ) + 1 );

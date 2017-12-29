@@ -26,7 +26,7 @@ public class EmailServiceImpl implements EmailService {
 	private JavaMailSender javaMailsSender;
 
 	@Override
-	public void enviaByUsuarioAndAssunto( Usuario usuario, AssuntoEnum assunto ) throws MessagingException {
+	public void enviaByUsuarioAndAssunto( Usuario usuario, AssuntoEnum assunto, Usuario delegado ) throws MessagingException {
 		StringBuilder corpoEmail = new StringBuilder( getEmailHeader() );
 		String cabecalho = null;
 		switch ( assunto ) {
@@ -42,11 +42,26 @@ public class EmailServiceImpl implements EmailService {
 				cabecalho = "Usuário desbloqueado";
 				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Usu&aacute;rio desbloqueado", "O usu&aacute;rio <b>" + usuario.getNmUsuario() + "</b> foi desbloqueado pelo administrador do sistema" ) );
 				break;
+			case REMOVER_DELEGADO:
+				cabecalho = "Permissão de acesso modificada";
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Acesso ao PGMC &#150; Permiss&atilde;o de acesso modificada", "A sua permiss&atilde;o de acesso ao PGMC foi alterada com sucesso, voc&ecirc; foi removido do n&iacute;vel de delegado por <b>" + usuario.getNmUsuario() + "</b> para acessar o PGMC." ) );
+				if ( delegado != null ) {
+					sendEmail( delegado.getDcEmail(), cabecalho, corpoEmail.toString() );
+				}
+				return;
+			case ADICIONAR_DELEGADO:
+				cabecalho = "Permissão de acesso modificada";
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Acesso ao PGMC &#150; Permiss&atilde;o de acesso modificada", "A sua permiss&atilde;o de acesso ao PGMC foi alterada com sucesso, voc&ecirc; foi delegado por <b>" + usuario.getNmUsuario() + "</b> para acessar o PGMC." ) );
+				if ( delegado != null ) {
+					sendEmail( delegado.getDcEmail(), cabecalho, corpoEmail.toString() );
+				}
+				return;
 			default:
 				break;
 		}
 
 		sendEmail( usuario.getDcEmail(), cabecalho, corpoEmail.toString() );
+
 	}
 
 	private void sendEmail( String destinatario, String cabecalho, String conteudo ) throws MessagingException {

@@ -41,7 +41,7 @@ public class Prestadora implements Serializable {
 
 	// bi-directional many-to-one association to PrestadoraXUsuario
 	@ManyToMany
-	@JoinTable( name = "PRESTADORA_X_USUARIO", joinColumns = @JoinColumn( name = "PK_ID_PRESTADORA" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_USUARIO" ) )
+	@JoinTable( name = "USUARIO_PRESTADORA", joinColumns = @JoinColumn( name = "FK_ID_PRESTADORA" ), inverseJoinColumns = @JoinColumn( name = "FK_ID_USUARIO" ) )
 	private List<Usuario> usuarios;
 
 	@OneToMany( mappedBy = "prestadora" )

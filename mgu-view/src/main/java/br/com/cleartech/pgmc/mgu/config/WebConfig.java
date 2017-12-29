@@ -14,8 +14,8 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 
-import br.com.cleartech.pgmc.mgu.converters.NivelEscalonamentoConverter2Controller;
-import br.com.cleartech.pgmc.mgu.converters.NivelEscalonamentoConverter2Page;
+import br.com.cleartech.pgmc.mgu.view.converters.NivelEscalonamentoConverter2Controller;
+import br.com.cleartech.pgmc.mgu.view.converters.NivelEscalonamentoConverter2Page;
 
 @Configuration
 @EnableWebMvc

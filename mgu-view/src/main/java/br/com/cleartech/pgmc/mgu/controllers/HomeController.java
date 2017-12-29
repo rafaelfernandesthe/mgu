@@ -1,6 +1,6 @@
 package br.com.cleartech.pgmc.mgu.controllers;
 
-import br.com.cleartech.pgmc.mgu.utils.MappedViews;
+import br.com.cleartech.pgmc.mgu.view.utils.MappedViews;
 
 public class HomeController {
 

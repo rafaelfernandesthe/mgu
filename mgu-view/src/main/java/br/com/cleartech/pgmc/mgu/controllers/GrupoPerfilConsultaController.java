@@ -9,11 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import br.com.cleartech.pgmc.mgu.dtos.GrupoPerfilConsultaDTO;
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.Prestadora;
 import br.com.cleartech.pgmc.mgu.services.GrupoPerfilService;
-import br.com.cleartech.pgmc.mgu.utils.MappedViews;
+import br.com.cleartech.pgmc.mgu.view.dtos.GrupoPerfilConsultaDTO;
+import br.com.cleartech.pgmc.mgu.view.utils.MappedViews;
 
 @Controller
 @RequestMapping( "/grupoPerfilConsulta" )

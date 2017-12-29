@@ -1,10 +1,11 @@
 package br.com.cleartech.pgmc.mgu.repositories;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
-import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 
 @NoRepositoryBean
 public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
@@ -14,5 +15,7 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 	Usuario findByUsernameIgnoreCase( String username );
 
 	Usuario findUsuarioMasterByUsernameAndIdPrestadora( String username, Long idPrestadora );
+
+	List<Usuario> find( Usuario usuario );
 
 }

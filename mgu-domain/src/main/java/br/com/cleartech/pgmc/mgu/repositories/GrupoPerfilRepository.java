@@ -13,4 +13,6 @@ public interface GrupoPerfilRepository extends CrudRepository<GrupoPerfil, Long>
 	public List<GrupoPerfil> findByPrestadora( Long idPrestadora );
 
 	public List<GrupoPerfil> findByPrestadoraAndNome( Long idPrestadora, String noGrupoPerfil );
+
+	public List<GrupoPerfil> findByUsuario( Long idUsuario );
 }

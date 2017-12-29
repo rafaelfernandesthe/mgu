@@ -1,4 +1,4 @@
-package br.com.cleartech.pgmc.mgu.dtos;
+package br.com.cleartech.pgmc.mgu.view.dtos;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -54,6 +54,24 @@ public class UsuarioCadastroDTO implements Serializable {
 	private Boolean flEnvioEmail = false;
 
 	public UsuarioCadastroDTO() {}
+
+	public UsuarioCadastroDTO( Usuario usuario ) {
+		this.setId( usuario.getId() );
+		this.setNmUsuario( usuario.getNmUsuario() );
+		this.setDcUsername( usuario.getDcUsername() );
+		this.setDcEmail( usuario.getDcEmail() );
+		this.setDcCargo( usuario.getDcCargo() );
+		this.setDcTelefone( usuario.getDcTelefone() );
+		this.setDcTelefoneFixo( usuario.getDcTelefoneFixo() );
+		this.setNuCpf( usuario.getNuCpf() );
+		this.setNivelEscalonamento( usuario.getNivelEscalonamento() );
+		this.setGrupoPerfis( usuario.getGrupoPerfis() );
+		this.setFlBloqueio( usuario.getFlBloqueio() );
+		this.setFlEnvioEmail( usuario.isFlEnvioEmail() );
+
+		if ( !usuario.getPrestadoras().isEmpty() )
+			this.setPrestadora( usuario.getPrestadoras().get( 0 ) );
+	}
 
 	public Usuario getUsuario() {
 		Usuario usuario = new Usuario();

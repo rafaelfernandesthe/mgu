@@ -1,17 +1,14 @@
-package br.com.cleartech.pgmc.mgu.dtos;
+package br.com.cleartech.pgmc.mgu.view.dtos;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
-import br.com.cleartech.pgmc.mgu.utils.DTOSearchBase;
 
 public class GrupoPerfilConsultaDTO extends DTOSearchBase {
 
 	private static final long serialVersionUID = -2539799703471445183L;
 
-	private String htmlOpcoes;
-	
 	private Long id;
 
 	private String noGrupoPerfil;
@@ -33,7 +30,6 @@ public class GrupoPerfilConsultaDTO extends DTOSearchBase {
 	public GrupoPerfilConsultaDTO( Long id, String noGrupoPerfil ) {
 		this.id = id;
 		this.noGrupoPerfil = noGrupoPerfil;
-		this.htmlOpcoes = "<button>aa</button>";
 	}
 
 	public Long getId() {
@@ -50,14 +46,6 @@ public class GrupoPerfilConsultaDTO extends DTOSearchBase {
 
 	public void setNoGrupoPerfil( String noGrupoPerfil ) {
 		this.noGrupoPerfil = noGrupoPerfil;
-	}
-
-	public String getHtmlOpcoes() {
-		return htmlOpcoes;
-	}
-
-	public void setHtmlOpcoes( String htmlOpcoes ) {
-		this.htmlOpcoes = htmlOpcoes;
 	}
 
 }

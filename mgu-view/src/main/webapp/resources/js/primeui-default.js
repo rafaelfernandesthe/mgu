@@ -10,15 +10,15 @@ showMessage = function(level, msg) {
     
 };
 $('#dlg').puidialog({
-    showEffect: 'fade',
+	showEffect: 'fade',
     hideEffect: 'fade',
     effectSpeed: 'slow',
     closable: false,
     draggable: false,
-	resizable: false,
+    resizable: false,
     minimizable: false,
     maximizable: false,
-    responsive: true,
+	responsive: true,
     modal: true,
     width: 150,
     title: 'Carregando...'

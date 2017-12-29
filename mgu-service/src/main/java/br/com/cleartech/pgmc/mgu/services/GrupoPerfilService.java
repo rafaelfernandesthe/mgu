@@ -16,4 +16,6 @@ public interface GrupoPerfilService {
 
 	public List<GrupoPerfil> loadAllById( List<GrupoPerfil> list );
 
+	public List<GrupoPerfil> findByUsuario( Long idUsuario );
+
 }

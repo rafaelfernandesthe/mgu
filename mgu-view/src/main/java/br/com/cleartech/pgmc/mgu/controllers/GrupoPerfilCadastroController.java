@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.services.GrupoPerfilService;
-import br.com.cleartech.pgmc.mgu.utils.MappedViews;
-import br.com.cleartech.pgmc.mgu.utils.MguUtils;
+import br.com.cleartech.pgmc.mgu.view.utils.MappedViews;
+import br.com.cleartech.pgmc.mgu.view.utils.MguUtils;
 
 @Controller
 @RequestMapping( "/grupoPerfilCadastro" )
