@@ -56,6 +56,14 @@ public class EmailServiceImpl implements EmailService {
 					sendEmail( delegado.getDcEmail(), cabecalho, corpoEmail.toString() );
 				}
 				return;
+			case REMOVER_USUARIO:
+				cabecalho = "Usuário removido do sistema";
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Usu&aacute;rio removido do sistema", "O usu&aacute;rio <b>" + usuario.getNmUsuario() + "</b> foi removido do sistema, a partir deste momento não possui mais acesso ao PGMC" ) );
+				break;
+			case REINICIAR_SENHA:
+				cabecalho = "Senha reiniciada com sucesso";
+				corpoEmail.append( getEmailBody( usuario.getNmUsuario(), usuario.getDcUsername(), usuario.getDcSenha(), "Acesso ao PGMC &#150; altera&ccedil;&atilde;o de dados cadastrais", "A senha de acesso ao PGMC foi reiniciada com sucesso. Seguem os novos dados de acesso:" ) );
+				break;
 			default:
 				break;
 		}

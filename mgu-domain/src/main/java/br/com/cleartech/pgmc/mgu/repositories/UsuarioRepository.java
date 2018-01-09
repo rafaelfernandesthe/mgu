@@ -16,6 +16,8 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
 	Usuario findUsuarioMasterByUsernameAndIdPrestadora( String username, Long idPrestadora );
 
-	List<Usuario> find( Usuario usuario );
+	List<Usuario> find( Usuario usuario, Long prestadoraId );
+
+	List<Usuario> findUsuarioDelegadoDisponivel( Long idUsuario, Long idPrestadora );
 
 }

@@ -31,7 +31,7 @@
 						<label class="control-label required" for="username" th:text="#{dcUsername}">Usuário Acesso: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="username" disabled th:errorclass="field-error" th:field="*{dcUsername}" />
+						<input class="form-control input-sm" id="username" disabled th:errorclass="field-error" th:field="${usuario.dcUsername}" />
 					</div>
 				</div>
 				<div class="row">
@@ -72,7 +72,7 @@
 					</div>
 					<div class="col-sm-4 form-group">
 						<input type="text" class="form-control input-sm CPF" th:errorclass="field-error"
-							maxlength="14" id="cpf" th:field="*{nuCpf}"
+							maxlength="14" id="cpf" th:field="${usuario.nuCpf}" disabled
 							placeholder="___.___.___-__" />
 					</div>
 
@@ -85,6 +85,21 @@
 							<option th:each="nvl : ${niveisEscalonamento}" 
 						          th:value="${{nvl}}" 
 						          th:text="${nvl.nuNivelEscalonamento + ' - ' + nvl.dcNivelEscalonamento}">
+							</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="row" th:if="${usuario.flMaster}">
+					<div class="col-sm-2 form-group ">
+						<label class="control-label" for="delegado" th:text="#{delegado}">Delegado: </label>
+					</div>
+					<div class="col-sm-4 form-group">
+						<select class="form-control input-sm" id="delegado" th:field="*{delegado}" >
+							<option value="">Selecione</option> 
+							<option th:each="del : ${listaUsuarioDelegado}" 
+						          th:value="${{del}}" 
+						          th:text="${del.nmUsuario + '(' + del.dcUsername + ')'}">
 							</option>
 						</select>
 					</div>
@@ -106,9 +121,17 @@
 					<div class="col-sm-2 form-group ">
 						<label class="control-label required" for="bloqueado" th:text="#{flBloqueio}">Bloqueado: </label>
 					</div>
-					<div id="bloqueado" class="col-sm-2 form-group">
-						<label class="radio-inline"> <input type="radio" th:value="BLOQUEADO_PRIMEIROACESSO" th:field="*{flBloqueio}">Não</label> 
-						<label class="radio-inline"> <input type="radio" th:value="BLOQUEADO_ADM" th:field="*{flBloqueio}">Sim</label>
+					<div id="bloqueado" class="col-sm-10 form-group">
+						<label class="radio-inline" th:if="${usuario.flBloqueio.toInt() == 2 || usuario.flBloqueio.toInt() == 3 || usuario.flBloqueio.toInt() == 4}"> <input type="radio" th:value="BLOQUEADO_NAO" disabled th:text="Não"></label>
+						<label class="radio-inline" th:if="${usuario.flBloqueio.toInt() != 2 && usuario.flBloqueio.toInt() != 3 && usuario.flBloqueio.toInt() != 4}"> <input type="radio" th:value="BLOQUEADO_NAO" th:field="*{flBloqueio}" th:text="Não"></label>
+						
+						<label class="radio-inline" th:if="${usuario.flBloqueio.toInt() == 0}"> <input type="radio" th:value="BLOQUEADO_ADM" th:field="*{flBloqueio}" th:text="Sim"></label> 
+						<label class="radio-inline" th:if="${usuario.flBloqueio.toInt() == 1}"> <input type="radio" th:value="BLOQUEADO_ADM" th:field="*{flBloqueio}" checked="checked" th:text="Sim"></label>
+						<label class="radio-inline" th:if="${usuario.flBloqueio.toInt() == 2}"> <input type="radio" th:value="BLOQUEADO_PRIMEIROACESSO" th:field="*{flBloqueio}" checked="checked" th:text="Sim"></label> 
+						<label class="radio-inline" th:if="${usuario.flBloqueio.toInt() == 3}"> <input type="radio" th:value="BLOQUEADO_EXPIRADA" th:field="*{flBloqueio}" checked="checked" th:text="Sim"></label> 
+						<label class="radio-inline" th:if="${usuario.flBloqueio.toInt() == 4}"> <input type="radio" th:value="BLOQUEADO_TENTATIVA" th:field="*{flBloqueio}" checked="checked" th:text="Sim"></label> 
+						
+						<label th:if="${usuario.flBloqueio.toInt() != 0}" class="radio-inline" th:text="${', ' + usuario.flBloqueio.getI18n()}"></label>
 					</div>
 				</div>
 				<div class="row">
@@ -125,8 +148,8 @@
 					<button id="submitBt" class="pui-button" type="submit">
 						<label th:text="#{botao.cadastrar}"></label>
 					</button>
-					<a class="pui-button" th:href="@{'/usuarioCadastro'}"> 
-						<label th:text="#{botao.limpar}"></label>
+					<a class="pui-button" th:href="@{'/usuarioConsulta'}"> 
+						<label th:text="#{botao.voltar}"></label>
 					</a>
 				</div>
 
@@ -155,6 +178,11 @@
 				    	 $('#dlg').puidialog('show');
 				    }
 				});
+				
+				$('#delegado').puidropdown({
+		            filter: true,
+		            filterMatchMode: 'contains'
+		        });
 				
 			});
 		</script>

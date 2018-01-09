@@ -7,9 +7,9 @@
 		
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"/>
 		<link href="../resources/css/loginStyle.css" th:href="@{/resources/css/loginStyle.css}" rel="stylesheet" type="text/css"/>
-	
 	    <title th:text="#{sistema.titulo}">Nome do Sistema</title>
-	    
+
+		<script src='https://www.google.com/recaptcha/api.js?hl=pt-br'></script>	    
 	</head>
 	<body onload='document.forms[0].username.focus();'>
 		<script type="text/javascript">
@@ -20,17 +20,16 @@
 			function go(url) {
 		    	window.location = getAppPath() + url+"?username="+document.getElementsByName("username")[0].value;
 		    } 
-			
 		</script>
 		
 		<div class="login-container">
 			
 			<div id="cabecalho"></div>
 			<div id="conteudo-form" class="container">
-				<form id="formulario" th:action="@{/login}" method="post" >
+				<form id="formulario" th:action="@{/senha/recuperarSenha}" method="post" >
 					<div class="row">
 						<div class="col-sm-12">
-							<label id="titulo"><a th:href="@{/}">MGU</a> > Identificação do Usuário</td>
+							<label id="titulo"><a th:href="@{/}">MGU</a> > Problemas com Senha</td>
 						</label>
 					</div>
 					<div class="row">
@@ -41,18 +40,30 @@
 							<input type="text" id="username" name="username" class="loginInput" tabindex="1"/>
 						</div>
 						<div class="col-sm-4">
-							<input class="btnLogin" type="submit" value="Efetuar Login" tabindex="3" />
+							<input class="btnLogin" type="submit" value="Resetar Senha" tabindex="3"/>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-2">
-							<label for="username" class="col-sm-2 col-form-label">Senha:</label>
 						</div>
 						<div class="col-sm-6">
-							<input type="password" id="password" name="password" class="loginInput" tabindex="2"/>
+							<img />
 						</div>
 						<div class="col-sm-4">
-							<input class="btnLogin" type="button" onclick="go('/senha/problemaSenha');" value="Problemas com Senha" tabindex="4"/>
+							<input class="btnLogin" type="button" onclick="go('/senha/trocarSenha');" value="Trocar Senha" tabindex="4"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-2">
+						</div>
+						<div class="col-sm-6">
+<!-- 							<input type="text" id="captcha" name="captcha" class="loginInput" tabindex="2"/> -->
+<!-- 							<div class="g-recaptcha col-sm-5" th:attr="data-sitekey=${@ParametrizacaoService.findByDcParametro('RECAPTCHA_SITE_KEY')}"></div> -->
+							<div class="g-recaptcha col-sm-5" data-sitekey="6LfgZz8UAAAAAIziASwL_Gcb0R5GcOCOm6IgYv45"></div>
+							<span id="captchaError" class="alert alert-danger col-sm-4" style="display:none"></span>
+						</div>
+						<div class="col-sm-4">
+							<input class="btnLogin" type="button" onclick="window.history.go(-1);" value="Voltar" />
 						</div>
 					</div>
 					<div class="row">

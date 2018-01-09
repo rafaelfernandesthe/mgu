@@ -53,4 +53,11 @@ public class GrupoPerfilRepositoryImpl extends QuerydslJpaRepositoryAux<GrupoPer
 		return createQuery( bb ).list( ConstructorExpression.create( GrupoPerfil.class, qGrupoPerfil.id, qGrupoPerfil.noGrupoPerfil ) );
 	}
 
+	@Override
+	public boolean existsByNoGrupoPerfil( String noGrupoPerfil ) {
+		BooleanBuilder bb = new BooleanBuilder();
+		bb.and( qGrupoPerfil.noGrupoPerfil.eq( noGrupoPerfil ) );
+		return createQuery( bb ).exists();
+	}
+
 }

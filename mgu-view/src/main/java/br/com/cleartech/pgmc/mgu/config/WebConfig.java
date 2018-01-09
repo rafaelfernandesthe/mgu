@@ -2,6 +2,7 @@ package br.com.cleartech.pgmc.mgu.config;
 
 import java.util.Locale;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,8 @@ import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 
 import br.com.cleartech.pgmc.mgu.view.converters.NivelEscalonamentoConverter2Controller;
 import br.com.cleartech.pgmc.mgu.view.converters.NivelEscalonamentoConverter2Page;
+import br.com.cleartech.pgmc.mgu.view.converters.UsuarioConverter2Controller;
+import br.com.cleartech.pgmc.mgu.view.converters.UsuarioConverter2Page;
 
 @Configuration
 @EnableWebMvc
@@ -38,12 +41,19 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		super.addFormatters( registry );
 		registry.addConverter( new NivelEscalonamentoConverter2Page() );
 		registry.addConverter( nivelEscalonamentoConverter2Controller() );
+		registry.addConverter( new UsuarioConverter2Page() );
+		registry.addConverter( usuarioConverter2Controller() );
 		// registry.addConverterFactory( autocompleteConverterFactory() );
 	}
 
 	@Bean
 	public NivelEscalonamentoConverter2Controller nivelEscalonamentoConverter2Controller() {
 		return new NivelEscalonamentoConverter2Controller();
+	}
+
+	@Bean
+	public UsuarioConverter2Controller usuarioConverter2Controller() {
+		return new UsuarioConverter2Controller();
 	}
 
 	// @Bean
@@ -65,6 +75,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		bundle.setCacheSeconds( 1 );
 
 		return bundle;
+	}
+
+	@Bean
+	public RestTemplateBuilder restTemplate() {
+		return new RestTemplateBuilder();
 	}
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
@@ -44,7 +45,7 @@ public class UsuarioConsultaController {
 
 	@GetMapping( "/s" )
 	public String lista( @ModelAttribute( "usuario" ) UsuarioConsultaDTO usuarioDTO, Model model ) {
-		List<Usuario> lista = usuarioService.find( usuarioDTO.getUsuario() );
+		List<Usuario> lista = usuarioService.find( usuarioDTO.getUsuario(), MguUtils.getUsuarioLogado().getIdPrestadora() );
 		model.addAttribute( "usuariosJSON", MguUtils.getJSON( lista ) );
 		return MappedViews.USUARIO_CONSULTA.getPath();
 	}
@@ -63,6 +64,54 @@ public class UsuarioConsultaController {
 	@ResponseBody
 	public List<GrupoPerfil> carregaGrupos( @PathVariable Long idUsuario ) {
 		return grupoPerfilService.findByUsuario( idUsuario );
+	}
+
+	@RequestMapping( method = RequestMethod.DELETE, value = "/excluir/{idUsuario}" )
+	@ResponseBody
+	public boolean excluir( @PathVariable Long idUsuario ) {
+		try {
+			usuarioService.excluir( idUsuario );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+
+		return true;
+	}
+
+	@RequestMapping( method = RequestMethod.PUT, value = "/resetar/{idUsuario}" )
+	@ResponseBody
+	public boolean resetar( @PathVariable Long idUsuario ) {
+		try {
+			usuarioService.resetar( idUsuario, MguUtils.getUsuarioLogado().getDcUsername() );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+
+		return true;
+	}
+
+	@RequestMapping( method = RequestMethod.PUT, value = "/bloquear/{idUsuario}" )
+	@ResponseBody
+	public boolean bloquear( @PathVariable Long idUsuario ) {
+		try {
+			usuarioService.bloquear( usuarioService.find( idUsuario ), false );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+
+		return true;
+	}
+
+	@RequestMapping( method = RequestMethod.PUT, value = "/desbloquear/{idUsuario}" )
+	@ResponseBody
+	public boolean desbloquear( @PathVariable Long idUsuario ) {
+		try {
+			usuarioService.desbloquear( usuarioService.find( idUsuario ) );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+
+		return true;
 	}
 
 }

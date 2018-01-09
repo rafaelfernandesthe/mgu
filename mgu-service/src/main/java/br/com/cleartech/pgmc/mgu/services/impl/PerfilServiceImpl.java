@@ -40,8 +40,8 @@ public class PerfilServiceImpl implements PerfilService {
 	private AcessoOperadoraRepository acessoOperadoraRepository;
 
 	@Override
-	public List<Perfil> findByPrestadora( Long idPrestadora ) {
-		return perfilRepository.findByPrestadora( idPrestadora );
+	public List<Perfil> findByPrestadora( Long idPrestadora, String usernameUsuarioLogado ) {
+		return perfilRepository.findByPrestadora( idPrestadora, usernameUsuarioLogado, parametrizacaoService.retornaTipoOperadora( idPrestadora ) );
 	}
 
 	@Override
@@ -112,7 +112,6 @@ public class PerfilServiceImpl implements PerfilService {
 		return perfilRepository.save( perfil );
 	}
 
-
 	@Override
 	public boolean deletarPerfil( String nomePerfil, String sistema ) {
 		Perfil perfil = perfilRepository.findByDcPerfilAndSistema( nomePerfil, sistema );
@@ -122,5 +121,19 @@ public class PerfilServiceImpl implements PerfilService {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public List<Perfil> loadAllById( List<Perfil> list ) {
+		List<Perfil> result = new ArrayList<>();
+		for ( Perfil item : list ) {
+			result.add( perfilRepository.findOne( item.getId() ) );
+		}
+		return result;
+	}
+
+	@Override
+	public List<Perfil> findByGrupoPerfil( Long grupoPerfilId ) {
+		return perfilRepository.findByGrupoPerfil( grupoPerfilId );
 	}
 }

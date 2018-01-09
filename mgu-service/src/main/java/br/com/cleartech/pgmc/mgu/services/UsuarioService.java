@@ -11,7 +11,7 @@ public interface UsuarioService {
 
 	Usuario findByUsername( String username );
 
-	List<Usuario> find( Usuario usuario );
+	List<Usuario> find( Usuario usuario, Long prestadoraId );
 
 	Usuario find( Long idUsuario );
 
@@ -23,9 +23,18 @@ public interface UsuarioService {
 
 	void bloquear( Usuario usuario, boolean removerMaster ) throws Exception;
 
+	void desbloquear( Usuario usuario ) throws Exception;
+
 	void alteraBloqueioUsuario( Usuario usuario, BloqueioUsuario bloqueio, String usuarioAlterando ) throws Exception;
 
 	Usuario salvar( Usuario usuario, boolean master ) throws Exception;
 
 	Usuario salvarEditar( Usuario usuarioAtualizado, Usuario usuarioDB ) throws Exception;
+
+	List<Usuario> findUsuarioDelegadoDisponivel( Long idUsuario, Long idPrestadora );
+
+	void excluir( Long idUsuario ) throws Exception;
+
+	void resetar( Long idUsuario, String usuarioLogado ) throws Exception;
+
 }

@@ -9,7 +9,7 @@ import br.com.cleartech.pgmc.mgu.enums.TipoOperadora;
 
 public interface PerfilService {
 
-	public List<Perfil> findByPrestadora( Long idPrestadora );
+	public List<Perfil> findByPrestadora( Long idPrestadora, String usernameUsuarioLogado );
 
 	public List<Perfil> findBySistema( Sistema sistema );
 
@@ -26,5 +26,9 @@ public interface PerfilService {
 	Perfil criarPerfiOperadora( String nomePerfil, Sistema sistema, List<TipoOperadora> tipoOperadoras );
 
 	boolean deletarPerfil( String nomePerfil, String sistema );
+
+	public List<Perfil> loadAllById( List<Perfil> perfisSelecionados );
+
+	public List<Perfil> findByGrupoPerfil( Long grupoPerfilId );
 
 }

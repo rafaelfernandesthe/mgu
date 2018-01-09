@@ -18,4 +18,12 @@ public interface GrupoPerfilService {
 
 	public List<GrupoPerfil> findByUsuario( Long idUsuario );
 
+	public boolean existsByNoGrupoPerfil( String noGrupoPerfil );
+
+	public void excluir( Long idGrupoPerfil );
+
+	public GrupoPerfil find( Long idGrupoPerfil );
+
+	public GrupoPerfil salvarEditar( GrupoPerfil grupoPerfil, GrupoPerfil grupoPerfilDB );
+
 }

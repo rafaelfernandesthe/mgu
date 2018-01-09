@@ -136,7 +136,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 			paraBloqueio = true;
 		}
 
-		if ( usuarioAtualizado.getFlMaster() ) {
+		if ( usuarioDB.getFlMaster() ) {
 			boolean mudouDelegado = false;
 			if ( ( usuarioDB.getDelegado() == null && usuarioAtualizado.getDelegado() != null ) || ( usuarioDB.getDelegado() != null && !usuarioDB.equals( usuarioAtualizado.getDelegado() ) ) ) {
 				mudouDelegado = true;
@@ -150,7 +150,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 			}
 			if ( mudouDelegado && usuarioAtualizado.getDelegado() != null ) {
 				Delegado delegado = new Delegado();
-				delegado.setUsuarioMaster( usuarioAtualizado );
+				delegado.setUsuarioMaster( usuarioDB );
 				delegado.setUsuarioComum( usuarioAtualizado.getDelegado() );
 				delegado.setPrestadora( usuarioAtualizado.getPrestadoras().get( 0 ) );
 				delegadoService.salvar( delegado );
@@ -164,7 +164,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 			usuarioAtualizado.setFlEnviarDynamics( true );
 		}
 
-		usuarioRepository.save( usuarioAtualizado );
+		atualizaDados( usuarioAtualizado, usuarioDB );
+		usuarioRepository.save( usuarioDB );
 
 		try {
 			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
@@ -179,16 +180,30 @@ public class UsuarioServiceImpl implements UsuarioService {
 		}
 
 		try {
-			if ( paraBloqueio ) {
-				emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.BLOQUEAR_USUARIO, null );
-			} else if ( !paraBloqueio ) {
-				emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.DESBLOQUEAR_USUARIO, null );
+			if ( paraBloqueio != null ) {
+				if ( paraBloqueio ) {
+					emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.BLOQUEAR_USUARIO, null );
+				} else if ( !paraBloqueio ) {
+					emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.DESBLOQUEAR_USUARIO, null );
+				}
 			}
 		} catch ( Exception e ) {
 			throw new MessagingException( "MGU ALERTA: Usuário atualizado com sucesso porém não foi possível enviar o e-mail de bloqueio/desbloqueio para \"" + usuarioAtualizado.getDcEmail() + "\", favor entrar em contato com a central de serviços para informar o problema." );
 		}
 
 		return usuarioAtualizado;
+	}
+
+	private void atualizaDados( Usuario usuarioAtualizado, Usuario usuarioDB ) {
+		usuarioDB.setNmUsuario( usuarioAtualizado.getNmUsuario() );
+		usuarioDB.setDcEmail( usuarioAtualizado.getDcEmail() );
+		usuarioDB.setDcCargo( usuarioAtualizado.getDcCargo() );
+		usuarioDB.setDcTelefone( usuarioAtualizado.getDcTelefone() );
+		usuarioDB.setDcTelefoneFixo( usuarioAtualizado.getDcTelefoneFixo() );
+		usuarioDB.setNivelEscalonamento( usuarioAtualizado.getNivelEscalonamento() );
+		usuarioDB.setGrupoPerfis( usuarioAtualizado.getGrupoPerfis() );
+		usuarioDB.setFlBloqueio( usuarioAtualizado.getFlBloqueio() );
+		usuarioDB.setFlEnvioEmail( usuarioAtualizado.isFlEnvioEmail() );
 	}
 
 	@Override
@@ -300,13 +315,88 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
-	public List<Usuario> find( Usuario usuario ) {
-		return usuarioRepository.find( usuario );
+	public List<Usuario> find( Usuario usuario, Long prestadoraId ) {
+		return usuarioRepository.find( usuario, prestadoraId );
 	}
 
 	@Override
 	public Usuario find( Long idUsuario ) {
 		return usuarioRepository.findOne( idUsuario );
+	}
+
+	@Override
+	public List<Usuario> findUsuarioDelegadoDisponivel( Long idUsuario, Long idPrestadora ) {
+		return usuarioRepository.findUsuarioDelegadoDisponivel( idUsuario, idPrestadora );
+	}
+
+	@Override
+	public void excluir( Long idUsuario ) throws Exception {
+		Usuario usuario = usuarioRepository.findOne( idUsuario );
+
+		try {
+			ldapService.deleteUser( usuario.getDcUsername(), usuario.getFlMaster() );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			// throw new LdapException( "LDAP ERRO: Não Foi possivel remover o
+			// usuario \"" + usuario.getDcUsername() + "\"" );
+		}
+
+		try {
+			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
+			if ( dynamicsAtivo ) {
+				dynamicsService.desativarUsuario( usuario.getDcUsername(), usuario.getDcEmail() );
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			// throw new MguException( ERRO_CONEXAO_DYNAMICS );
+		}
+
+		try {
+			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.REMOVER_USUARIO, null );
+		} catch ( MessagingException e ) {
+			e.printStackTrace();
+			// throw new MessagingException( "MGU ALERTA: Usuário excluído com
+			// sucesso porém não foi possível enviar o e-mail para \"" +
+			// usuario.getDcUsername() + "\"" );
+		}
+
+		usuarioRepository.delete( idUsuario );
+
+	}
+
+	@Override
+	public void resetar( Long idUsuario, String usuarioLogado ) throws Exception {
+		Usuario usuario = usuarioRepository.findOne( idUsuario );
+
+		String novaSenha = GeradorSenha.getRandomPassword( 8 );
+		usuario.setDcSenha( novaSenha );
+		ldapService.alterarSenha( usuario.getDcUsername(), GeradorSenha.md5( novaSenha ) );
+		alteraBloqueioUsuario( usuario, BloqueioUsuario.BLOQUEADO_NAO, usuarioLogado );
+		emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.REINICIAR_SENHA, null );
+	}
+
+	@Override
+	public void desbloquear( Usuario usuario ) throws Exception {
+		usuario.setFlEnviarDynamics( true );
+		usuario.setFlBloqueio( BloqueioUsuario.BLOQUEADO_NAO );
+		usuarioRepository.save( usuario );
+
+		try {
+			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
+			if ( dynamicsAtivo ) {
+				dynamicsService.criarUsuario( usuario );
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new MguException( ERRO_CONEXAO_DYNAMICS );
+		}
+
+		try {
+			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.DESBLOQUEAR_USUARIO, null );
+		} catch ( Exception e ) {
+			// TODO: Verificar se deve retornar
+			new MessagingException( "MGU ALERTA: Não foi possivel enviar email de desbloqueio para o usuario \"" + usuario.getDcUsername() + "\"" ).printStackTrace();
+		}
 	}
 
 }

@@ -152,7 +152,7 @@ public class Usuario implements Serializable {
 
 	@NotAudited
 	@ManyToMany
-	@JoinTable( name = "USUARIO_X_GRUPO_PERFIL_TEMP", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_GRUPO_PERFIL" ) )
+	@JoinTable( name = "USUARIO_GRUPO_PERFIL", joinColumns = @JoinColumn( name = "FK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "FK_ID_GRUPO_PERFIL" ) )
 	private List<GrupoPerfil> grupoPerfis;
 
 	@NotAudited
@@ -194,6 +194,13 @@ public class Usuario implements Serializable {
 		this.nuCpf = nuCpf;
 		this.flBloqueio = flBloqueio;
 		this.status = flBloqueio.getI18n();
+	}
+
+	public Usuario( Long id, String nmUsuario, String dcUsername, String dcEmail ) {
+		this.id = id;
+		this.nmUsuario = nmUsuario;
+		this.dcUsername = dcUsername;
+		this.dcEmail = dcEmail;
 	}
 
 	public boolean getFlEnviarDynamics() {

@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 
 import br.com.cleartech.pgmc.mgu.configs.MguAuthenticationProvider.MguUserDetails;
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
+import br.com.cleartech.pgmc.mgu.entities.Perfil;
 
 public class MguUtils {
 
@@ -48,6 +49,22 @@ public class MguUtils {
 		return result;
 	}
 
+	public static String preparePerfilToJson( List<Perfil> listaPerfil ) {
+		List<ValueObject> fields = new ArrayList<ValueObject>();
+		for ( Perfil p : listaPerfil ) {
+			p.setGrupoPerfis( null );
+			p.setListaPerfil( null );
+			p.setPerfilAcessoOperadoras( null );
+			p.setUsuarios( null );
+			if ( p.getSistema() != null ) {
+				p.setDcDescricao( p.getDcDescricao() + "+" + p.getSistema().getDcSistema() );
+			}
+			p.setSistema( null );
+			fields.add( new ValueObject( String.valueOf( p.getId() ), p.getDcDescricao() ) );
+		}
+		return gson.toJson( fields );
+	}
+
 	public static String getVO2JSON( List<?> list, String valueFieldName, String labelFieldName ) {
 		return getJSON( getVO( list, valueFieldName, labelFieldName ) );
 	}
@@ -64,6 +81,14 @@ public class MguUtils {
 		List<GrupoPerfil> result = new ArrayList<GrupoPerfil>();
 		for ( Integer id : listId ) {
 			result.add( new GrupoPerfil( Long.parseLong( id.toString() ), "" ) );
+		}
+		return result;
+	}
+
+	public static List<Perfil> idListToPerfilList( List<Integer> listId ) {
+		List<Perfil> result = new ArrayList<Perfil>();
+		for ( Integer id : listId ) {
+			result.add( new Perfil( Long.parseLong( id.toString() ) ) );
 		}
 		return result;
 	}

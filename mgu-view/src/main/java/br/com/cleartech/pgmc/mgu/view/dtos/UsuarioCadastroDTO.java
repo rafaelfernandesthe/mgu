@@ -23,7 +23,8 @@ public class UsuarioCadastroDTO implements Serializable {
 	@NotBlank
 	private String nmUsuario;
 
-	@NotBlank
+	// @NotBlank
+	// retirado para a tela de editar
 	private String dcUsername;
 
 	@Email
@@ -37,7 +38,8 @@ public class UsuarioCadastroDTO implements Serializable {
 
 	private String dcTelefoneFixo;
 
-	@NotBlank
+	// NotBlank
+	// retirado para a tela de editar
 	private String nuCpf;
 
 	private NivelEscalonamento nivelEscalonamento;
@@ -52,6 +54,10 @@ public class UsuarioCadastroDTO implements Serializable {
 	private BloqueioUsuario flBloqueio = BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO;
 
 	private Boolean flEnvioEmail = false;
+
+	private Boolean flMaster;
+
+	private Usuario delegado;
 
 	public UsuarioCadastroDTO() {}
 
@@ -68,6 +74,8 @@ public class UsuarioCadastroDTO implements Serializable {
 		this.setGrupoPerfis( usuario.getGrupoPerfis() );
 		this.setFlBloqueio( usuario.getFlBloqueio() );
 		this.setFlEnvioEmail( usuario.isFlEnvioEmail() );
+		this.setFlMaster( usuario.getFlMaster() );
+		this.setDelegado( usuario.getDelegado() );
 
 		if ( !usuario.getPrestadoras().isEmpty() )
 			this.setPrestadora( usuario.getPrestadoras().get( 0 ) );
@@ -206,6 +214,22 @@ public class UsuarioCadastroDTO implements Serializable {
 
 	public void setPrestadora( Prestadora prestadora ) {
 		this.prestadora = prestadora;
+	}
+
+	public Boolean getFlMaster() {
+		return flMaster;
+	}
+
+	public void setFlMaster( Boolean flMaster ) {
+		this.flMaster = flMaster;
+	}
+
+	public Usuario getDelegado() {
+		return delegado;
+	}
+
+	public void setDelegado( Usuario delegado ) {
+		this.delegado = delegado;
 	}
 
 }

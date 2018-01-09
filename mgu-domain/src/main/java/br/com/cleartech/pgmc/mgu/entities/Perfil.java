@@ -86,6 +86,19 @@ public class Perfil implements Serializable {
 	@XmlElement( name = "perfil" )
 	private List<Perfil> listaPerfil;
 
+	public Perfil() {}
+
+	public Perfil( Long id ) {
+		this.id = id;
+	}
+
+	public Perfil( Long id, String dcPerfil, String dcDescricao, Sistema sistema ) {
+		this.id = id;
+		this.dcPerfil = dcPerfil;
+		this.dcDescricao = dcDescricao;
+		this.sistema = sistema;
+	}
+
 	public Long getId() {
 		return this.id;
 	}

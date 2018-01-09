@@ -12,7 +12,7 @@
 		</ul>
  
 		<div class="painel-primary pui-panel-toggleable" th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
-			<form action="#" method="get" th:action="@{/usuarioConsulta/s}" th:object="${usuario}">
+			<form id="formConsulta" action="#" method="get" th:action="@{/usuarioConsulta/s}" th:object="${usuario}">
 
 				<div th:include="~{/_layout/mensagem.html}"></div>
 
@@ -77,6 +77,7 @@
 					          th:text="${gp.noGrupoPerfil}">GP</option>
 						</select>
 					</div>
+					
 					<div class="col-sm-2 form-group ">
 						<label class="control-label" for="statusFiltro" th:text="#{statusFiltro}">Status</label>
 					</div>
@@ -109,6 +110,18 @@
 		<div id="gruposUsuario" title="Grupos">
 			<div id="tabelaGruposUsuario"></div>
 		</div>
+		<div id="dlgExcluir" title="Excluir?" style="display:none;">
+			Deseja realmente excluir o usuário selecionado?
+		</div>
+		<div id="dlgResetar" title="Resetar?" style="display:none;">
+			Deseja realmente resetar o usuário selecionado?
+		</div>
+		<div id="dlgBloquear" title="Bloquear?" style="display:none;">
+			Deseja realmente bloquear o usuário selecionado?
+		</div>
+		<div id="dlgDesbloquear" title="Desbloquear?" style="display:none;">
+			Deseja realmente desbloquear o usuário selecionado?
+		</div>
 	</div>
 	
 	<div layout:fragment="javascript-support">
@@ -127,9 +140,19 @@
 			        columns: [
 			        	{headerText: 'Opções', bodyClass: 'buttonsGroup', 
 			        		content: function (linha){
+			        			var botaoBloqueio = "";
+			        			if(linha.flBloqueio == 'BLOQUEADO_NAO'){
+			        				botaoBloqueio = `<button title="Bloquear" id="botaoBloquear${linha.id}" class='btn btn-primary btn-sm' onclick="bloquear(${linha.id});"><span class='fa fa-user-times'></span></button>`;
+			        			} else if(linha.flBloqueio == 'BLOQUEADO_ADM'){
+			        				botaoBloqueio = `<button title="Desbloquear" id="botaoDesbloquear${linha.id}" class='btn btn-primary btn-sm' onclick="desbloquear(${linha.id});"><span class='fa fa-unlock'></span></button>`;
+			        			}else{
+			        				botaoBloqueio = `<button title="Nenhuma ação de bloqueio/desbloqueio disponível" id="botaoDesabilitado${linha.id}" class='btn btn-secondary btn-sm'><span class='fa fa-user'></span></button>`;
+			        			}
 			        			return ""
-			        			+`<button id="botaoEditar${linha.id}" class='btn btn-primary btn-sm' onclick="editar(${linha.id});"><span class='fa fa-pencil'></span></button>`
-								+`<button id="botaoExcluir${linha.id}" class='btn btn-primary btn-sm'onclick="excluir(${linha.id});"><span class='fa fa-trash'></span></button>`;
+			        			+ botaoBloqueio
+								+`<button title="Resetar" id="botaoResetar${linha.id}" class='btn btn-primary btn-sm' onclick="resetar(${linha.id});"><span class='fa fa-user'></span></button>`
+			        			+`<button title="Editar" id="botaoEditar${linha.id}" class='btn btn-primary btn-sm' onclick="editar(${linha.id});"><span class='fa fa-pencil'></span></button>`
+								+`<button title="Excluir" id="botaoExcluir${linha.id}" class='btn btn-primary btn-sm' onclick="excluir(${linha.id});"><span class='fa fa-trash'></span></button>`;
 			        		}
 			        	},
 			            {field: 'nmUsuario', headerText: 'Nome'},
@@ -142,7 +165,7 @@
 			            {headerText: 'Grupo Perfil', bodyClass: 'buttonsGroup', 
 			            	content: function (linha){
 			            		return ""
-			            		+`<button id="botaoVerGrupos${linha.id}" class='btn btn-primary btn-sm' onclick="mostraGrupos(${linha.id});"><span class='fa fa-bars'></span></button>`;
+			            		+`<button title="Mostrar Grupos" id="botaoVerGrupos${linha.id}" class='btn btn-primary btn-sm' onclick="mostraGrupos(${linha.id});"><span class='fa fa-bars'></span></button>`;
 			            	},
 			            }
 			        ],
@@ -153,7 +176,8 @@
 				});
 				
 				$('#grupoPerfilFiltro').puidropdown({
-		            filter: true
+		            filter: true,
+		            filterMatchMode: 'contains'
 		        });
 				
 				$('#gruposUsuario').puidialog({
@@ -178,6 +202,8 @@
 		                {field: 'noGrupoPerfil', headerText: 'Nome do Grupo'},
 		            ],
 		            datasource: function(callback) {
+		            	$('#gruposUsuario').puidialog('hide');
+		            	$('#dlg').puidialog('show');
 		                $.ajax({
 		                    type: "GET",
 		                    url: getAppPath() + '/usuarioConsulta/grupoPerfis/'+idUsuario,
@@ -185,16 +211,33 @@
 		                    context: this,
 		                    success: function(response) {
 		                        callback.call(this, response);
+		                        $('#dlg').puidialog('hide');
+								$('#gruposUsuario').puidialog('show');
 		                    }
 		                });
 		            }
 		        });
 				
-				$('#gruposUsuario').puidialog('show');
 			}
 			
 			function editar(idUsuario){
 				document.location = getAppPath() + '/usuarioEdicao/'+idUsuario ;
+			}
+			
+			function excluir(idUsuario){
+				show_puidialog('#dlgExcluir', 'DELETE', '/usuarioConsulta/excluir/'+idUsuario, '#formConsulta');
+			}
+			
+			function resetar(idUsuario){
+				show_puidialog('#dlgResetar', 'PUT', '/usuarioConsulta/resetar/'+idUsuario, '#formConsulta');
+			}
+			
+			function bloquear(idUsuario){
+				show_puidialog('#dlgBloquear', 'PUT', '/usuarioConsulta/bloquear/'+idUsuario, '#formConsulta');
+			}
+			
+			function desbloquear(idUsuario){
+				show_puidialog('#dlgDesbloquear', 'PUT', '/usuarioConsulta/desbloquear/'+idUsuario, '#formConsulta');
 			}
 		</script>
 	</div>

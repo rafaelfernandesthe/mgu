@@ -12,20 +12,21 @@
 		</ul>
 
 		<div class="pui-panel-toggleable" th:title="#{pagina.consulta}+' '+#{grupoPerfil}">
-			<form action="#" method="get" th:action="@{/grupoPerfilConsulta/s}" th:object="${grupoPerfil}">
+			<form id="formConsulta" action="#" method="get" th:action="@{/grupoPerfilConsulta/s}" th:object="${grupoPerfil}">
 			
 				<div class="row">
-					<div class="col-sm-12">
-						<div class="form-group">
-							<label class="control-label" for="nome"
-								th:text="#{grupoPerfil.nome}">Nome: </label> <input
-								class="form-control" id="nome" th:field="*{noGrupoPerfil}" />
-						</div>
+					<div class="col-sm-2 form-group">
+						<label class="control-label" for="nome" th:text="#{noGrupoPerfil}">Nome: </label> 
+					</div>
+					<div class="col-sm-10 form-group">
+						<input class="form-control" id="nome" th:field="*{noGrupoPerfil}" />
 					</div>
 				</div>
 
 				<div class="form-group buttonsGroup">
-					<button class="pui-button" type="submit"><label th:text="#{botao.consultar}"></label></button>
+					<button id="submitBt" class="pui-button" type="submit">
+						<label th:text="#{botao.consultar}"></label>
+					</button>
 					<a class="pui-button" th:href="@{'/grupoPerfilConsulta'}">
 						<label th:text="#{botao.limpar}"></label>
 					</a>
@@ -37,7 +38,9 @@
 			<div class="pui-datatableResult" id="tableGrupoPerfil"></div>
 		</div>
 		
-		
+		<div id="dlgExcluir" title="Excluir?" style="display:none;">
+			Deseja realmente excluir o Grupo de Perfil selecionado?
+		</div>
 	</div>
 
 	<div layout:fragment="javascript-support">
@@ -51,17 +54,31 @@
 				        rows: 10
 				    },
 				    columns: [
-			        	{headerText: 'Opções',
-			        		content: function (record){
+			        	{headerText: 'Opções', bodyClass: 'buttonsGroup', 
+			        		content: function (linha){
 			        			return ""
-			        			+"<a href='#'><button class='btn btn-primary btn-sm' data-title='Edit' data-toggle='modal' data-target='#edit'><span class='fa fa-pencil'></span></button></a>"
-								+"<a href='#'><button class='btn btn-primary btn-sm' data-title='Edit' data-toggle='modal' data-target='#edit'><span class='fa fa-trash'></span></button></a>"; 
+			        			+`<button title="Editar" id="botaoEditar${linha.id}" class='btn btn-primary btn-sm' onclick="editar(${linha.id});"><span class='fa fa-pencil'></span></button>`
+								+`<button title="Excluir" id="botaoExcluir${linha.id}" class='btn btn-primary btn-sm' onclick="excluir(${linha.id});"><span class='fa fa-trash'></span></button>`; 
 			        		}
 			        	},
 			            {field: 'noGrupoPerfil', headerText: 'Nome'},
 			        ],
 			        datasource: localData,
 				});
+			});
+			
+			function editar(idGrupoPerfil){
+				document.location = getAppPath() + '/grupoPerfilEdicao/'+idGrupoPerfil ;
+			}
+			
+			function excluir(idGrupoPerfil){
+				show_puidialog('#dlgExcluir', 'DELETE', '/grupoPerfilConsulta/excluir/'+idGrupoPerfil, '#formConsulta');
+			}
+			
+			$('#submitBt').puibutton({
+			    click: function(event) {
+			    	 $('#dlg').puidialog('show');
+			    }
 			});
 			
 		</script>

@@ -9,7 +9,10 @@ import org.springframework.stereotype.Repository;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.ConstructorExpression;
+import com.mysema.query.types.Order;
+import com.mysema.query.types.OrderSpecifier;
 
+import br.com.cleartech.pgmc.mgu.entities.QDelegado;
 import br.com.cleartech.pgmc.mgu.entities.QPrestadora;
 import br.com.cleartech.pgmc.mgu.entities.QUsuario;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
@@ -54,8 +57,10 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 	}
 
 	@Override
-	public List<Usuario> find( Usuario usuario ) {
+	public List<Usuario> find( Usuario usuario, Long prestadoraId ) {
 		BooleanBuilder bb = new BooleanBuilder();
+		bb.and( qUsuario.prestadoras.any().id.eq( prestadoraId ) );
+
 		if ( !StringUtils.isEmpty( usuario.getNmUsuario() ) ) {
 			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( qUsuario.nmUsuario, usuario.getNmUsuario() ) );
 		}
@@ -82,5 +87,20 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 		}
 
 		return createQuery( bb ).list( ConstructorExpression.create( Usuario.class, qUsuario.id, qUsuario.nmUsuario, qUsuario.dcUsername, qUsuario.dcEmail, qUsuario.dcCargo, qUsuario.dcTelefone, qUsuario.nuCpf, qUsuario.flBloqueio ) );
+	}
+
+	@Override
+	public List<Usuario> findUsuarioDelegadoDisponivel( Long idUsuario, Long idPrestadora ) {
+		BooleanBuilder bb = new BooleanBuilder();
+		QDelegado qDelegado = QDelegado.delegado;
+		bb.and( qUsuario.id.ne( idUsuario ) );
+		bb.and( qUsuario.prestadoras.any().id.eq( idPrestadora ) );
+		bb.and( qDelegado.id.isNull().or( qDelegado.usuarioMaster.id.eq( idUsuario ) ) );
+
+		JPAQuery query = new JPAQuery( this.getEm() );
+		query.from( qUsuario ).leftJoin( qUsuario.delegadosComuns, qDelegado ).where( bb );
+		query.orderBy( new OrderSpecifier<>( Order.ASC, qUsuario.dcUsername ) );
+
+		return query.list( ConstructorExpression.create( Usuario.class, qUsuario.id, qUsuario.nmUsuario, qUsuario.dcUsername, qUsuario.dcEmail ) );
 	}
 }

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,13 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.NivelEscalonamento;
+import br.com.cleartech.pgmc.mgu.entities.Prestadora;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.services.GrupoPerfilService;
-import br.com.cleartech.pgmc.mgu.services.LdapService;
 import br.com.cleartech.pgmc.mgu.services.NivelEscalonamentoService;
 import br.com.cleartech.pgmc.mgu.services.PrestadoraService;
 import br.com.cleartech.pgmc.mgu.services.UsuarioService;
-import br.com.cleartech.pgmc.mgu.utils.StringUtils;
 import br.com.cleartech.pgmc.mgu.view.dtos.UsuarioCadastroDTO;
 import br.com.cleartech.pgmc.mgu.view.utils.MappedViews;
 import br.com.cleartech.pgmc.mgu.view.utils.MguUtils;
@@ -49,18 +47,17 @@ public class UsuarioEdicaoController {
 	private NivelEscalonamentoService nivelEscalonamentoService;
 
 	@Autowired
-	private LdapService ldapService;
-
-	@Autowired
 	private PrestadoraService prestadoraService;
 
 	private CPFValidator cpfValidator = new CPFValidator();
 
 	private Usuario usuario;
 
+	private Usuario usuarioDB;
+
 	@GetMapping( "/{idUsuario}" )
 	public String init( Model model, @PathVariable Long idUsuario ) {
-		Usuario usuarioDB = usuarioService.find( idUsuario );
+		usuarioDB = usuarioService.find( idUsuario );
 		UsuarioCadastroDTO usuarioDto = new UsuarioCadastroDTO( usuarioDB );
 
 		model.addAttribute( "usuario", usuarioDto );
@@ -75,6 +72,12 @@ public class UsuarioEdicaoController {
 		groupSelecteds = grupoPerfilService.loadAllById( groupSelecteds );
 		model.addAttribute( "grupoPerfisTargetJSON", MguUtils.getVO2JSON( groupSelecteds, "id", "noGrupoPerfil" ) );
 
+		if ( usuarioDto.getFlMaster() ) {
+			Prestadora prestadora = prestadoraService.prestadoraPorUsername( MguUtils.getUsuarioLogado().getDcUsername() );
+			List<Usuario> delegados = usuarioService.findUsuarioDelegadoDisponivel( usuarioDB.getId(), prestadora.getId() );
+			model.addAttribute( "listaUsuarioDelegado", delegados );
+		}
+
 		cpfValidator.initialize( null );
 
 		return MappedViews.USUARIO_EDICAO.getPath();
@@ -83,31 +86,10 @@ public class UsuarioEdicaoController {
 	@PostMapping( "/salvar" )
 	public String salvar( @Validated @ModelAttribute( "usuario" ) UsuarioCadastroDTO usuarioDto, BindingResult bindingResult, Model model ) {
 
-		Usuario usuarioDB = usuarioService.find( usuarioDto.getId() );
+		usuarioDB = usuarioService.find( usuarioDto.getId() );
 		// carregar grupos
 		List<GrupoPerfil> groupSelecteds = MguUtils.idListToGrupoPerfilList( usuarioDto.getGrupoPerfisIdList() );
 		usuarioDto.setGrupoPerfis( groupSelecteds );
-
-		if ( !cpfValidator.isValid( usuarioDto.getNuCpf(), null ) ) {
-			bindingResult.addError( new FieldError( "usuario", "nuCpf", usuarioDto.getNuCpf(), false, null, null, "CPF informado é inválido." ) );
-		}
-
-		if ( !StringUtils.isEmpty( usuarioDto.getDcUsername() ) ) {
-			String msgUsuarioExiste = "Usuário de acesso informado já existe e não pode ser utilizado. Por favor, informe outro usuário de acesso.";
-			boolean mudouDcUsername = !usuarioDto.getDcUsername().equals( usuarioDB.getDcUsername() );
-
-			if ( mudouDcUsername ) {
-				if ( usuarioService.existsByUsernameIgnoreCase( usuarioDto.getDcUsername() ) ) {
-					bindingResult.addError( new FieldError( "usuario", "dcUsername", usuarioDto.getDcUsername(), false, null, null, msgUsuarioExiste ) );
-				} else if ( ldapService.existeUsuario( usuarioDto.getDcUsername() ) ) {
-					bindingResult.addError( new FieldError( "usuario", "dcUsername", usuarioDto.getDcUsername(), false, null, null, "LDAP ERRO: " + msgUsuarioExiste ) );
-				}
-			}
-
-			if ( !usuarioDto.getDcUsername().replaceAll( "[\\w._-]", "" ).isEmpty() ) {
-				bindingResult.addError( new FieldError( "usuario", "dcUsername", usuarioDto.getDcUsername(), false, null, null, "Usuário de Acesso deve conter apenas letras, números, ponto(.), underline(_) e traço(-)." ) );
-			}
-		}
 
 		if ( !bindingResult.hasErrors() ) {
 			try {
@@ -129,6 +111,15 @@ public class UsuarioEdicaoController {
 
 		groupSelecteds = grupoPerfilService.loadAllById( groupSelecteds );
 		model.addAttribute( "grupoPerfisTargetJSON", MguUtils.getVO2JSON( groupSelecteds, "id", "noGrupoPerfil" ) );
+
+		usuarioDto.setDcUsername( usuarioDB.getDcUsername() );
+		usuarioDto.setNuCpf( usuarioDB.getNuCpf() );
+		usuarioDto.setFlMaster( usuarioDB.getFlMaster() );
+		if ( usuarioDto.getFlMaster() ) {
+			Prestadora prestadora = prestadoraService.prestadoraPorUsername( MguUtils.getUsuarioLogado().getDcUsername() );
+			List<Usuario> delegados = usuarioService.findUsuarioDelegadoDisponivel( usuarioDB.getId(), prestadora.getId() );
+			model.addAttribute( "listaUsuarioDelegado", delegados );
+		}
 
 		return MappedViews.USUARIO_EDICAO.getPath();
 	}

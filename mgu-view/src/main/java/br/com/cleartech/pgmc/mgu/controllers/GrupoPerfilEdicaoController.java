@@ -1,6 +1,5 @@
 package br.com.cleartech.pgmc.mgu.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,28 +8,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
 import br.com.cleartech.pgmc.mgu.services.GrupoPerfilService;
 import br.com.cleartech.pgmc.mgu.services.PerfilService;
-import br.com.cleartech.pgmc.mgu.services.PrestadoraService;
-import br.com.cleartech.pgmc.mgu.utils.StringUtils;
 import br.com.cleartech.pgmc.mgu.view.dtos.GrupoPerfilCadastroDTO;
 import br.com.cleartech.pgmc.mgu.view.utils.MappedViews;
 import br.com.cleartech.pgmc.mgu.view.utils.MguUtils;
 
 @Controller
-@RequestMapping( "/grupoPerfilCadastro" )
-public class GrupoPerfilCadastroController {
+@RequestMapping( "/grupoPerfilEdicao" )
+public class GrupoPerfilEdicaoController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger( GrupoPerfilCadastroController.class );
+	private static final Logger LOGGER = LoggerFactory.getLogger( GrupoPerfilEdicaoController.class );
 
 	@Autowired
 	private GrupoPerfilService grupoPerfilService;
@@ -38,39 +36,38 @@ public class GrupoPerfilCadastroController {
 	@Autowired
 	private PerfilService perfilService;
 
-	@Autowired
-	private PrestadoraService prestadoraService;
+	@GetMapping( "/{idGrupoPerfil}" )
+	public String init( Model model, @PathVariable Long idGrupoPerfil ) {
+		GrupoPerfil grupoPerfilDB = grupoPerfilService.find( idGrupoPerfil );
 
-	@GetMapping
-	public String init( Model model ) {
+		GrupoPerfilCadastroDTO grupoPerfilDto = new GrupoPerfilCadastroDTO( grupoPerfilDB );
+		model.addAttribute( "grupoPerfil", grupoPerfilDto );
+
+		List<Perfil> perfisSelecionados = perfilService.findByGrupoPerfil( grupoPerfilDto.getId() );
+		grupoPerfilDto.setPerfis( perfisSelecionados );
+
 		List<Perfil> listaPerfilTotal = getPerfilList();
-		model.addAttribute( "grupoPerfil", new GrupoPerfilCadastroDTO() );
+		listaPerfilTotal.removeAll( perfisSelecionados );
 		model.addAttribute( "perfisSourceJSON", MguUtils.preparePerfilToJson( listaPerfilTotal ) );
-		model.addAttribute( "perfisTargetJSON", MguUtils.getJSON( new ArrayList<Perfil>() ) );
-		return MappedViews.GRUPO_PERFIL_CADASTRO.getPath();
+
+		model.addAttribute( "perfisTargetJSON", MguUtils.preparePerfilToJson( perfisSelecionados ) );
+
+		return MappedViews.GRUPO_PERFIL_EDICAO.getPath();
 	}
 
 	@PostMapping( "/salvar" )
 	public String salvar( @Validated @ModelAttribute( "grupoPerfil" ) GrupoPerfilCadastroDTO grupoPerfilDto, BindingResult bindingResult, Model model ) {
 
-		// carregar grupos
+		GrupoPerfil grupoPerfilDB = grupoPerfilService.find( grupoPerfilDto.getId() );
+
+		// carregar perfis
 		List<Perfil> perfisSelecionados = MguUtils.idListToPerfilList( grupoPerfilDto.getPerfisIdList() );
 		grupoPerfilDto.setPerfis( perfisSelecionados );
-
-		if ( !StringUtils.isEmpty( grupoPerfilDto.getNoGrupoPerfil() ) ) {
-			if ( grupoPerfilService.existsByNoGrupoPerfil( grupoPerfilDto.getNoGrupoPerfil() ) ) {
-				bindingResult.addError( new FieldError( "grupoPerfil", "noGrupoPerfil", grupoPerfilDto.getNoGrupoPerfil(), false, null, null, "Nome do Grupo de Perfil informado já está cadastrado." ) );
-			}
-
-		} else {
-			bindingResult.addError( new FieldError( "grupoPerfil", "noGrupoPerfil", grupoPerfilDto.getNoGrupoPerfil(), false, null, null, "Nome do Grupo de Perfil é obrigatório." ) );
-		}
 
 		if ( !bindingResult.hasErrors() ) {
 			try {
 				LOGGER.info( "salvando: " + grupoPerfilDto.toString() );
-				grupoPerfilDto.setPrestadora( prestadoraService.prestadoraPorUsername( MguUtils.getUsuarioLogado().getDcUsername() ) );
-				grupoPerfilService.salvar( grupoPerfilDto.getGrupoPerfil() );
+				grupoPerfilService.salvarEditar( grupoPerfilDto.getGrupoPerfil(), grupoPerfilDB );
 				return "redirect:/grupoPerfilConsulta" + MappedViews.SUCESSO_PARAMETRO.getPath();
 			} catch ( Exception e ) {
 				bindingResult.addError( new ObjectError( "grupoPerfil", e.getMessage() ) );
@@ -84,7 +81,9 @@ public class GrupoPerfilCadastroController {
 		perfisSelecionados = perfilService.loadAllById( perfisSelecionados );
 		model.addAttribute( "perfisTargetJSON", MguUtils.preparePerfilToJson( perfisSelecionados ) );
 
-		return MappedViews.GRUPO_PERFIL_CADASTRO.getPath();
+		grupoPerfilDto.setNoGrupoPerfil( grupoPerfilDB.getNoGrupoPerfil() );
+
+		return MappedViews.GRUPO_PERFIL_EDICAO.getPath();
 	}
 
 	private List<Perfil> getPerfilList() {

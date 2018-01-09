@@ -50,4 +50,26 @@ public class GrupoPerfilServiceImpl implements GrupoPerfilService {
 		return grupoPerfilRepository.findByUsuario( idUsuario );
 	}
 
+	@Override
+	public boolean existsByNoGrupoPerfil( String noGrupoPerfil ) {
+		return grupoPerfilRepository.existsByNoGrupoPerfil( noGrupoPerfil );
+	}
+
+	@Override
+	public void excluir( Long idGrupoPerfil ) {
+		grupoPerfilRepository.delete( idGrupoPerfil );
+	}
+
+	@Override
+	public GrupoPerfil find( Long idGrupoPerfil ) {
+		return grupoPerfilRepository.findOne( idGrupoPerfil );
+	}
+
+	@Override
+	public GrupoPerfil salvarEditar( GrupoPerfil grupoPerfilAtualizado, GrupoPerfil grupoPerfilDB ) {
+		grupoPerfilDB.setPerfis( grupoPerfilAtualizado.getPerfis() );
+		grupoPerfilRepository.save( grupoPerfilDB );
+		return grupoPerfilDB;
+	}
+
 }

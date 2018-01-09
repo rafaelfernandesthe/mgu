@@ -4,11 +4,13 @@ public enum MappedViews {
 
 	LOGIN( "/login.html" ),
 	HOME( "/home.html" ),
+	PROBLEMA_SENHA( "/problemaSenha.html" ),
 	USUARIO_CADASTRO( "/usuario/usuarioCadastro.html" ),
 	USUARIO_CONSULTA( "/usuario/usuarioConsulta.html" ),
 	USUARIO_EDICAO( "/usuario/usuarioEdicao.html" ),
 	GRUPO_PERFIL_CADASTRO( "/grupoPerfil/grupoPerfilCadastro.html" ),
-	GRUPO_PERFIL_CONSULTA( "/grupoPerfil/grupoPerfilConsulta" ),
+	GRUPO_PERFIL_CONSULTA( "/grupoPerfil/grupoPerfilConsulta.html" ),
+	GRUPO_PERFIL_EDICAO( "/grupoPerfil/grupoPerfilEdicao.html" ),
 	PARAMETRO_CONSULTA( "/parametro/parametroConsulta.html" ),
 
 	/**

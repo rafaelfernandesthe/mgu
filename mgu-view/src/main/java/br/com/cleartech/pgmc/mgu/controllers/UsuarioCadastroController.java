@@ -77,7 +77,9 @@ public class UsuarioCadastroController {
 		List<GrupoPerfil> groupSelecteds = MguUtils.idListToGrupoPerfilList( usuarioDto.getGrupoPerfisIdList() );
 		usuarioDto.setGrupoPerfis( groupSelecteds );
 
-		if ( !cpfValidator.isValid( usuarioDto.getNuCpf(), null ) ) {
+		if ( StringUtils.isEmpty( usuario.getNuCpf() ) ) {
+			bindingResult.addError( new FieldError( "usuario", "nuCpf", usuarioDto.getNuCpf(), false, null, null, "CPF é obrigatório." ) );
+		} else if ( !cpfValidator.isValid( usuarioDto.getNuCpf(), null ) ) {
 			bindingResult.addError( new FieldError( "usuario", "nuCpf", usuarioDto.getNuCpf(), false, null, null, "CPF informado é inválido." ) );
 		}
 
@@ -93,6 +95,8 @@ public class UsuarioCadastroController {
 			if ( !usuarioDto.getDcUsername().replaceAll( "[\\w._-]", "" ).isEmpty() ) {
 				bindingResult.addError( new FieldError( "usuario", "dcUsername", usuarioDto.getDcUsername(), false, null, null, "Usuário de Acesso deve conter apenas letras, números, ponto(.), underline(_) e traço(-)." ) );
 			}
+		} else {
+			bindingResult.addError( new FieldError( "usuario", "dcUsername", usuarioDto.getDcUsername(), false, null, null, "Usuário de Acesso é obrigatório." ) );
 		}
 
 		if ( !bindingResult.hasErrors() ) {
@@ -130,7 +134,6 @@ public class UsuarioCadastroController {
 	public Usuario getUsuario() {
 		return usuario;
 	}
-	
 
 	public void setUsuario( Usuario usuario ) {
 		this.usuario = usuario;
