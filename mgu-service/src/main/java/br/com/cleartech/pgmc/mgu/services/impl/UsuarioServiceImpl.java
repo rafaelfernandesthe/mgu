@@ -376,6 +376,21 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
+	public void alterarSenha( Long idUsuario, String usuarioLogado, String novaSenha ) throws Exception {
+		Usuario usuario = usuarioRepository.findOne( idUsuario );
+		usuario.setFlPrimeiroAcessoSNOA( false );
+		usuario.setUltimaTrocaSenha( new Date() );
+		usuario.setUltimoAcesso( new Date() );
+
+		novaSenha = GeradorSenha.md5( novaSenha );
+		usuario.setDcSenha( novaSenha );
+		ldapService.alterarSenha( usuario.getDcUsername(), novaSenha );
+		alteraBloqueioUsuario( usuario, BloqueioUsuario.BLOQUEADO_NAO, usuarioLogado );
+
+		emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.ALTERAR_SENHA, null );
+	}
+
+	@Override
 	public void desbloquear( Usuario usuario ) throws Exception {
 		usuario.setFlEnviarDynamics( true );
 		usuario.setFlBloqueio( BloqueioUsuario.BLOQUEADO_NAO );

@@ -45,12 +45,10 @@ public class RecaptchaService {
 			// String errorMessage = errorCodes.stream().map( s ->
 			// RecaptchaUtil.RECAPTCHA_ERROR_CODE.get( s ) ).collect(
 			// Collectors.joining( ", " ) );
-			String errorMessage = "";
-			for ( String code : errorCodes ) {
-				errorMessage += RecaptchaUtil.RECAPTCHA_ERROR_CODE.get( code ) + ", ";
-			}
+			if ( errorCodes != null && !errorCodes.isEmpty() )
+				return "Valor informado no captcha invalido!";
 
-			return errorMessage.substring( 0, errorMessage.length() - 2 );
+			return "Erro na configuração do captcha. Por favor entrar em contato com a central de serviços.";
 		} else {
 			return org.apache.commons.lang.StringUtils.EMPTY;
 		}

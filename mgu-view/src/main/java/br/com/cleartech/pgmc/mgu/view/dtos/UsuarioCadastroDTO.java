@@ -59,6 +59,10 @@ public class UsuarioCadastroDTO implements Serializable {
 
 	private Usuario delegado;
 
+	private String senhaAtual;
+	private String senhaNova;
+	private String confirmarSenhaNova;
+
 	public UsuarioCadastroDTO() {}
 
 	public UsuarioCadastroDTO( Usuario usuario ) {
@@ -230,6 +234,30 @@ public class UsuarioCadastroDTO implements Serializable {
 
 	public void setDelegado( Usuario delegado ) {
 		this.delegado = delegado;
+	}
+
+	public String getSenhaAtual() {
+		return senhaAtual;
+	}
+
+	public void setSenhaAtual( String senhaAtual ) {
+		this.senhaAtual = senhaAtual;
+	}
+
+	public String getSenhaNova() {
+		return senhaNova;
+	}
+
+	public void setSenhaNova( String senhaNova ) {
+		this.senhaNova = senhaNova;
+	}
+
+	public String getConfirmarSenhaNova() {
+		return confirmarSenhaNova;
+	}
+
+	public void setConfirmarSenhaNova( String confirmarSenhaNova ) {
+		this.confirmarSenhaNova = confirmarSenhaNova;
 	}
 
 }

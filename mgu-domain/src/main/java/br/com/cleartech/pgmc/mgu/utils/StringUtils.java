@@ -20,4 +20,12 @@ public class StringUtils {
 		return false;
 	}
 
+	public static boolean hasAnyEmpty( String... value ) {
+		for ( String i : value ) {
+			if ( isEmpty( i ) )
+				return true;
+		}
+		return false;
+	}
+
 }

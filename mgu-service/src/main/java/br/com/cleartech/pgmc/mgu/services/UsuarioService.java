@@ -37,4 +37,6 @@ public interface UsuarioService {
 
 	void resetar( Long idUsuario, String usuarioLogado ) throws Exception;
 
+	void alterarSenha( Long idUsuario, String usuarioLogado, String novaSenha ) throws Exception;
+
 }

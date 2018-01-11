@@ -5,6 +5,7 @@ public enum MappedViews {
 	LOGIN( "/login.html" ),
 	HOME( "/home.html" ),
 	PROBLEMA_SENHA( "/problemaSenha.html" ),
+	TROCAR_SENHA( "/trocarSenha.html" ),
 	USUARIO_CADASTRO( "/usuario/usuarioCadastro.html" ),
 	USUARIO_CONSULTA( "/usuario/usuarioConsulta.html" ),
 	USUARIO_EDICAO( "/usuario/usuarioEdicao.html" ),

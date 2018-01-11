@@ -64,6 +64,10 @@ public class EmailServiceImpl implements EmailService {
 				cabecalho = "Senha reiniciada com sucesso";
 				corpoEmail.append( getEmailBody( usuario.getNmUsuario(), usuario.getDcUsername(), usuario.getDcSenha(), "Acesso ao PGMC &#150; altera&ccedil;&atilde;o de dados cadastrais", "A senha de acesso ao PGMC foi reiniciada com sucesso. Seguem os novos dados de acesso:" ) );
 				break;
+			case ALTERAR_SENHA:
+				cabecalho = "Senha alterada com sucesso";
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Acesso ao PGMC &#150; altera&ccedil;&atilde;o de dados cadastrais", "A senha de acesso ao PGMC foi alterada com sucesso." ) );
+				break;
 			default:
 				break;
 		}

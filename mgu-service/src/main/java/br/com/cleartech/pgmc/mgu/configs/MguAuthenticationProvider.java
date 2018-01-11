@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,6 +24,7 @@ import br.com.cleartech.pgmc.mgu.exceptions.MguViewAuthenticationException;
 import br.com.cleartech.pgmc.mgu.services.DelegadoService;
 import br.com.cleartech.pgmc.mgu.services.LdapService;
 import br.com.cleartech.pgmc.mgu.services.UsuarioService;
+import br.com.cleartech.pgmc.mgu.utils.GeradorSenha;
 
 @Component
 public class MguAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
@@ -44,7 +44,7 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 	protected MguUserDetails retrieveUser( String username, UsernamePasswordAuthenticationToken authentication ) throws AuthenticationException {
 		logger.info( "MguAuthenticationProvider.retrieveUser()" );
 		logger.info( "Tentativa de Login com {}", username );
-		String passwEncoded = new Md5PasswordEncoder().encodePassword( authentication.getCredentials().toString(), null );
+		String passwEncoded = GeradorSenha.md5( authentication.getCredentials().toString() );
 		try {
 			boolean usuarioLdapValido = ldapService.existeUsuario( authentication.getName(), passwEncoded );
 			if ( !usuarioLdapValido ) {

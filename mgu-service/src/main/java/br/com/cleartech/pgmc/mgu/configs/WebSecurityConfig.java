@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                 .antMatchers("/resources/js/*","/resources/img/*","/resources/img/login/*","/resources/css/*",
-                				"/senha/problemaSenha","/senha/trocarSenha", "/senha/recuperarSenha").permitAll()
+                				"/senha/problemaSenha","/senha/trocarSenha", "/senha/recuperarSenha", "/senha/salvarNovaSenha").permitAll()
                 .anyRequest().authenticated()
                 .and()
             .formLogin()

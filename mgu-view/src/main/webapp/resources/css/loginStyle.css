@@ -3,9 +3,24 @@ body {
 	font-family: Calibri !important;
 }
 
+label.control-label {
+    width: 100%;
+    text-align: right;
+}
+
 .loginInput {
 	width: 100%;
 	color: black;
+}
+
+.btnTrocarSenha {
+	background: url(../img/login/btnBackground.png);
+    background-repeat: repeat;
+    background-color: transparent;
+    background-attachment: scroll;
+    border: 1px solid #5B7596;
+    width: 100%;
+  	margin-top: 5px;
 }
 
 .btnLogin {

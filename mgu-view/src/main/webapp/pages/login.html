@@ -14,11 +14,11 @@
 	<body onload='document.forms[0].username.focus();'>
 		<script type="text/javascript">
 			function getAppPath(){
-				return window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/'));
+				return "/"+window.location.pathname.split('/')[1];
 			}
 			
 			function go(url) {
-		    	window.location = getAppPath() + url+"?username="+document.getElementsByName("username")[0].value;
+		    	window.location = getAppPath() + url+"?username="+document.getElementById("username").value;
 		    } 
 			
 		</script>

@@ -14,11 +14,11 @@
 	<body onload='document.forms[0].username.focus();'>
 		<script type="text/javascript">
 			function getAppPath(){
-				return window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/'));
+				return "/"+window.location.pathname.split('/')[1];
 			}
 			
 			function go(url) {
-		    	window.location = getAppPath() + url+"?username="+document.getElementsByName("username")[0].value;
+		    	window.location = getAppPath() + url+"?username="+document.getElementById("username").value;
 		    } 
 		</script>
 		
@@ -26,7 +26,7 @@
 			
 			<div id="cabecalho"></div>
 			<div id="conteudo-form" class="container">
-				<form id="formulario" th:action="@{/senha/recuperarSenha}" method="post" >
+				<form id="formulario" th:action="@{/senha/recuperarSenha}" method="post" th:object="${usuario}">
 					<div class="row">
 						<div class="col-sm-12">
 							<label id="titulo"><a th:href="@{/}">MGU</a> > Problemas com Senha</td>
@@ -37,7 +37,7 @@
 							<label for="username" class="col-sm-2 col-form-label">Usuário:</label>
 						</div>
 						<div class="col-sm-6">
-							<input type="text" id="username" name="username" class="loginInput" tabindex="1"/>
+							<input id="username" type="text" th:field="*{dcUsername}" class="loginInput" tabindex="1"/>
 						</div>
 						<div class="col-sm-4">
 							<input class="btnLogin" type="submit" value="Resetar Senha" tabindex="3"/>
@@ -47,7 +47,6 @@
 						<div class="col-sm-2">
 						</div>
 						<div class="col-sm-6">
-							<img />
 						</div>
 						<div class="col-sm-4">
 							<input class="btnLogin" type="button" onclick="go('/senha/trocarSenha');" value="Trocar Senha" tabindex="4"/>
@@ -60,14 +59,12 @@
 <!-- 							<input type="text" id="captcha" name="captcha" class="loginInput" tabindex="2"/> -->
 <!-- 							<div class="g-recaptcha col-sm-5" th:attr="data-sitekey=${@ParametrizacaoService.findByDcParametro('RECAPTCHA_SITE_KEY')}"></div> -->
 							<div class="g-recaptcha col-sm-5" data-sitekey="6LfgZz8UAAAAAIziASwL_Gcb0R5GcOCOm6IgYv45"></div>
-							<span id="captchaError" class="alert alert-danger col-sm-4" style="display:none"></span>
+							<span id="msgError" th:if="${msgError}" class="alert alert-danger col-sm-12" th:text="${msgError}"></span>
+							<span id="msgSucesso" th:if="${msgSucesso}" class="alert alert-success col-sm-12" th:text="${msgSucesso}"></span>
 						</div>
 						<div class="col-sm-4">
 							<input class="btnLogin" type="button" onclick="window.history.go(-1);" value="Voltar" />
 						</div>
-					</div>
-					<div class="row">
-						<p th:if="${loginError}" class="error" th:text="${loginError}">Erro de login!</p>
 					</div>
 					<div class="row">
 						<div class="col-sm-12">
