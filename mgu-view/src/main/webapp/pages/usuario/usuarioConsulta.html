@@ -7,11 +7,11 @@
 	<div layout:fragment="content">
 		<ul class="pui-breadcrumb">
 			<li><a href="#">Home</a></li>
-			<li><a href="#">Grupo de Perfil</a></li>
+			<li><a href="#">Usuario</a></li>
 			<li><a href="#">Consulta</a></li>
 		</ul>
  
-		<div class="painel-primary pui-panel-toggleable" th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
+		<div class="painel-primary pui-panel-toggleable" th:title="#{pagina.consulta}+' '+#{usuario}">
 			<form id="formConsulta" action="#" method="get" th:action="@{/usuarioConsulta/s}" th:object="${usuario}">
 
 				<div th:include="~{/_layout/mensagem.html}"></div>
@@ -138,7 +138,7 @@
 					emptyMessage: 'Nenhum Registro Encontrado',
 					responsive: true,
 			        columns: [
-			        	{headerText: 'Opções', bodyClass: 'buttonsGroup', 
+			        	{headerText: 'Opções', bodyClass: 'buttonsGroup',headerStyle: 'width:13%',
 			        		content: function (linha){
 			        			var botaoBloqueio = "";
 			        			if(linha.flBloqueio == 'BLOQUEADO_NAO'){

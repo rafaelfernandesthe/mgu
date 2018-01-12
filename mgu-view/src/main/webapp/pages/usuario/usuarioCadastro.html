@@ -12,7 +12,7 @@
 			<li><a href="#">Cadastro</a></li>
 		</ul>
 
-		<div class="painel-primary pui-panel" th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
+		<div class="painel-primary pui-panel" th:title="#{pagina.cadastro}+' '+#{usuario}">
 			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}" th:object="${usuario}" >
 
 				<div th:include="~{/_layout/mensagem.html}"></div>

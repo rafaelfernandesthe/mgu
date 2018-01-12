@@ -77,7 +77,7 @@ public class UsuarioCadastroController {
 		List<GrupoPerfil> groupSelecteds = MguUtils.idListToGrupoPerfilList( usuarioDto.getGrupoPerfisIdList() );
 		usuarioDto.setGrupoPerfis( groupSelecteds );
 
-		if ( StringUtils.isEmpty( usuario.getNuCpf() ) ) {
+		if ( StringUtils.isEmpty( usuarioDto.getNuCpf() ) ) {
 			bindingResult.addError( new FieldError( "usuario", "nuCpf", usuarioDto.getNuCpf(), false, null, null, "CPF é obrigatório." ) );
 		} else if ( !cpfValidator.isValid( usuarioDto.getNuCpf(), null ) ) {
 			bindingResult.addError( new FieldError( "usuario", "nuCpf", usuarioDto.getNuCpf(), false, null, null, "CPF informado é inválido." ) );
