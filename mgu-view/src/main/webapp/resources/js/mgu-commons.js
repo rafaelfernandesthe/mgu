@@ -1,5 +1,5 @@
 function getAppPath(){
-	return window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/'));
+	return "/"+window.location.pathname.split('/')[1];
 }
 
 function getUrlParams( prop ) {

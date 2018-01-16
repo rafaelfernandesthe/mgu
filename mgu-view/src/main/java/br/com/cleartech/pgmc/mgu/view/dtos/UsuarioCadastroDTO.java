@@ -63,6 +63,8 @@ public class UsuarioCadastroDTO implements Serializable {
 	private String senhaNova;
 	private String confirmarSenhaNova;
 
+	private String urlConsulta;
+
 	public UsuarioCadastroDTO() {}
 
 	public UsuarioCadastroDTO( Usuario usuario ) {
@@ -258,6 +260,14 @@ public class UsuarioCadastroDTO implements Serializable {
 
 	public void setConfirmarSenhaNova( String confirmarSenhaNova ) {
 		this.confirmarSenhaNova = confirmarSenhaNova;
+	}
+
+	public String getUrlConsulta() {
+		return urlConsulta;
+	}
+
+	public void setUrlConsulta( String urlConsulta ) {
+		this.urlConsulta = urlConsulta;
 	}
 
 }

@@ -43,6 +43,15 @@ label.control-label {
     position: absolute;
     top: 50%;
     width: 470px;
+    background-image: url(../img/login/login-bottom-bg.png) !important;
+    background-attachment: scroll !important;
+    background-repeat: no-repeat !important;
+    background-position-x: left !important;
+    background-position-y: bottom !important;
+    background-size: auto !important;
+    background-origin: padding-box !important;
+    background-clip: border-box !important;
+    background-color: transparent !important;
 }
 
 #cabecalho {

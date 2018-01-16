@@ -3,6 +3,7 @@ package br.com.cleartech.pgmc.mgu.controllers;
 import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator;
 import org.slf4j.Logger;
@@ -56,10 +57,14 @@ public class UsuarioEdicaoController {
 	private Usuario usuarioDB;
 
 	@GetMapping( "/{idUsuario}" )
-	public String init( Model model, @PathVariable Long idUsuario ) {
+	public String init( Model model, @PathVariable Long idUsuario, HttpServletRequest request ) {
 		usuarioDB = usuarioService.find( idUsuario );
 		UsuarioCadastroDTO usuarioDto = new UsuarioCadastroDTO( usuarioDB );
 
+		String lastPage = request.getHeader( "Referer" );
+		if ( lastPage != null ) {
+			usuarioDto.setUrlConsulta( lastPage );
+		}
 		model.addAttribute( "usuario", usuarioDto );
 
 		List<GrupoPerfil> groupSelecteds = grupoPerfilService.findByUsuario( usuarioDB.getId() );
@@ -97,7 +102,12 @@ public class UsuarioEdicaoController {
 				usuarioDto.setPrestadora( prestadoraService.prestadoraPorUsername( MguUtils.getUsuarioLogado().getDcUsername() ) );
 
 				usuarioService.salvarEditar( usuarioDto.getUsuario(), usuarioDB );
-				return "redirect:/usuarioConsulta" + MappedViews.SUCESSO_PARAMETRO.getPath();
+
+				if ( usuarioDto.getUrlConsulta() != null ) {
+					return "redirect:"+usuarioDto.getUrlConsulta();
+				} else {
+					return "redirect:/usuarioConsulta" + MappedViews.SUCESSO_PARAMETRO.getPath();
+				}
 			} catch ( MessagingException e ) {
 				return "redirect:/usuarioConsulta" + String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO.getPath(), e.getMessage() );
 			} catch ( Exception e ) {

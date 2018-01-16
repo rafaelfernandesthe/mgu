@@ -87,14 +87,14 @@
     <footer>
     	<div class="footer">
 	        <label style="float: left;">Sistema MGU</label>
-	      	<label th:if="${session.versionLabel}" th:text="${session.versionLabel}"/>
+	      	<label th:if="${session.versionLabel}" th:text="${session.versionLabel}">Versão X.X</label>
 	        <label style="float: right;">ABR Telecom © 2017</label>
     	</div>
 	</footer>
 	
-	<script type="text/javascript" src="../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.js}" ></script>
+	<script type="text/javascript" src="../../resources/js/jquery.js" th:src="@{/resources/js/jquery.js}" ></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
-	<script type="text/javascript" src="../../resources/js/jquery-ui.min.js" th:src="@{/resources/js/jquery-ui.js}" ></script>
+	<script type="text/javascript" src="../../resources/js/jquery-ui.js" th:src="@{/resources/js/jquery-ui.js}" ></script>
 	<script type="text/javascript" src="../../resources/js/primeui.min.js" th:src="@{/resources/js/primeui.min.js}" ></script>
 	<script type="text/javascript" src="../../resources/js/primeui-default.js" th:src="@{/resources/js/primeui-default.js}"></script>
 	<script type="text/javascript" src="../../resources/js/mgu-commons.js" th:src="@{/resources/js/mgu-commons.js}"></script>
@@ -112,7 +112,7 @@
 			}
 			
 			//remover todos os parametros de url na tela de consulta 
-			window.history.replaceState(null, null, window.location.pathname.replace(/\/s$/g,''));
+			//window.history.replaceState(null, null, window.location.pathname.replace(/\/s$/g,''));
 
 		});
 	</script>

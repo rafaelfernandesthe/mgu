@@ -37,32 +37,22 @@
 							<label for="username" class="col-sm-2 col-form-label">Usuário:</label>
 						</div>
 						<div class="col-sm-6">
-							<input id="username" type="text" th:field="*{dcUsername}" class="loginInput" tabindex="1"/>
+							<input id="username" style="width:106%" type="text" th:field="*{dcUsername}" class="loginInput" tabindex="1"/>
 						</div>
 						<div class="col-sm-4">
 							<input class="btnLogin" type="submit" value="Resetar Senha" tabindex="3"/>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-sm-2">
-						</div>
-						<div class="col-sm-6">
+						<div class="col-sm-8">
+						<!-- <input type="text" id="captcha" name="captcha" class="loginInput" tabindex="2"/> -->
+						<!-- <div class="g-recaptcha col-sm-5" th:attr="data-sitekey=${@ParametrizacaoService.findByDcParametro('RECAPTCHA_SITE_KEY')}"></div> -->
+						<div class="g-recaptcha col-sm-5" data-sitekey="6LfgZz8UAAAAAIziASwL_Gcb0R5GcOCOm6IgYv45"></div>
+						<span id="msgError" th:if="${msgError}" class="alert alert-danger col-sm-12" th:text="${msgError}"></span>
+						<span id="msgSucesso" th:if="${msgSucesso}" class="alert alert-success col-sm-12" th:text="${msgSucesso}"></span>
 						</div>
 						<div class="col-sm-4">
 							<input class="btnLogin" type="button" onclick="go('/senha/trocarSenha');" value="Trocar Senha" tabindex="4"/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-2">
-						</div>
-						<div class="col-sm-6">
-<!-- 							<input type="text" id="captcha" name="captcha" class="loginInput" tabindex="2"/> -->
-<!-- 							<div class="g-recaptcha col-sm-5" th:attr="data-sitekey=${@ParametrizacaoService.findByDcParametro('RECAPTCHA_SITE_KEY')}"></div> -->
-							<div class="g-recaptcha col-sm-5" data-sitekey="6LfgZz8UAAAAAIziASwL_Gcb0R5GcOCOm6IgYv45"></div>
-							<span id="msgError" th:if="${msgError}" class="alert alert-danger col-sm-12" th:text="${msgError}"></span>
-							<span id="msgSucesso" th:if="${msgSucesso}" class="alert alert-success col-sm-12" th:text="${msgSucesso}"></span>
-						</div>
-						<div class="col-sm-4">
 							<input class="btnLogin" type="button" onclick="window.history.go(-1);" value="Voltar" />
 						</div>
 					</div>
