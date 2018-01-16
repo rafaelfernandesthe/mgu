@@ -19,105 +19,100 @@
 	</head>
   
   <body>
-
-    <header>
-    	<div class="navbar navbar-default">
-		    <div class="container-fluid">
-	            <div id="header" class="row-fluid" style="margin-top:10px;">
-	            	 
-		    		<div class="user-box">
-		    			<div class="innerUser-box">
-			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
-			    				Usuário: <span th:text="${#authentication.principal.nmUsuario}"></span> 
-			    			</span>
-			    			<br/>
-			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
-			    				Empresa: <span th:text="${#authentication.principal.prestadora}"></span>
-			    			</span> 
-			    			<br/>
-			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
-			    				Grupo: <span th:text="${#authentication.principal.grupoPrestadora}"></span>
-			    			</span>
-		    			</div>
-		    		</div>
-		    	
-		            <img alt="" th:src="@{'/resources/img/header.png'}" src="../../resources/img/header.png">
-		            
-			        <div class="navbar-header">
-			            <button type="button" class="navbar-toggle collapsed"
-			                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-			                    aria-controls="navbar">
-			                <span class="sr-only">Toggle navigation</span>
-			                <span class="icon-bar" />
-			                <span class="icon-bar" />
-			                <span class="icon-bar" />
-			            </button>
-			            
-			        </div>
-		    	</div>
-		        
-				<div class="row-fluid" th:include="/_layout/menu.html :: menu"></div>
-		         
-		    </div>
-		</div>
-    </header>
-
-	<section style="padding-bottom: 1%">
-		<div id="growl"></div>
-		<div id="content" class="container-fluid" layout:fragment="content">
-			<!-- ============================================================================ -->
-			<!-- This content is only used for static prototyping purposes (natural templates)-->
-			<!-- and is therefore entirely optional, as this markup fragment will be included -->
-			<!-- from "fragments/header.html" at runtime.                                     -->
-			<!-- ============================================================================ -->
-			<h1>Static content for prototyping purposes only</h1>
-			<p>
-			  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-			  Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
-			  Phasellus et placerat elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-			  Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
-			  Phasellus et placerat elit.
-			</p>
-		</div>
-		<div id="dlg">
-			<img th:src="@{/resources/img/carregando.gif}"/>
-		</div>
-    </section>
-    
-    <footer>
-    	<div class="footer">
-	        <label style="float: left;">Sistema MGU</label>
-	      	<label th:if="${session.versionLabel}" th:text="${session.versionLabel}">Versão X.X</label>
-	        <label style="float: right;">ABR Telecom © 2017</label>
-    	</div>
-	</footer>
+  	<div class="container-fluid">
+	    <header>
+	    	<div class="navbar navbar-default">
+		            <div id="header" class="row-fluid">
+		            	 
+			    		<div class="user-box hidden-xs">
+			    			<div class="innerUser-box">
+				    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
+				    				Usuário: <span th:text="${#authentication.principal.nmUsuario}"></span> 
+				    			</span>
+				    			<br/>
+				    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
+				    				Empresa: <span th:text="${#authentication.principal.prestadora}"></span>
+				    			</span> 
+				    			<br/>
+				    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
+				    				Grupo: <span th:text="${#authentication.principal.grupoPrestadora}"></span>
+				    			</span>
+			    			</div>
+			    		</div>
+			    	
+			            <img alt="" th:src="@{'/resources/img/header.png'}" src="../../resources/img/header.png">
+			    	</div>
+			        
+					<div class="row-fluid" th:include="/_layout/menu.html :: menu"></div>
+			         
+			    </div>
+	    </header>
+	    
+	    <div id="content-parent" class="row-fluid parent-panel">
+	    
+		<section style="padding-bottom: 1%">
+			<div id="growl"></div>
+			<div id="content" class="row-fluid container-fluid" layout:fragment="content">
+				<!-- ============================================================================ -->
+				<!-- This content is only used for static prototyping purposes (natural templates)-->
+				<!-- and is therefore entirely optional, as this markup fragment will be included -->
+				<!-- from "fragments/header.html" at runtime.                                     -->
+				<!-- ============================================================================ -->
+				<h1>Static content for prototyping purposes only</h1>
+				<p>
+				  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+				  Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
+				  Phasellus et placerat elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+				  Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
+				  Phasellus et placerat elit.
+				</p>
+			</div>
+			<div id="dlg">
+				<img th:src="@{/resources/img/carregando.gif}"/>
+			</div>
+	    </section>
+	    
+	    </div>
+	    
+	    <footer>
+	    	<div class="footer hidden-xs">
+		        <label style="float: left;">Sistema MGU</label>
+		      	<label th:if="${session.versionLabel}" th:text="${session.versionLabel}"/>
+		        <label style="float: right;">ABR Telecom © 2017</label>
+	    	</div>
+	    	<div class="footer visible-xs">
+		        <label style="float: left;">Sistema MGU </label>
+		      	<label th:if="${session.versionLabel}" th:text="${session.versionLabel}"/>
+	    	</div>
+		</footer>
+		
+		<script type="text/javascript" src="../../resources/js/jquery.js" th:src="@{/resources/js/jquery.js}" ></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+		<script type="text/javascript" src="../../resources/js/jquery-ui.js" th:src="@{/resources/js/jquery-ui.js}" ></script>
+		<script type="text/javascript" src="../../resources/js/primeui.min.js" th:src="@{/resources/js/primeui.min.js}" ></script>
+		<script type="text/javascript" src="../../resources/js/primeui-default.js" th:src="@{/resources/js/primeui-default.js}"></script>
+		<script type="text/javascript" src="../../resources/js/mgu-commons.js" th:src="@{/resources/js/mgu-commons.js}"></script>
+		
+		<script>
+			$(function (){
+				//usuario nao deve conseguir ver a pagina sendo 'montada'
+				//no style.css tem #content {display:none;}
+				$('#content').show();
+				
+				//mensagem padrão de sucesso
+				var param = getUrlParams('success');
+				if(param != undefined && param != '' && param != null){
+					showMessage('info','Operação realizada com sucesso!');
+				}
+				
+				//remover todos os parametros de url na tela de consulta 
+				//window.history.replaceState(null, null, window.location.pathname.replace(/\/s$/g,''));
 	
-	<script type="text/javascript" src="../../resources/js/jquery.js" th:src="@{/resources/js/jquery.js}" ></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
-	<script type="text/javascript" src="../../resources/js/jquery-ui.js" th:src="@{/resources/js/jquery-ui.js}" ></script>
-	<script type="text/javascript" src="../../resources/js/primeui.min.js" th:src="@{/resources/js/primeui.min.js}" ></script>
-	<script type="text/javascript" src="../../resources/js/primeui-default.js" th:src="@{/resources/js/primeui-default.js}"></script>
-	<script type="text/javascript" src="../../resources/js/mgu-commons.js" th:src="@{/resources/js/mgu-commons.js}"></script>
+			});
+		</script>
+		
+		<div layout:fragment="javascript-support"></div>		
 	
-	<script>
-		$(function (){
-			//usuario nao deve conseguir ver a pagina sendo 'montada'
-			//no style.css tem #content {display:none;}
-			$('#content').show();
-			
-			//mensagem padrão de sucesso
-			var param = getUrlParams('success');
-			if(param != undefined && param != '' && param != null){
-				showMessage('info','Operação realizada com sucesso!');
-			}
-			
-			//remover todos os parametros de url na tela de consulta 
-			//window.history.replaceState(null, null, window.location.pathname.replace(/\/s$/g,''));
-
-		});
-	</script>
-	
-	<div layout:fragment="javascript-support"></div>		
-	
+	</div>
   </body>
 </html>

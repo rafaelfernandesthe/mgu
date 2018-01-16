@@ -1,10 +1,10 @@
 body {
+	margin-top: 10px;
 	background-color: whitesmoke;
 	height: 100%;
 }
 
 .header {
-	
 }
 
 #buttonMenu {
@@ -23,7 +23,7 @@ body {
 	padding-bottom: 3px;
 	padding-left: 5px;
 	padding-right: 5px;
-	
+	font-size : 14px;
 }
 
 .user-box {
@@ -68,7 +68,14 @@ body {
 
 .buttonsGroup {
 	text-align: center;
-	padding-top: 1%;
+}
+
+.buttonsGroup > button {
+	margin: 1px;
+}
+
+.buttonCenter {
+	text-align: center;
 }
 
 /**
@@ -79,16 +86,35 @@ body {
 	display: none;
 }
 
+#content-parent {
+	margin-top: 10px;
+	margin-bottom: 40px;
+	min-height: 500px;
+}
+
 #dlg {
 	display : none;
 }
 
 .pui-datatableResult #ui-id-1 {
-	width: 10%;
+	width: 13% !important;
+}
+
+.ui-datatable-odd {
+    background: none repeat scroll 0 0 #F9F9F9;
+}
+
+.ui-datatable table {
+    table-layout: auto
+}
+
+.ui-datatable tbody td {
+	padding: 2px 5px !important;
 }
 
 .navbar {
-	margin-bottom: 5px;
+	margin-bottom: 0px;
+	border: 0px !important;
 }
 
 .pui-picklist {
@@ -208,4 +234,30 @@ label.control-label {
 
 .ui-dropdown-label.ui-inputtext.ui-corner-all{
 	background-color: white;
+}
+
+.parent-panel {
+	background-color: white;
+	border: 1px solid #cecece;
+	border-radius: 4px;
+}
+
+.ui-breadcrumb {
+	margin: 20px 0px !important;	
+}
+
+.ui-panel {
+	margin-bottom: 20px !important;
+	background-color: #F5F5F5 !important;
+}
+
+.ui-picklist .ui-picklist-filter {
+	background-color: #fff;
+}
+
+@media only screen and (max-width: 767px) {
+    /* For mobile phones: */
+    .footer {
+    	font-size : 12px;
+    }
 }
