@@ -20,16 +20,23 @@ public class MailConfig {
 	@Bean
 	public JavaMailSender getJavaMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-	
+
 		mailSender.setHost( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_HOST.getDcParametro() ) );
 		mailSender.setPort( Integer.valueOf( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_PORT.getDcParametro() ) ) );
-		mailSender.setUsername( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_USERNAME.getDcParametro() ) );
-		mailSender.setPassword( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_PASSWORD.getDcParametro() ) );
+
+		String usernameMail = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_USERNAME.getDcParametro() );
+		String passwordMail = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_PASSWORD.getDcParametro() );
+		boolean auth = false;
+		if ( usernameMail != null && passwordMail != null ) {
+			auth = true;
+			mailSender.setUsername( usernameMail );
+			mailSender.setPassword( passwordMail );
+		}
 
 		Properties props = mailSender.getJavaMailProperties();
-		props.put( "mail.transport.protocol", "smtp" );
-		props.put( "mail.smtp.auth", "true" );
-		props.put( "mail.smtp.starttls.enable", "true" );
+		props.put( "mail.smtp.auth", String.valueOf( auth ) );
+		//props.put( "mail.transport.protocol", "smtp" );
+		//props.put( "mail.smtp.starttls.enable", "true" );
 		// props.put( "mail.debug", "true" );
 
 		return mailSender;

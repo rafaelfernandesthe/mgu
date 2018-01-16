@@ -82,7 +82,7 @@
 						<label class="control-label" for="statusFiltro" th:text="#{statusFiltro}">Status</label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<select class="form-control input-sm" id="statusFiltro" th:field="*{statusFiltro}" >
+						<select class="form-control input-sm pui-dropdown" id="statusFiltro" th:field="*{statusFiltro}" >
 							<option value="">Todos</option>
 							<option th:each="s : ${todosStatus}" 
 					          th:value="${s.value}" 
@@ -221,7 +221,7 @@
 			}
 			
 			function editar(idUsuario){
-				document.location = '/usuarioEdicao/'+idUsuario;
+				document.location = getAppPath() + '/usuarioEdicao/'+idUsuario;
 			}
 			
 			function excluir(idUsuario){

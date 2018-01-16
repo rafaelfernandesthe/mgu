@@ -50,8 +50,6 @@ public class UsuarioEdicaoController {
 	@Autowired
 	private PrestadoraService prestadoraService;
 
-	private CPFValidator cpfValidator = new CPFValidator();
-
 	private Usuario usuario;
 
 	private Usuario usuarioDB;
@@ -82,8 +80,6 @@ public class UsuarioEdicaoController {
 			List<Usuario> delegados = usuarioService.findUsuarioDelegadoDisponivel( usuarioDB.getId(), prestadora.getId() );
 			model.addAttribute( "listaUsuarioDelegado", delegados );
 		}
-
-		cpfValidator.initialize( null );
 
 		return MappedViews.USUARIO_EDICAO.getPath();
 	}

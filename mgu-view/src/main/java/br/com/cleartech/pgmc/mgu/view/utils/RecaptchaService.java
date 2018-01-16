@@ -33,6 +33,8 @@ public class RecaptchaService {
 		body.put( "response", recaptchaResponse );
 		body.put( "remoteip", ip );
 		logger.info( "Request body for recaptcha: {}", body );
+		logger.info( "Getting " + GOOGLE_RECAPTCHA_VERIFY_URL );
+		DisableSSLCertificateCheckUtil.disableChecks( GOOGLE_RECAPTCHA_VERIFY_URL );
 		ResponseEntity<Map> recaptchaResponseEntity = restTemplateBuilder.build().postForEntity( GOOGLE_RECAPTCHA_VERIFY_URL + "?secret={secret}&response={response}&remoteip={remoteip}", body, Map.class, body );
 
 		logger.info( "Response from recaptcha: {}", recaptchaResponseEntity );

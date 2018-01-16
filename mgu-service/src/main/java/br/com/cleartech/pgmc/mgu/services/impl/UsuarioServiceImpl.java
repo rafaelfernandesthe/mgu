@@ -170,7 +170,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		try {
 			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
 			if ( dynamicsAtivo ) {
-				dynamicsService.alterar( usuarioAtualizado, false );
+				dynamicsService.alterar( usuarioDB, false );
 			}
 		} catch ( DynamicsException e ) {
 			throw new DynamicsException( e.getMessage() );
@@ -182,9 +182,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 		try {
 			if ( paraBloqueio != null ) {
 				if ( paraBloqueio ) {
-					emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.BLOQUEAR_USUARIO, null );
+					emailService.enviaByUsuarioAndAssunto( usuarioDB, AssuntoEnum.BLOQUEAR_USUARIO, null );
 				} else if ( !paraBloqueio ) {
-					emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.DESBLOQUEAR_USUARIO, null );
+					emailService.enviaByUsuarioAndAssunto( usuarioDB, AssuntoEnum.DESBLOQUEAR_USUARIO, null );
 				}
 			}
 		} catch ( Exception e ) {

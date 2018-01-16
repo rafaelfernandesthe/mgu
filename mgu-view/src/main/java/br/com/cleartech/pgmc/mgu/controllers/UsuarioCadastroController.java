@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.mail.MessagingException;
 
-import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,7 @@ import br.com.cleartech.pgmc.mgu.utils.StringUtils;
 import br.com.cleartech.pgmc.mgu.view.dtos.UsuarioCadastroDTO;
 import br.com.cleartech.pgmc.mgu.view.utils.MappedViews;
 import br.com.cleartech.pgmc.mgu.view.utils.MguUtils;
+import br.com.cleartech.pgmc.mgu.view.utils.ValidaCPF;
 
 @Controller
 @RequestMapping( "/usuarioCadastro" )
@@ -54,8 +54,6 @@ public class UsuarioCadastroController {
 	@Autowired
 	private PrestadoraService prestadoraService;
 
-	private CPFValidator cpfValidator = new CPFValidator();
-
 	private Usuario usuario;
 
 	@GetMapping
@@ -64,8 +62,6 @@ public class UsuarioCadastroController {
 		model.addAttribute( "grupoPerfisSourceJSON", MguUtils.getVO2JSON( listaGrupoPerfilTotal, "id", "noGrupoPerfil" ) );
 		model.addAttribute( "grupoPerfisTargetJSON", MguUtils.getJSON( new ArrayList<GrupoPerfil>() ) );
 		model.addAttribute( "usuario", new UsuarioCadastroDTO() );
-
-		cpfValidator.initialize( null );
 
 		return MappedViews.USUARIO_CADASTRO.getPath();
 	}
@@ -79,7 +75,7 @@ public class UsuarioCadastroController {
 
 		if ( StringUtils.isEmpty( usuarioDto.getNuCpf() ) ) {
 			bindingResult.addError( new FieldError( "usuario", "nuCpf", usuarioDto.getNuCpf(), false, null, null, "CPF é obrigatório." ) );
-		} else if ( !cpfValidator.isValid( usuarioDto.getNuCpf(), null ) ) {
+		} else if ( !ValidaCPF.isCPF( usuarioDto.getNuCpf() ) ) {
 			bindingResult.addError( new FieldError( "usuario", "nuCpf", usuarioDto.getNuCpf(), false, null, null, "CPF informado é inválido." ) );
 		}
 
