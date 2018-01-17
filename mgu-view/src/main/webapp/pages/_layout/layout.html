@@ -103,8 +103,9 @@
 				var param = getUrlParams('success');
 				if(param != undefined && param != '' && param != null){
 					showMessage('info','Operação realizada com sucesso!');
+					removeUrlParams('success');
 				}
-				
+
 				//remover todos os parametros de url na tela de consulta 
 				//window.history.replaceState(null, null, window.location.pathname.replace(/\/s$/g,''));
 	

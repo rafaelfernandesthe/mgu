@@ -43,10 +43,11 @@
 				</div>
 
 				<div class="form-group buttonsGroup">
+					<input type="hidden" th:field="*{urlConsulta}"/>
 					<button id="submitBt" class="pui-button" type="submit">
 						<label th:text="#{botao.cadastrar}"></label>
 					</button>
-					<a class="pui-button" th:href="@{'/grupoPerfilConsulta'}"> 
+					<a id="goBack" class="pui-button"> 
 						<label th:text="#{botao.voltar}"></label>
 					</a>
 				</div>
@@ -87,6 +88,12 @@
 			$('#submitBt').puibutton({
 			    click: function(event) {
 			    	 $('#dlg').puidialog('show');
+			    }
+			});
+			
+			$('#goBack').puibutton({
+			    click: function(event) {
+			    	 history.go(-1);
 			    }
 			});
 			

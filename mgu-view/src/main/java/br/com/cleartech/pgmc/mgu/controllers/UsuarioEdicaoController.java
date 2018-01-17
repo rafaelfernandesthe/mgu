@@ -5,7 +5,6 @@ import java.util.List;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.validator.internal.constraintvalidators.hv.br.CPFValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,6 @@ public class UsuarioEdicaoController {
 	public String init( Model model, @PathVariable Long idUsuario, HttpServletRequest request ) {
 		usuarioDB = usuarioService.find( idUsuario );
 		UsuarioCadastroDTO usuarioDto = new UsuarioCadastroDTO( usuarioDB );
-
 		String lastPage = request.getHeader( "Referer" );
 		if ( lastPage != null ) {
 			usuarioDto.setUrlConsulta( lastPage );
@@ -100,12 +98,12 @@ public class UsuarioEdicaoController {
 				usuarioService.salvarEditar( usuarioDto.getUsuario(), usuarioDB );
 
 				if ( usuarioDto.getUrlConsulta() != null ) {
-					return "redirect:"+usuarioDto.getUrlConsulta();
+					return "redirect:" + usuarioDto.getUrlConsulta() + MappedViews.SUCESSO_PARAMETRO_COMPEMENTO.getPath();
 				} else {
-					return "redirect:/usuarioConsulta" + MappedViews.SUCESSO_PARAMETRO.getPath();
+					return "redirect:/usuarioConsulta" + MappedViews.SUCESSO_PARAMETRO_NOVO.getPath();
 				}
 			} catch ( MessagingException e ) {
-				return "redirect:/usuarioConsulta" + String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO.getPath(), e.getMessage() );
+				return "redirect:/usuarioConsulta" + String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO_NOVO.getPath(), e.getMessage() );
 			} catch ( Exception e ) {
 				bindingResult.addError( new ObjectError( "usuario", e.getMessage() ) );
 			}

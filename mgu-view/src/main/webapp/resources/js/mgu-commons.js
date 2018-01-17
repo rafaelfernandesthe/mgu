@@ -17,6 +17,32 @@ function getUrlParams( prop ) {
     return ( prop && prop in params ) ? params[ prop ] : null;
 }
 
+function removeUrlParams( prop ) {
+	if(window.location.href.split('?')[1] == undefined)
+		return;
+	
+    var urlRequest = window.location.href.split('?')[0];
+    var params = '';
+    var search =  window.location.href.slice( window.location.href.indexOf( '?' ) + 1 );
+    
+    var definitions = search.split( '&' );
+    var firstParam = true;
+    definitions.forEach( function( val, key ) {
+        var parts = val.split( '=', 2 );
+        if(parts.length > 1 && parts[0] != prop){
+        	if(!firstParam){
+        		params += "&"
+        	} else{
+        		params += "?"
+        		firstParam = false;
+        	}
+        	params += parts[ 0 ] + '=' + parts[ 1 ];
+        }
+    } );
+
+    window.history.replaceState(null, null, urlRequest + params);
+}
+
 function sleep (time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }

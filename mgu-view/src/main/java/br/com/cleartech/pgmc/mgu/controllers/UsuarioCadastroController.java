@@ -100,9 +100,9 @@ public class UsuarioCadastroController {
 				LOGGER.info( "salvando: " + usuarioDto.toString() );
 				usuarioDto.setPrestadora( prestadoraService.findById( MguUtils.getUsuarioLogado().getIdPrestadora() ) );
 				usuarioService.salvar( usuarioDto.getUsuario(), false );
-				return "redirect:/usuarioConsulta" + MappedViews.SUCESSO_PARAMETRO.getPath();
+				return "redirect:/usuarioConsulta" + MappedViews.SUCESSO_PARAMETRO_NOVO.getPath();
 			} catch ( MessagingException e ) {
-				return "redirect:/usuarioConsulta" + String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO.getPath(), e.getMessage() );
+				return "redirect:/usuarioConsulta" + String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO_NOVO.getPath(), e.getMessage() );
 			} catch ( Exception e ) {
 				bindingResult.addError( new ObjectError( "usuario", e.getMessage() ) );
 			}
