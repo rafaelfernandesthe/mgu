@@ -4,6 +4,7 @@ $('.pui-panel-toggleable').puipanel({
 	toggleable: true,
 });
 $('.pui-panel').puipanel();
+$('.pui-dropdown').puidropdown();
 $('#growl').puigrowl();
 showMessage = function(level, msg) {
     $('#growl').puigrowl('show', [{severity: level, summary: '', detail: msg}]);

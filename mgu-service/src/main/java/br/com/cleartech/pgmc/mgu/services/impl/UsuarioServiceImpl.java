@@ -170,7 +170,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		try {
 			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
 			if ( dynamicsAtivo ) {
-				dynamicsService.alterar( usuarioAtualizado, false );
+				dynamicsService.alterar( usuarioDB, false );
 			}
 		} catch ( DynamicsException e ) {
 			throw new DynamicsException( e.getMessage() );
@@ -182,9 +182,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 		try {
 			if ( paraBloqueio != null ) {
 				if ( paraBloqueio ) {
-					emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.BLOQUEAR_USUARIO, null );
+					emailService.enviaByUsuarioAndAssunto( usuarioDB, AssuntoEnum.BLOQUEAR_USUARIO, null );
 				} else if ( !paraBloqueio ) {
-					emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.DESBLOQUEAR_USUARIO, null );
+					emailService.enviaByUsuarioAndAssunto( usuarioDB, AssuntoEnum.DESBLOQUEAR_USUARIO, null );
 				}
 			}
 		} catch ( Exception e ) {
@@ -385,7 +385,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 		novaSenha = GeradorSenha.md5( novaSenha );
 		usuario.setDcSenha( novaSenha );
 		ldapService.alterarSenha( usuario.getDcUsername(), novaSenha );
-		alteraBloqueioUsuario( usuario, BloqueioUsuario.BLOQUEADO_NAO, usuarioLogado );
+
+		if ( !usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_NAO ) ) {
+			alteraBloqueioUsuario( usuario, BloqueioUsuario.BLOQUEADO_NAO, usuarioLogado );
+		}
 
 		emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.ALTERAR_SENHA, null );
 	}

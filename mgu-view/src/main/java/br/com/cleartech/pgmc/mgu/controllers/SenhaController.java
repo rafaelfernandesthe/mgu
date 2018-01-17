@@ -135,7 +135,7 @@ public class SenhaController {
 			return MappedViews.TROCAR_SENHA.getPath();
 		}
 
-		if ( !usuario.getSenhaAtual().equals( usuario.getConfirmarSenhaNova() ) ) {
+		if ( !usuario.getSenhaNova().equals( usuario.getConfirmarSenhaNova() ) ) {
 			model.addAttribute( "msgError", "A nova senha deve ser igual a senha informada no campo \"Confirma Nova Senha\"" );
 			return MappedViews.TROCAR_SENHA.getPath();
 		}

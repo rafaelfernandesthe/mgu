@@ -78,7 +78,7 @@
 						<label class="control-label" for="nivelEscalonamento" th:text="#{nivelEscalonamento}">Nivel: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<select class="form-control input-sm" id="nivelEscalonamento" th:field="*{nivelEscalonamento}" >
+						<select class="form-control input-sm pui-dropdown" id="nivelEscalonamento" th:field="*{nivelEscalonamento}" >
 							<option value="">Selecione</option> 
 							<option th:each="nvl : ${niveisEscalonamento}" 
 						          th:value="${{nvl}}" 
@@ -123,9 +123,9 @@
 					<button id="submitBt" class="pui-button" type="submit">
 						<label th:text="#{botao.cadastrar}"></label>
 					</button>
-					<a class="pui-button" th:href="@{'/usuarioCadastro'}"> 
+					<button id="limparCampos" class="pui-button" type="reset">
 						<label th:text="#{botao.limpar}"></label>
-					</a>
+					</button>
 				</div>
 
 			</form>
@@ -152,6 +152,13 @@
 				    click: function(event) {
 				    	 $('#dlg').puidialog('show');
 				    }
+				});
+				
+				$('#limparCampos').puibutton({
+					click: function(event){
+						$('#nivelEscalonamento').puidropdown('selectValue', '');
+						declare_puipicklist('#listaGrupoPerfil', sourceData, targetData, 'grupoPerfisIdList');
+					}
 				});
 				
 			});

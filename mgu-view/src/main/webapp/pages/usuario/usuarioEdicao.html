@@ -5,7 +5,6 @@
 
 	<div layout:fragment="content">
 
-
 		<ul class="pui-breadcrumb">
 			<li><a href="#">Home</a></li>
 			<li><a href="#">Usuário</a></li>
@@ -80,7 +79,7 @@
 						<label class="control-label" for="nivelEscalonamento" th:text="#{nivelEscalonamento}">Nivel: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<select class="form-control input-sm" id="nivelEscalonamento" th:field="*{nivelEscalonamento}" >
+						<select class="form-control input-sm pui-dropdown" id="nivelEscalonamento" th:field="*{nivelEscalonamento}" >
 							<option value="">Selecione</option> 
 							<option th:each="nvl : ${niveisEscalonamento}" 
 						          th:value="${{nvl}}" 

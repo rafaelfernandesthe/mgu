@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
 import br.com.cleartech.pgmc.mgu.services.ParametrizacaoService;
@@ -21,7 +23,7 @@ import br.com.cleartech.pgmc.mgu.services.ParametrizacaoService;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger( WebSecurityConfig.class );
-	
+
 	@Autowired
 	private ParametrizacaoService parametrizacaoService;
 
@@ -41,8 +43,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure( HttpSecurity http ) throws Exception {
+		CharacterEncodingFilter filter = new CharacterEncodingFilter( "UTF-8" );
+		filter.setForceEncoding( true );
 		//@formatter:off
-        http
+        http.addFilterBefore( filter, CsrfFilter.class )
             .authorizeRequests()
                 .antMatchers("/resources/js/*","/resources/img/*","/resources/img/login/*","/resources/css/*",
                 				"/senha/problemaSenha","/senha/trocarSenha", "/senha/recuperarSenha", "/senha/salvarNovaSenha").permitAll()

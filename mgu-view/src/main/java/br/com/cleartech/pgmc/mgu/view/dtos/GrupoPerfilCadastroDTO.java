@@ -24,6 +24,8 @@ public class GrupoPerfilCadastroDTO implements Serializable {
 
 	private Prestadora prestadora;
 
+	private String urlConsulta;
+
 	public GrupoPerfilCadastroDTO() {}
 
 	public GrupoPerfilCadastroDTO( GrupoPerfil grupoPerfil ) {
@@ -80,6 +82,14 @@ public class GrupoPerfilCadastroDTO implements Serializable {
 
 	public void setPrestadora( Prestadora prestadora ) {
 		this.prestadora = prestadora;
+	}
+
+	public String getUrlConsulta() {
+		return urlConsulta;
+	}
+
+	public void setUrlConsulta( String urlConsulta ) {
+		this.urlConsulta = urlConsulta;
 	}
 
 }

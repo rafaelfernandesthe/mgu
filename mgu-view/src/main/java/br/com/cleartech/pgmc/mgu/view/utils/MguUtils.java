@@ -96,5 +96,5 @@ public class MguUtils {
 	public static MguUserDetails getUsuarioLogado() {
 		return (MguUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
-
+	
 }

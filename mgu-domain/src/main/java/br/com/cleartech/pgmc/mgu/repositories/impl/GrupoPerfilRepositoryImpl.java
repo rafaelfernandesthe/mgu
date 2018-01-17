@@ -41,7 +41,7 @@ public class GrupoPerfilRepositoryImpl extends QuerydslJpaRepositoryAux<GrupoPer
 		if ( idPrestadora != null )
 			bb.and( qGrupoPerfil.prestadora.id.eq( idPrestadora ) );
 		if ( noGrupoPerfil != null )
-			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( qGrupoPerfil.noGrupoPerfil, noGrupoPerfil ) );
+			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( "grupoPerfil.noGrupoPerfil", noGrupoPerfil ) );
 
 		return findAll( bb );
 	}

@@ -38,8 +38,11 @@ public class LdapServiceImpl implements LdapService {
 
 	@Override
 	public void alterarSenha( String usuario, String senha ) throws LdapException {
-		// TODO Auto-generated method stub
+		LdapName dn = LdapNameBuilder.newInstance().add( getUserDn() ).add( "cn", usuario ).build();
 
+		Attribute attr = new BasicAttribute( "userPassword", senha );
+		ModificationItem item = new ModificationItem( DirContext.REPLACE_ATTRIBUTE, attr );
+		ldapTemplate.modifyAttributes( dn, new ModificationItem[] { item } );
 	}
 
 	@Override
@@ -124,7 +127,7 @@ public class LdapServiceImpl implements LdapService {
 				.base( getUserDn() )
 				.searchScope( SearchScope.SUBTREE )
 				.attributes( "cn" )
-				.where( "cn" ).is( usuario ).and( "userpassword" ).is( senha );
+				.where( "cn" ).is( usuario ).and( "userPassword" ).is( senha );
 		//@formatter:on
 
 		// AndFilter filter = new AndFilter();

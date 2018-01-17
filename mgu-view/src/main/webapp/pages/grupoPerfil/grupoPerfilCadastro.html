@@ -44,9 +44,9 @@
 					<button id="submitBt" class="pui-button" type="submit">
 						<label th:text="#{botao.cadastrar}"></label>
 					</button>
-					<a class="pui-button" th:href="@{'/grupoPerfilCadastro'}"> 
+					<button id="limparCampos" class="pui-button" type="reset"> 
 						<label th:text="#{botao.limpar}"></label>
-					</a>
+					</button>
 				</div>
 		
 			</div>
@@ -57,9 +57,10 @@
 		<script type="text/javascript" src="../../resources/js/jquery.mask.js" th:src="@{/resources/js/jquery.mask.js}"></script>
 
 		<script>
-			$(function (){
-			  	var sourceData = [(${perfisSourceJSON})];
+			function carregaListaPerfil(){
+				var sourceData = [(${perfisSourceJSON})];
 			  	var targetData = [(${perfisTargetJSON})];
+			  	
 				$('#listaPerfil').puipicklist({
 			        sourceCaption: 'Disponíveis',
 			        targetCaption: 'Selecionados',
@@ -76,6 +77,11 @@
 			        },
 				});
 				puipicklist_refresh("#perfisIdList");
+			}
+		
+			$(function (){
+			  	carregaListaPerfil();
+			  	
 				
 				$('#telefoneFixo').mask('(00) 0000-0000');
 				$('#telefone').mask('(00) 00000-0000');
@@ -86,6 +92,12 @@
 			    click: function(event) {
 			    	 $('#dlg').puidialog('show');
 			    }
+			});
+			
+			$('#limparCampos').puibutton({
+				click: function(event){
+					carregaListaPerfil();
+				}
 			});
 			
 		</script>

@@ -82,7 +82,7 @@
 						<label class="control-label" for="statusFiltro" th:text="#{statusFiltro}">Status</label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<select class="form-control input-sm" id="statusFiltro" th:field="*{statusFiltro}" >
+						<select class="form-control input-sm pui-dropdown" id="statusFiltro" th:field="*{statusFiltro}" >
 							<option value="">Todos</option>
 							<option th:each="s : ${todosStatus}" 
 					          th:value="${s.value}" 
@@ -95,9 +95,9 @@
 					<button id="buttonFind" class="pui-button" type="submit"> 
 						<label th:text="#{botao.consultar}"></label>
 					</button>
-					<a class="pui-button" th:href="@{'/usuarioConsulta'}"> 
+					<button id="limparCampos" class="pui-button" type='button'> 
 						<label th:text="#{botao.limpar}"></label>
-					</a>
+					</button>
 				</div>
 
 			</form>
@@ -125,12 +125,29 @@
 	</div>
 	
 	<div layout:fragment="javascript-support">
+		<script type="text/javascript" src="../../resources/js/jquery.mask.js" th:src="@{/resources/js/jquery.mask.js}"></script>
+		
 		<script>
 			$(function (){
+				$('#cpf').mask('999.999.999-99' );
+				
 				$("#buttonFind").puibutton({
 				    click: function(event) {
 				    	 $('#dlg').puidialog('show');
 				    }
+				});
+				
+				$('#limparCampos').puibutton({
+					click: function(event){
+						$('#nome').val('');
+						$('#username').val('');
+						$('#email').val('');
+						$('#cargo').val('');
+						$('#telefone').val('');
+						$('#cpf').val('');
+						$('#grupoPerfilFiltro').puidropdown('selectValue', '');
+						$('#statusFiltro').puidropdown('selectValue', '');
+					}
 				});
 			
 			  	var localData = [(${usuariosJSON})];
@@ -221,7 +238,7 @@
 			}
 			
 			function editar(idUsuario){
-				document.location = '/usuarioEdicao/'+idUsuario;
+				document.location = getAppPath() + '/usuarioEdicao/'+idUsuario;
 			}
 			
 			function excluir(idUsuario){

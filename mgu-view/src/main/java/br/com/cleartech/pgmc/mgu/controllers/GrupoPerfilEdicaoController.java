@@ -2,6 +2,8 @@ package br.com.cleartech.pgmc.mgu.controllers;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +39,14 @@ public class GrupoPerfilEdicaoController {
 	private PerfilService perfilService;
 
 	@GetMapping( "/{idGrupoPerfil}" )
-	public String init( Model model, @PathVariable Long idGrupoPerfil ) {
+	public String init( Model model, @PathVariable Long idGrupoPerfil, HttpServletRequest request ) {
 		GrupoPerfil grupoPerfilDB = grupoPerfilService.find( idGrupoPerfil );
 
 		GrupoPerfilCadastroDTO grupoPerfilDto = new GrupoPerfilCadastroDTO( grupoPerfilDB );
+		String lastPage = request.getHeader( "Referer" );
+		if ( lastPage != null ) {
+			grupoPerfilDto.setUrlConsulta( lastPage );
+		}
 		model.addAttribute( "grupoPerfil", grupoPerfilDto );
 
 		List<Perfil> perfisSelecionados = perfilService.findByGrupoPerfil( grupoPerfilDto.getId() );
@@ -68,7 +74,11 @@ public class GrupoPerfilEdicaoController {
 			try {
 				LOGGER.info( "salvando: " + grupoPerfilDto.toString() );
 				grupoPerfilService.salvarEditar( grupoPerfilDto.getGrupoPerfil(), grupoPerfilDB );
-				return "redirect:/grupoPerfilConsulta" + MappedViews.SUCESSO_PARAMETRO.getPath();
+				if ( grupoPerfilDto.getUrlConsulta() != null ) {
+					return "redirect:" + grupoPerfilDto.getUrlConsulta() + MappedViews.SUCESSO_PARAMETRO_COMPEMENTO.getPath();
+				} else {
+					return "redirect:/grupoPerfilConsulta" + MappedViews.SUCESSO_PARAMETRO_NOVO.getPath();
+				}
 			} catch ( Exception e ) {
 				bindingResult.addError( new ObjectError( "grupoPerfil", e.getMessage() ) );
 			}
