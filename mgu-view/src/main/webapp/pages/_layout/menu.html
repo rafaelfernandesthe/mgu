@@ -5,7 +5,7 @@
 		<nav class="navbar navbar-icon-top navbar-default">
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
-					<div class="container-fluid hidden-sm hidden-md hidden-lg">
+					<div id="userBoxMobile" class="container-fluid hidden-sm hidden-md hidden-lg">
 						<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
 		    				Usuário: <span th:text="${#authentication.principal.nmUsuario}"></span> 
 		    			</span>
@@ -30,33 +30,41 @@
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li class="dropdown"><a class="btn dropdown-toggle menu-link"
-							data-toggle="dropdown" href="#" data-icon="fa fa-user"
-							th:text="#{usuario}">Usuário <span class="caret"></span></a>
+						<li class="dropdown">
+							<a class="btn dropdown-toggle menu-link" data-toggle="dropdown" role="button" href="#">
+								<span class="fa fa-user" aria-hidden="true"></span>
+								Usuário
+								<span class="caret"></span>
+							</a>
 							<ul class="dropdown-menu">
 								<li><a href="#" th:href="@{/usuarioCadastro}"
 									th:text="#{menu.cadastro}+' '+#{usuario}">Cadastro
 										Usuário</a></li>
 								<li><a href="#" th:href="@{/usuarioConsulta}"
 									th:text="#{menu.lista}+' '+#{usuario}">Lista Usuário</a></li>
-							</ul></li>
-						<li class="dropdown"><a class="btn dropdown-toggle menu-link"
-							data-toggle="dropdown" href="#" data-icon="fa fa-users"
-							th:text="#{grupoPerfil}"> Grupo de Perfil <span class="glyphicon glyphicon-asterisk">
-						</a>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a class="btn dropdown-toggle menu-link" data-toggle="dropdown" role="button" href="#">
+								<span class="fa fa-users" aria-hidden="true"></span>
+								Grupo de Perfil
+								<span class="caret"></span>
+							</a>
 							<ul class="dropdown-menu">
 								<li><a href="#" th:href="@{/grupoPerfilCadastro}"
 									th:text="#{menu.cadastro}+' '+#{grupoPerfil}">Cadastro Grupo de Perfil</a></li>
 								<li><a href="#" th:href="@{/grupoPerfilConsulta}"
 									th:text="#{menu.lista}+' '+#{grupoPerfil}">Lista Grupo de Perfil</a></li>
 							</ul></li>
-						<li class="dropdown"><a class="btn dropdown-toggle menu-link"
-							data-toggle="dropdown" href="#" data-icon="fa fa-wrench"
-							th:text="#{configuracao}"> Configuração <span class="caret"></span>
-						</a>
-						<ul class="dropdown-menu">
-							<li><a href="#" th:href="@{/parametro}" th:text="#{parametros}">Parametro do sistema </a></li>
-						</ul>
+						<li class="dropdown">
+							<a class="btn dropdown-toggle menu-link" data-toggle="dropdown" role="button" href="#">
+								<span class="fa fa-wrench" aria-hidden="true"></span>
+								Configuração
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="#" th:href="@{/parametro}" th:text="#{parametros}">Parametro do sistema </a></li>
+							</ul>
 						</li>
 					</ul>
 					

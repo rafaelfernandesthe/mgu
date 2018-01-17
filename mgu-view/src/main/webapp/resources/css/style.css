@@ -32,12 +32,16 @@ body {
 	-webkit-box-shadow: 0 0 15px 1px rgba(51, 81, 126, 0.5) !important;
 	background-color: rgba(255, 255, 255, 0.75);
 	border-radius: 4px 4px 4px 4px;
-	height: 90px;
+	height: 70px;
 	position: absolute;
-	right: 4%;
-	top: 19px;
-	width: 300px;
+	right: 20px;
+	top: 20px;
+	width: 200px;
 	z-index: 100;
+}
+
+#userBoxMobile {
+	position: absolute !important;
 }
 
 .user-box-line {
@@ -54,6 +58,10 @@ body {
 	margin: 2px 5px;
 	font-weight: normal;
 	border-width: 1px 0;
+}
+
+.navbar-header {
+	font-size: 12px;
 }
 
 .menu-link {

@@ -55,7 +55,7 @@
 							<input class="btnLogin" type="button" onclick="go('/senha/problemaSenha');" value="Problemas com Senha" tabindex="4"/>
 						</div>
 					</div>
-					<div class="row">
+					<div id="loginError" class="row">
 						<p th:if="${loginError}" class="error" th:text="${loginError}">Erro de login!</p>
 					</div>
 					<div class="row">
