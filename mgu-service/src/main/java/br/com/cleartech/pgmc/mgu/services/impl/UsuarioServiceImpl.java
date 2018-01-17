@@ -385,7 +385,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 		novaSenha = GeradorSenha.md5( novaSenha );
 		usuario.setDcSenha( novaSenha );
 		ldapService.alterarSenha( usuario.getDcUsername(), novaSenha );
-		alteraBloqueioUsuario( usuario, BloqueioUsuario.BLOQUEADO_NAO, usuarioLogado );
+
+		if ( !usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_NAO ) ) {
+			alteraBloqueioUsuario( usuario, BloqueioUsuario.BLOQUEADO_NAO, usuarioLogado );
+		}
 
 		emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.ALTERAR_SENHA, null );
 	}

@@ -98,7 +98,8 @@ function show_puidialog(identifierDialog, reqType, urlTarget, formToSubmit){
 	                	if(formToSubmit != null && formToSubmit != undefined && formToSubmit != ''){
 	                		$('#dlg').puidialog('show');
 	                		sleep(1000).then(() => {
-	                			$(formToSubmit).submit();
+	                			//$(formToSubmit).submit();
+	                			document.location = document.location+'&success=1';
 	                		});
 	                	}
 	                }

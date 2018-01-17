@@ -62,22 +62,22 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 		bb.and( qUsuario.prestadoras.any().id.eq( prestadoraId ) );
 
 		if ( !StringUtils.isEmpty( usuario.getNmUsuario() ) ) {
-			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( qUsuario.nmUsuario, usuario.getNmUsuario() ) );
+			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( "usuario.nmUsuario", usuario.getNmUsuario() ) );
 		}
 		if ( !StringUtils.isEmpty( usuario.getDcUsername() ) ) {
-			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( qUsuario.dcUsername, usuario.getDcUsername() ) );
+			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( "usuario.dcUsername", usuario.getDcUsername() ) );
 		}
 		if ( !StringUtils.isEmpty( usuario.getDcEmail() ) ) {
 			bb.and( qUsuario.dcEmail.eq( usuario.getDcEmail() ) );
 		}
 		if ( !StringUtils.isEmpty( usuario.getDcCargo() ) ) {
-			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( qUsuario.dcCargo, usuario.getDcCargo() ) );
+			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( "usuario.dcCargo", usuario.getDcCargo() ) );
 		}
 		if ( !StringUtils.isEmpty( usuario.getDcTelefone() ) ) {
 			bb.and( qUsuario.dcTelefone.eq( usuario.getDcTelefone() ) );
 		}
 		if ( !StringUtils.isEmpty( usuario.getNuCpf() ) ) {
-			bb.and( qUsuario.nuCpf.eq( usuario.getNuCpf() ) );
+			bb.and( qUsuario.nuCpf.eq( usuario.getNuCpf() ).or( qUsuario.nuCpf.eq( usuario.getNuCpfWithMask() ) ) );
 		}
 		if ( !usuario.getGrupoPerfis().isEmpty() ) {
 			bb.and( qUsuario.grupoPerfis.any().id.eq( usuario.getGrupoPerfis().get( 0 ).getId() ) );

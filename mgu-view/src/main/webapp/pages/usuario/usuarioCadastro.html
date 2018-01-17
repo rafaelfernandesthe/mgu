@@ -123,9 +123,9 @@
 					<button id="submitBt" class="pui-button" type="submit">
 						<label th:text="#{botao.cadastrar}"></label>
 					</button>
-					<a class="pui-button" th:href="@{'/usuarioCadastro'}"> 
+					<button id="limparCampos" class="pui-button" type="reset">
 						<label th:text="#{botao.limpar}"></label>
-					</a>
+					</button>
 				</div>
 
 			</form>
@@ -152,6 +152,13 @@
 				    click: function(event) {
 				    	 $('#dlg').puidialog('show');
 				    }
+				});
+				
+				$('#limparCampos').puibutton({
+					click: function(event){
+						$('#nivelEscalonamento').puidropdown('selectValue', '');
+						declare_puipicklist('#listaGrupoPerfil', sourceData, targetData, 'grupoPerfisIdList');
+					}
 				});
 				
 			});
