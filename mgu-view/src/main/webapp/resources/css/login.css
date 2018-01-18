@@ -1,0 +1,68 @@
+/*
+ * Specific styles of signin component
+ */
+/*
+ * General styles
+ */
+body, html {
+	height: 100%;
+	background: url(../img/login/login-page-bg.png) repeat-x scroll left top #254970;
+	font-family: Calibri !important;
+}
+
+.card-container.card {
+	max-width: 550px;
+	padding: 70px 40px;
+}
+
+.card {
+	padding: 20px 25px 30px;
+	margin: 0 auto;
+}
+
+.form-container {
+	background-image: url(../img/login/login-bottom-bg.png);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	background-color: transparent;
+	border-radius: 0 0 10px 10px;
+	height: auto;
+	width: 100%;
+	font-family: Calibri;
+	color: #FFFFFF !important;
+	font-weight: bold;
+	font-size: 9pt;
+	vertical-align: top;
+	box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btnLogin {
+	width: 100%;
+	background: url(../img/login/btnBackground.png);
+	background-repeat: repeat;
+	background-color: transparent;
+	background-attachment: scroll;
+	border: 1px solid #5B7596;
+	margin-left: -10px;
+}
+
+.loginInput {
+	width: 100%;
+	color: black;
+}
+
+#loginError {
+	text-align: center;
+	color: red;
+}
+
+#version {
+	text-align: center;
+}
+
+.g-recaptcha > div{
+ margin 10px auto !important;
+ text-align: center;
+ width: auto !important;
+ height: auto !important;
+}

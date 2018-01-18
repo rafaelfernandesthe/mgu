@@ -2,16 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8"/>
-		
+		<link rel="application icon" href="../../resources/img/favicon.ico" th:href="@{/resources/img/favicon.ico}"/>  
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"/>
-		<link href="../resources/css/loginStyle.css" th:href="@{/resources/css/loginStyle.css}" rel="stylesheet" type="text/css"/>
+		<link th:href="@{/resources/css/login.css}" rel="stylesheet" type="text/css"/>
 	
 	    <title th:text="#{sistema.titulo}">Nome do Sistema</title>
 	    
 	</head>
-	<body onload='document.forms[0].username.focus();'>
+	<body>
 		<script type="text/javascript">
 			function getAppPath(){
 				return "/"+window.location.pathname.split('/')[1];
@@ -20,52 +20,60 @@
 			function go(url) {
 		    	window.location = getAppPath() + url+"?username="+document.getElementById("username").value;
 		    } 
-			
+
 		</script>
 		
-		<div class="login-container">
-			
-			<div id="cabecalho"></div>
-			<div id="conteudo-form" class="container">
-				<form id="formulario" th:action="@{/login}" method="post" >
-					<div class="row">
-						<div class="col-sm-12">
-							<label id="titulo"><a th:href="@{/}">MGU</a> > Identificação do Usuário</td>
-						</label>
-					</div>
-					<div class="row">
-						<div class="col-sm-2">
-							<label for="username" class="col-sm-2 col-form-label">Usuário:</label>
-						</div>
-						<div class="col-sm-6">
-							<input type="text" id="username" name="username" class="loginInput" tabindex="1"/>
-						</div>
-						<div class="col-sm-4">
-							<input class="btnLogin" type="submit" value="Efetuar Login" tabindex="3" />
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-2">
-							<label for="username" class="col-sm-2 col-form-label">Senha:</label>
-						</div>
-						<div class="col-sm-6">
-							<input type="password" id="password" name="password" class="loginInput" tabindex="2"/>
-						</div>
-						<div class="col-sm-4">
-							<input class="btnLogin" type="button" onclick="go('/senha/problemaSenha');" value="Problemas com Senha" tabindex="4"/>
-						</div>
-					</div>
-					<div id="loginError" class="row">
-						<p th:if="${loginError}" class="error" th:text="${loginError}">Erro de login!</p>
-					</div>
-					<div class="row">
-						<div class="col-sm-12">
-							<p id="version" th:if="${session.versionLabel}" th:text="${session.versionLabel}"/>
-						</div>
-					</div>
-				</form>
-			</div>
-			
-		</div>
+		 <div class="container-fluid">
+	        <div class="card card-container">
+	        	<img alt="" th:src="@{'/resources/img/login/login-top-bg.png'}" style="width: 100%">
+				    <div class="form-container container">
+						<form id="formulario" th:action="@{/login}" method="post" >
+					    	<div class="row">
+					    		<div class="col-sm-12">
+									<label id="titulo"><a th:href="@{/}">MGU</a> > Identificação do Usuário</td></label>
+					    		</div>
+					    	</div>
+					    	<div class="row">
+					    		<div class="col-sm-2">
+									<label class="control-label" for="username">Usuário:</label>
+								</div>
+								<div class="col-xs-12 col-sm-6 form-group">
+									<input type="text" id="username" name="username" class="loginInput" autofocus tabindex="1"/>
+								</div>
+								<div class="col-sm-4 hidden-xs" >
+									<input class="btnLogin" type="submit" value="Efetuar Login" tabindex="3"/>
+								</div>
+					    	</div>
+					    	<div class="row">
+					    		<div class="col-sm-2">
+									<label for="password" class="control-label">Senha:</label>
+								</div>
+								<div class="col-xs-12 col-sm-6 form-group">
+									<input type="password" id="password" name="password" class="loginInput" tabindex="2"/>
+								</div>
+								<div class="col-sm-4 hidden-xs">
+									<input class="btnLogin" type="button" onclick="go('/senha/problemaSenha');" value="Problemas com Senha" tabindex="4"/>
+								</div>
+					    	</div>
+					    	<div class="row hidden-sm hidden-md hidden-lg">
+				    			<div class="col-xs-12" style="padding-bottom: 5px;text-align: center">
+									<input class="btnLogin" type="submit" value="Efetuar Login" style="margin: 0 auto;"/>
+								</div>
+								<div class="col-xs-12" style="padding-bottom: 5px;text-align: center">
+									<input class="btnLogin" type="button" onclick="go('/senha/problemaSenha');" value="Problemas com Senha" style="margin: 0 auto;"/>
+								</div>
+				    		</div>
+					    	<div id="loginError" class="row">
+								<p th:if="${loginError}" class="error" th:text="${loginError}">Erro de login!</p>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<p id="version" th:if="${session.versionLabel}" th:text="${session.versionLabel}"/>
+								</div>
+							</div>
+			            </form><!-- /form -->
+            		</div>
+	        </div><!-- /card-container -->
+	    </div><!-- /container -->
 	</body>
 </html>
