@@ -59,9 +59,7 @@
 						<label class="control-label" for="nome" th:text="#{nuCpf}">Cpf</label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input type="text" class="form-control input-sm CPF"
-							maxlength="14" id="cpf" th:field="*{nuCpf}"
-							placeholder="___.___.___-__" />
+						<input type="text" class="form-control input-sm CPF" maxlength="14" id="cpf" th:field="*{nuCpf}" placeholder="___.___.___-__" />
 					</div>
 				</div>
 
@@ -92,12 +90,12 @@
 				</div>
 
 				<div class="form-group buttonsGroup">
-					<button id="buttonFind" class="pui-button" type="submit"> 
+					<button id="buttonFind" type="submit"> 
 						<label th:text="#{botao.consultar}"></label>
 					</button>
-					<button id="limparCampos" class="pui-button" type='button'> 
+					<a id="limparCampos"> 
 						<label th:text="#{botao.limpar}"></label>
-					</button>
+					</a>
 				</div>
 
 			</form>
@@ -130,14 +128,17 @@
 		<script>
 			$(function (){
 				$('#cpf').mask('999.999.999-99' );
+				$('#telefone').mask('(00) 00000-0000');
 				
 				$("#buttonFind").puibutton({
+					icon: 'fa-search',
 				    click: function(event) {
 				    	 $('#dlg').puidialog('show');
 				    }
 				});
 				
 				$('#limparCampos').puibutton({
+					icon: 'fa-eraser',
 					click: function(event){
 						$('#nome').val('');
 						$('#username').val('');
@@ -242,19 +243,19 @@
 			}
 			
 			function excluir(idUsuario){
-				show_puidialog('#dlgExcluir', 'DELETE', '/usuarioConsulta/excluir/'+idUsuario, '#formConsulta');
+				show_puidialog('#dlgExcluir', 'DELETE', '/usuarioConsulta/excluir/'+idUsuario);
 			}
 			
 			function resetar(idUsuario){
-				show_puidialog('#dlgResetar', 'PUT', '/usuarioConsulta/resetar/'+idUsuario, '#formConsulta');
+				show_puidialog('#dlgResetar', 'PUT', '/usuarioConsulta/resetar/'+idUsuario);
 			}
 			
 			function bloquear(idUsuario){
-				show_puidialog('#dlgBloquear', 'PUT', '/usuarioConsulta/bloquear/'+idUsuario, '#formConsulta');
+				show_puidialog('#dlgBloquear', 'PUT', '/usuarioConsulta/bloquear/'+idUsuario);
 			}
 			
 			function desbloquear(idUsuario){
-				show_puidialog('#dlgDesbloquear', 'PUT', '/usuarioConsulta/desbloquear/'+idUsuario, '#formConsulta');
+				show_puidialog('#dlgDesbloquear', 'PUT', '/usuarioConsulta/desbloquear/'+idUsuario);
 			}
 		</script>
 	</div>

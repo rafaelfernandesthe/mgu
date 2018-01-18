@@ -38,17 +38,57 @@ public class LdapServiceImpl implements LdapService {
 
 	@Override
 	public void alterarSenha( String usuario, String senha ) throws LdapException {
-		LdapName dn = LdapNameBuilder.newInstance().add( getUserDn() ).add( "cn", usuario ).build();
+		try {
+			LdapName dn = LdapNameBuilder.newInstance().add( getUserDn() ).add( "cn", usuario ).build();
 
-		Attribute attr = new BasicAttribute( "userPassword", senha );
-		ModificationItem item = new ModificationItem( DirContext.REPLACE_ATTRIBUTE, attr );
-		ldapTemplate.modifyAttributes( dn, new ModificationItem[] { item } );
+			Attribute attr = new BasicAttribute( "userPassword", senha );
+			ModificationItem item = new ModificationItem( DirContext.REPLACE_ATTRIBUTE, attr );
+			ldapTemplate.modifyAttributes( dn, new ModificationItem[] { item } );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new LdapException( "Erro ao alterar usuario" );
+		}
 	}
 
 	@Override
 	public void alterarUsuarioParaMaster( String usuario ) throws LdapException {
-		// TODO Auto-generated method stub
+		try {
+			usuario = "master_claro";
+			usuario = "rfernandes_claro";
+			LdapName dn = LdapNameBuilder.newInstance().add( getUserDn() ).add( "cn", usuario ).build();
 
+			//@formatter:off
+			ContainerCriteria query = LdapQueryBuilder.query()
+				.base( getGrupoDnMaster() )
+				.searchScope( SearchScope.SUBTREE )
+				.where( "uniqueMember" ).is( dn.toString() );
+			//@formatter:on
+
+			AttributesMapper<?> attrs = new AttributesMapper<Object>() {
+				@Override
+				public Object mapFromAttributes( Attributes attrs ) throws NamingException {
+					return attrs.getAll();
+				}
+			};
+
+			List<?> result = ldapTemplate.search( query, attrs );
+			System.out.println( result );
+
+			if ( result == null || !result.isEmpty() ) {
+				return;
+			} else if ( 1 == 1 ) {
+				return;
+			}
+
+			Attribute attr = new BasicAttribute( "uniqueMember", dn.toString() + "," + getLdapRoot() );
+
+			ModificationItem item = new ModificationItem( DirContext.ADD_ATTRIBUTE, attr );
+			ldapTemplate.modifyAttributes( getGrupoDnMaster(), new ModificationItem[] { item } );
+
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new LdapException( "Erro ao alterarUsuarioParaMaster" );
+		}
 	}
 
 	@Override
@@ -59,15 +99,20 @@ public class LdapServiceImpl implements LdapService {
 
 	@Override
 	public void deleteUser( String usuario, boolean isMaster ) throws LdapException {
-		LdapName dn = LdapNameBuilder.newInstance().add( getUserDn() ).add( "cn", usuario ).build();
-		ldapTemplate.unbind( dn );
+		try {
+			LdapName dn = LdapNameBuilder.newInstance().add( getUserDn() ).add( "cn", usuario ).build();
+			ldapTemplate.unbind( dn );
 
-		Attribute attr = new BasicAttribute( "uniqueMember", dn.toString() + "," + getLdapRoot() );
-		ModificationItem item = new ModificationItem( DirContext.REMOVE_ATTRIBUTE, attr );
-		if ( isMaster ) {
-			ldapTemplate.modifyAttributes( getGrupoDnMaster(), new ModificationItem[] { item } );
-		} else {
-			ldapTemplate.modifyAttributes( getGrupoDnUsuario(), new ModificationItem[] { item } );
+			Attribute attr = new BasicAttribute( "uniqueMember", dn.toString() + "," + getLdapRoot() );
+			ModificationItem item = new ModificationItem( DirContext.REMOVE_ATTRIBUTE, attr );
+			if ( isMaster ) {
+				ldapTemplate.modifyAttributes( getGrupoDnMaster(), new ModificationItem[] { item } );
+			} else {
+				ldapTemplate.modifyAttributes( getGrupoDnUsuario(), new ModificationItem[] { item } );
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new LdapException( "Erro ao deletar usuario" );
 		}
 	}
 
@@ -104,12 +149,13 @@ public class LdapServiceImpl implements LdapService {
 	@Override
 	public Boolean existeUsuario( String usuario ) throws LdapException {
 		//@formatter:off
-				ContainerCriteria query = LdapQueryBuilder.query()
-						.base( getUserDn() )
-						.searchScope( SearchScope.SUBTREE )
-						.attributes( "cn" )
-						.where( "cn" ).is( usuario );
-				//@formatter:on
+		ContainerCriteria query = LdapQueryBuilder.query()
+			.base( getUserDn() )
+			.searchScope( SearchScope.SUBTREE )
+			.attributes( "cn" )
+			.where( "cn" ).is( usuario );
+		//@formatter:on
+
 		AttributesMapper<?> attrs = new AttributesMapper<Object>() {
 			@Override
 			public Object mapFromAttributes( Attributes attrs ) throws NamingException {
@@ -124,10 +170,10 @@ public class LdapServiceImpl implements LdapService {
 	public Boolean existeUsuario( String usuario, String senha ) throws LdapException {
 		//@formatter:off
 		ContainerCriteria query = LdapQueryBuilder.query()
-				.base( getUserDn() )
-				.searchScope( SearchScope.SUBTREE )
-				.attributes( "cn" )
-				.where( "cn" ).is( usuario ).and( "userPassword" ).is( senha );
+			.base( getUserDn() )
+			.searchScope( SearchScope.SUBTREE )
+			.attributes( "cn" )
+			.where( "cn" ).is( usuario ).and( "userPassword" ).is( senha );
 		//@formatter:on
 
 		// AndFilter filter = new AndFilter();

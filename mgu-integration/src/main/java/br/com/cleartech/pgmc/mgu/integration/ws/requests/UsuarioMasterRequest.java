@@ -146,4 +146,9 @@ public class UsuarioMasterRequest {
 		return usuario;
 	}
 
+	@Override
+	public String toString() {
+		return "UsuarioMasterRequest [nome=" + nome + ", telefone=" + telefone + ", telefone2=" + telefone2 + ", email=" + email + ", cpf=" + cpf + ", cargo=" + cargo + ", userNameAnterior=" + userNameAnterior + ", userName=" + userName + ", aprovado=" + aprovado + ", ipOrigem=" + ipOrigem + ", idGrupoPrestadora=" + idGrupoPrestadora + ", idPrestadora=" + idPrestadora + "]";
+	}
+
 }

@@ -41,11 +41,14 @@
 				</div>
 
 				<div class="form-group buttonsGroup">
-					<button id="submitBt" class="pui-button" type="submit">
-						<label th:text="#{botao.cadastrar}"></label>
-					</button>
-					<button id="limparCampos" class="pui-button" type="reset"> 
+					<a id="voltar">
+						<label th:text="#{botao.voltar}"></label>
+					</a>
+					<button id="limparCampos" type="reset"> 
 						<label th:text="#{botao.limpar}"></label>
+					</button>
+					<button id="submitBt" type="submit">
+						<label th:text="#{botao.cadastrar}"></label>
 					</button>
 				</div>
 		
@@ -57,49 +60,60 @@
 		<script type="text/javascript" src="../../resources/js/jquery.mask.js" th:src="@{/resources/js/jquery.mask.js}"></script>
 
 		<script>
-			function carregaListaPerfil(){
+			$(function (){
 				var sourceData = [(${perfisSourceJSON})];
 			  	var targetData = [(${perfisTargetJSON})];
 			  	
-				$('#listaPerfil').puipicklist({
-			        sourceCaption: 'Disponíveis',
-			        targetCaption: 'Selecionados',
-			        filter: true,
-			        filterMatchMode: 'contains',
-			        sourceData: sourceData,
-			        targetData: targetData,
-			        reponsive: true,
-			        content: function(option) {
-			        	var labelParts = option.label.toString().split("+");
-			        	if(!labelParts[1])
-				        	labelParts[1]="";
-				        return '<div><span style="text-align:left">'+labelParts[0]+'</span><span style="float:right">'+ labelParts[1] +'</span></div>';
-			        },
-				});
-				puipicklist_refresh("#perfisIdList");
-			}
-		
-			$(function (){
 			  	carregaListaPerfil();
-			  	
-				
 				$('#telefoneFixo').mask('(00) 0000-0000');
 				$('#telefone').mask('(00) 00000-0000');
 				$('#cpf').mask('999.999.999-99' );
-			});
-			
-			$('#submitBt').puibutton({
-			    click: function(event) {
-			    	 $('#dlg').puidialog('show');
-			    }
-			});
-			
-			$('#limparCampos').puibutton({
-				click: function(event){
-					carregaListaPerfil();
+				
+				function carregaListaPerfil(){
+					$('#listaPerfil').puipicklist({
+				        sourceCaption: 'Disponíveis',
+				        targetCaption: 'Selecionados',
+				        filter: true,
+				        filterMatchMode: 'contains',
+				        sourceData: sourceData,
+				        targetData: targetData,
+				        reponsive: true,
+				        content: function(option) {
+				        	var labelParts = option.label.toString().split("+");
+				        	if(!labelParts[1])
+					        	labelParts[1]="";
+					        return '<div><span style="text-align:left">'+labelParts[0]+'</span><span style="float:right">'+ labelParts[1] +'</span></div>';
+				        },
+					});
+					puipicklist_refresh("#perfisIdList");
 				}
+				
+				$('#nome').keyup(function () {
+					this.value = this.value.replace(/[^\w._-]/g,'');
+				});
+				
+				$('#voltar').puibutton({
+					icon: 'fa-arrow-circle-left',						
+				    click: function(event) {
+				    	document.location = document.referrer;
+				    }
+				});
+
+				$('#limparCampos').puibutton({
+					icon: 'fa-eraser',
+					click: function(event){
+						carregaListaPerfil();
+					}
+				});
+				
+				$('#submitBt').puibutton({
+					icon: 'fa-check',		
+				    click: function(event) {
+				    	 $('#dlg').puidialog('show');
+				    }
+				});
 			});
-			
+		
 		</script>
 	</div>
 

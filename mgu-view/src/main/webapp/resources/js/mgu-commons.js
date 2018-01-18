@@ -68,7 +68,7 @@ function declare_puipicklist(identifierPicklist, sourceData, targetData, fieldNa
 	
 }
 
-function show_puidialog(identifierDialog, reqType, urlTarget, formToSubmit){
+function show_puidialog(identifierDialog, reqType, urlTarget){
 	var token = $("meta[name='_csrf']").attr("content");
   	var header = $("meta[name='_csrf_header']").attr("content");
 	
@@ -86,22 +86,20 @@ function show_puidialog(identifierDialog, reqType, urlTarget, formToSubmit){
 	                text: 'Sim',
 	                icon: 'fa-check',
 	                click: function() {
-	                	$.ajax({
+	                	$('#dlg').puidialog('show');
+	                	
+	                	var msgText = $.ajax({
 		                    type: reqType,
+		                    async: false,
 		                    url: getAppPath() + urlTarget,
 		                    beforeSend: function (xhr) {
 		                        xhr.setRequestHeader(header, token);
 		                    },
 		                    context: this,
-		                });
+		                }).responseText;
 	                	
-	                	if(formToSubmit != null && formToSubmit != undefined && formToSubmit != ''){
-	                		$('#dlg').puidialog('show');
-	                		sleep(1000).then(() => {
-	                			//$(formToSubmit).submit();
-	                			document.location = document.location+'&success=1';
-	                		});
-	                	}
+	                	document.location = document.location+'&success=1&msgText='+msgText;
+	                	
 	                }
 	            },
 	            {

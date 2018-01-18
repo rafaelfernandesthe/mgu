@@ -44,12 +44,15 @@
 
 				<div class="form-group buttonsGroup">
 					<input type="hidden" th:field="*{urlConsulta}"/>
-					<button id="submitBt" class="pui-button" type="submit">
-						<label th:text="#{botao.cadastrar}"></label>
-					</button>
-					<a id="goBack" class="pui-button"> 
+					<a id="voltar"> 
 						<label th:text="#{botao.voltar}"></label>
 					</a>
+					<a id="limparCampos"> 
+						<label th:text="#{botao.limpar}"></label>
+					</a>
+					<button id="submitBt" type="submit">
+						<label th:text="#{botao.cadastrar}"></label>
+					</button>
 				</div>
 		
 			</div>
@@ -63,40 +66,52 @@
 			$(function (){
 			  	var sourceData = [(${perfisSourceJSON})];
 			  	var targetData = [(${perfisTargetJSON})];
-				$('#listaPerfil').puipicklist({
-			        sourceCaption: 'Disponíveis',
-			        targetCaption: 'Selecionados',
-			        filter: true,
-			        filterMatchMode: 'contains',
-			        sourceData: sourceData,
-			        targetData: targetData,
-			        reponsive: true,
-			        content: function(option) {
-			        	var labelParts = option.label.toString().split("+");
-			        	if(!labelParts[1])
-				        	labelParts[1]="";
-				        return '<div><span style="text-align:left">'+labelParts[0]+'</span><span style="float:right">'+ labelParts[1] +'</span></div>';
-			        },
-				});
-				puipicklist_refresh("#perfisIdList");
-				
+			  	
+			  	carregaListaPerfil(sourceData,targetData);
 				$('#telefoneFixo').mask('(00) 0000-0000');
 				$('#telefone').mask('(00) 00000-0000');
 				$('#cpf').mask('999.999.999-99' );
-			});
+				
+				function carregaListaPerfil(sourceData,targetData){
+					$('#listaPerfil').puipicklist({
+				        sourceCaption: 'Disponíveis',
+				        targetCaption: 'Selecionados',
+				        filter: true,
+				        filterMatchMode: 'contains',
+				        sourceData: sourceData,
+				        targetData: targetData,
+				        reponsive: true,
+				        content: function(option) {
+				        	var labelParts = option.label.toString().split("+");
+				        	if(!labelParts[1])
+					        	labelParts[1]="";
+					        return '<div><span style="text-align:left">'+labelParts[0]+'</span><span style="float:right">'+ labelParts[1] +'</span></div>';
+				        },
+					});
+					puipicklist_refresh("#perfisIdList");
+				}
 			
-			$('#submitBt').puibutton({
-			    click: function(event) {
-			    	 $('#dlg').puidialog('show');
-			    }
+				$('#voltar').puibutton({
+					icon: 'fa-arrow-circle-left',
+				    click: function(event) {
+				    	 document.location = document.referrer;
+				    }
+				});
+				
+				$('#limparCampos').puibutton({
+					icon: 'fa-eraser',
+					click: function(event){
+						carregaListaPerfil(sourceData.concat(targetData), {});
+					}
+				});
+				
+				$('#submitBt').puibutton({
+					icon: 'fa-check',	
+				    click: function(event) {
+				    	 $('#dlg').puidialog('show');
+				    }
+				});
 			});
-			
-			$('#goBack').puibutton({
-			    click: function(event) {
-			    	 history.go(-1);
-			    }
-			});
-			
 		</script>
 	</div>
 

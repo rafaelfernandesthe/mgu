@@ -14,6 +14,8 @@
 
 		<div class="painel-primary pui-panel" th:title="#{pagina.cadastro}+' '+#{usuario}">
 			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}" th:object="${usuario}" >
+			
+<!-- 				<a th:href="@{/usuarioCadastro/teste}"> teste </a> -->
 
 				<div th:include="~{/_layout/mensagem.html}"></div>
 
@@ -120,11 +122,14 @@
 				</div>
 
 				<div class="form-group buttonsGroup">
-					<button id="submitBt" class="pui-button" type="submit">
-						<label th:text="#{botao.cadastrar}"></label>
-					</button>
-					<button id="limparCampos" class="pui-button" type="reset">
+					<a id="voltar">
+						<label th:text="#{botao.voltar}"></label>
+					</a>
+					<button id="limparCampos" type="reset">
 						<label th:text="#{botao.limpar}"></label>
+					</button>
+					<button id="submitBt" type="submit">
+						<label th:text="#{botao.cadastrar}"></label>
 					</button>
 				</div>
 
@@ -148,17 +153,26 @@
 					this.value = this.value.replace(/[^\w._-]/g,'');
 				});
 				
-				$('#submitBt').puibutton({
+				$('#voltar').puibutton({
+					icon: 'fa-arrow-circle-left',						
 				    click: function(event) {
-				    	 $('#dlg').puidialog('show');
+				    	document.location = document.referrer;
 				    }
 				});
 				
 				$('#limparCampos').puibutton({
+					icon: 'fa-eraser',
 					click: function(event){
 						$('#nivelEscalonamento').puidropdown('selectValue', '');
 						declare_puipicklist('#listaGrupoPerfil', sourceData, targetData, 'grupoPerfisIdList');
 					}
+				});
+				
+				$('#submitBt').puibutton({
+					icon: 'fa-check',					
+				    click: function(event) {
+				    	 $('#dlg').puidialog('show');
+				    }
 				});
 				
 			});

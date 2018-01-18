@@ -279,6 +279,13 @@ public class Usuario implements Serializable {
 		return dcTelefone;
 	}
 
+	public String getDcTelefoneWithMask() {
+		if ( this.dcTelefone != null )
+			return this.dcTelefone.replaceAll( "[^\\d]", "" );
+		else
+			return this.nuCpf;
+	}
+
 	public void setDcTelefone( String dcTelefone ) {
 		this.dcTelefone = dcTelefone;
 	}
@@ -326,7 +333,6 @@ public class Usuario implements Serializable {
 	public String getNuCpf() {
 		if ( this.nuCpf != null )
 			return this.nuCpf.replaceAll( "[^\\d]", "" );
-
 		else
 			return this.nuCpf;
 	}

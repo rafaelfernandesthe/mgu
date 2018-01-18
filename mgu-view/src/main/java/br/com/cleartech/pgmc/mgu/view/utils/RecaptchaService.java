@@ -50,7 +50,7 @@ public class RecaptchaService {
 			if ( errorCodes != null && !errorCodes.isEmpty() )
 				return "Valor informado no captcha invalido!";
 
-			return "Erro na configuração do captcha. Por favor entrar em contato com a central de serviços.";
+			return "Erro na configuração do captcha. Favor entrar em contato com a Central de Serviços através do e-mail: suporte.pgmc@cleartech.com.br.";
 		} else {
 			return org.apache.commons.lang.StringUtils.EMPTY;
 		}

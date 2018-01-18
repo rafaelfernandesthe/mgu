@@ -85,4 +85,9 @@ public class Sistema implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Sistema [id=" + id + ", dcSistema=" + dcSistema + "]";
+	}
+
 }

@@ -42,7 +42,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	private final List<String> mensagensValidasDynamics = Arrays.asList( "Usuário criado com Sucesso", "Usuário ja possui cadastro. Foram adicionadas as permissões do PGMC", "Usuário ja possui CPF ou Email Cadastrado" );
 
-	private static final String ERRO_CONEXAO_DYNAMICS = "DYNAMICS ERRO: Problemas no serviço de integração com o Portal Dynanimcs. Favor entrar em contato com a Central de Serviços.";
+	private static final String ERRO_CONEXAO_DYNAMICS = "DYNAMICS ERRO: Problemas no serviço de integração com o Portal Dynanimcs. Favor entrar em contato com a Central de Serviços através do e-mail: suporte.pgmc@cleartech.com.br.";
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
@@ -118,7 +118,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 			usuario.setSenhaSemMD5( senha );
 			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.CRIAR_USUARIO, null );
 		} catch ( Exception e ) {
-			throw new MessagingException( "MGU ALERTA: Usuário criado com sucesso porém não foi possível enviar a senha para o e-mail \"" + usuario.getDcEmail() + "\", favor entrar em contato com a central de serviços para solicitar a senha de acesso do usuário \"" + usuario.getDcUsername() + "\"" );
+			throw new MessagingException( "MGU ALERTA: Usuário criado com sucesso porém não foi possível enviar a senha para o e-mail \"" + usuario.getDcEmail() + "\", favor entrar em contato com a Central de Serviços através do e-mail: suporte.pgmc@cleartech.com.br para solicitar a senha de acesso do usuário \"" + usuario.getDcUsername() + "\"" );
 		}
 
 		return usuario;
@@ -188,7 +188,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 				}
 			}
 		} catch ( Exception e ) {
-			throw new MessagingException( "MGU ALERTA: Usuário atualizado com sucesso porém não foi possível enviar o e-mail de bloqueio/desbloqueio para \"" + usuarioAtualizado.getDcEmail() + "\", favor entrar em contato com a central de serviços para informar o problema." );
+			throw new MessagingException( "MGU ALERTA: Usuário atualizado com sucesso porém não foi possível enviar o e-mail de bloqueio/desbloqueio para \"" + usuarioAtualizado.getDcEmail() + "\", Favor entrar em contato com a Central de Serviços através do e-mail: suporte.pgmc@cleartech.com.br." );
 		}
 
 		return usuarioAtualizado;

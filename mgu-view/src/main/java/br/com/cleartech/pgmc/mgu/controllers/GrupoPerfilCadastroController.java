@@ -41,7 +41,7 @@ public class GrupoPerfilCadastroController {
 	@Autowired
 	private PrestadoraService prestadoraService;
 
-	@GetMapping
+	@GetMapping( { "", "/", "/salvar" } )
 	public String init( Model model ) {
 		List<Perfil> listaPerfilTotal = getPerfilList();
 		model.addAttribute( "grupoPerfil", new GrupoPerfilCadastroDTO() );
@@ -58,6 +58,10 @@ public class GrupoPerfilCadastroController {
 		grupoPerfilDto.setPerfis( perfisSelecionados );
 
 		if ( !StringUtils.isEmpty( grupoPerfilDto.getNoGrupoPerfil() ) ) {
+			if ( !grupoPerfilDto.getNoGrupoPerfil().replaceAll( "[\\w._-]", "" ).isEmpty() ) {
+				bindingResult.addError( new FieldError( "grupoPerfil", "noGrupoPerfil", grupoPerfilDto.getNoGrupoPerfil(), false, null, null, "Nome do Grupo de Perfil deve conter apenas letras, números, ponto(.), underline(_) e traço(-)." ) );
+			}
+
 			if ( grupoPerfilService.existsByNoGrupoPerfil( grupoPerfilDto.getNoGrupoPerfil() ) ) {
 				bindingResult.addError( new FieldError( "grupoPerfil", "noGrupoPerfil", grupoPerfilDto.getNoGrupoPerfil(), false, null, null, "Nome do Grupo de Perfil informado já está cadastrado." ) );
 			}

@@ -74,7 +74,7 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( "usuario.dcCargo", usuario.getDcCargo() ) );
 		}
 		if ( !StringUtils.isEmpty( usuario.getDcTelefone() ) ) {
-			bb.and( qUsuario.dcTelefone.eq( usuario.getDcTelefone() ) );
+			bb.and( qUsuario.dcTelefone.eq( usuario.getDcTelefone() ).or( qUsuario.dcTelefone.eq( usuario.getDcTelefoneWithMask() ) ) );
 		}
 		if ( !StringUtils.isEmpty( usuario.getNuCpf() ) ) {
 			bb.and( qUsuario.nuCpf.eq( usuario.getNuCpf() ).or( qUsuario.nuCpf.eq( usuario.getNuCpfWithMask() ) ) );

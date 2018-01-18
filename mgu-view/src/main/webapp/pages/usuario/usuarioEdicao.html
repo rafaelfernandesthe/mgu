@@ -143,14 +143,18 @@
 					</div>
 				</div>
 
+				<input type="hidden" th:field="*{urlConsulta}"/>
+
 				<div class="form-group buttonsGroup">
-					<input type="hidden" th:field="*{urlConsulta}"/>
-					<button id="submitBt" class="pui-button" type="submit">
-						<label th:text="#{botao.cadastrar}"></label>
-					</button>
-					<a id="goBack" class="pui-button"> 
+					<a id="voltar"> 
 						<label th:text="#{botao.voltar}"></label>
 					</a>
+					<a id="limparCampos">
+						<label th:text="#{botao.limpar}"></label>
+					</a>
+					<button id="submitBt" type="submit">
+						<label th:text="#{botao.cadastrar}"></label>
+					</button>
 				</div>
 
 			</form>
@@ -173,17 +177,38 @@
 					this.value = this.value.replace(/[^\w._-]/g,'');
 				});
 				
+				$('#voltar').puibutton({
+					icon: 'fa-arrow-circle-left',						
+				    click: function(event) {
+				    	document.location = document.referrer;
+				    }
+				});
+				
+				$('#limparCampos').puibutton({
+					icon: 'fa-eraser',
+					click: function(event){
+						$('#nome').val('');
+						$('#email').val('');
+						$('#cargo').val('');
+						$('#telefone').val('');
+						$('#telefoneFixo').val('');
+						$('#delegado').puidropdown('selectValue', '');
+						$('#flBloqueio1')[0].checked = true;
+						$('#flBloqueio2')[0].checked = false;
+						$('#flEnvioEmail1')[0].checked = true;
+						$('#flEnvioEmail2')[0].checked = false;
+						$('#nivelEscalonamento').puidropdown('selectValue', '');
+						declare_puipicklist('#listaGrupoPerfil', sourceData.concat(targetData), [], 'grupoPerfisIdList');
+					}
+				});
+				
 				$('#submitBt').puibutton({
+					icon: 'fa-check',		
 				    click: function(event) {
 				    	 $('#dlg').puidialog('show');
 				    }
 				});
 				
-				$('#goBack').puibutton({
-				    click: function(event) {
-				    	history.go(-1);
-				    }
-				});
 				
 				$('#delegado').puidropdown({
 		            filter: true,

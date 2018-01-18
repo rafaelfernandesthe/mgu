@@ -68,50 +68,54 @@ public class UsuarioConsultaController {
 
 	@RequestMapping( method = RequestMethod.DELETE, value = "/excluir/{idUsuario}" )
 	@ResponseBody
-	public boolean excluir( @PathVariable Long idUsuario ) {
+	public String excluir( @PathVariable Long idUsuario ) {
 		try {
 			usuarioService.excluir( idUsuario );
 		} catch ( Exception e ) {
 			e.printStackTrace();
+			return "Ocorreu um erro ao tentar excluir o Usuário!";
 		}
 
-		return true;
+		return "Usuário deletado com sucesso!";
 	}
 
 	@RequestMapping( method = RequestMethod.PUT, value = "/resetar/{idUsuario}" )
 	@ResponseBody
-	public boolean resetar( @PathVariable Long idUsuario ) {
+	public String resetar( @PathVariable Long idUsuario ) {
 		try {
 			usuarioService.resetar( idUsuario, MguUtils.getUsuarioLogado().getDcUsername() );
 		} catch ( Exception e ) {
 			e.printStackTrace();
+			return "Ocorreu um erro ao tentar realizar o reset da senha!";
 		}
 
-		return true;
+		return "Reset da senha realizado com sucesso!";
 	}
 
 	@RequestMapping( method = RequestMethod.PUT, value = "/bloquear/{idUsuario}" )
 	@ResponseBody
-	public boolean bloquear( @PathVariable Long idUsuario ) {
+	public String bloquear( @PathVariable Long idUsuario ) {
 		try {
 			usuarioService.bloquear( usuarioService.find( idUsuario ), false );
 		} catch ( Exception e ) {
 			e.printStackTrace();
+			return "Ocorreu um erro ao tentar bloquear o Usuário";
 		}
 
-		return true;
+		return "Usuário bloqueado com sucesso!";
 	}
 
 	@RequestMapping( method = RequestMethod.PUT, value = "/desbloquear/{idUsuario}" )
 	@ResponseBody
-	public boolean desbloquear( @PathVariable Long idUsuario ) {
+	public String desbloquear( @PathVariable Long idUsuario ) {
 		try {
 			usuarioService.desbloquear( usuarioService.find( idUsuario ) );
 		} catch ( Exception e ) {
 			e.printStackTrace();
+			return "Ocorreu um erro ao tentar desbloquear o Usuário";
 		}
 
-		return true;
+		return "Usuário desbloqueado com sucesso!";
 	}
 
 }

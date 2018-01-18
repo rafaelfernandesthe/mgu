@@ -42,17 +42,18 @@ public class GrupoPerfilConsultaController {
 		model.addAttribute( "grupoPerfisJSON", new GrupoPerfilConsultaDTO().getVOToJson( lista ) );
 		return MappedViews.GRUPO_PERFIL_CONSULTA.getPath();
 	}
-	
+
 	@RequestMapping( method = RequestMethod.DELETE, value = "/excluir/{idGrupoPerfil}" )
 	@ResponseBody
-	public boolean excluir( @PathVariable Long idGrupoPerfil ) {
+	public String excluir( @PathVariable Long idGrupoPerfil ) {
 		try {
 			grupoPerfilService.excluir( idGrupoPerfil );
 		} catch ( Exception e ) {
 			e.printStackTrace();
+			return "Ocorreu um erro ao tentar excluir o Grupo de Perfil!";
 		}
 
-		return true;
+		return "Grupo de Perfil deletado com sucesso!";
 	}
 
 }

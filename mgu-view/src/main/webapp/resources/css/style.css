@@ -108,7 +108,7 @@ body {
 }
 
 .ui-datatable-odd {
-    background: none repeat scroll 0 0 #F9F9F9;
+    background: none repeat scroll 0 0 #e9e9e9;
 }
 
 .ui-datatable table {
@@ -245,7 +245,7 @@ label.control-label {
 }
 
 .ui-breadcrumb {
-	margin: 20px 0px !important;	
+	margin: 10px 0px !important;	
 }
 
 .ui-panel {

@@ -100,7 +100,13 @@
 				//mensagem padrão de sucesso
 				var param = getUrlParams('success');
 				if(param != undefined && param != '' && param != null){
-					showMessage('info','Operação realizada com sucesso!');
+					var msgText = getUrlParams('msgText');
+					if(msgText != undefined && msgText != '' && msgText != null){	
+						showMessage('info', unescape(msgText));
+						removeUrlParams('msgText');
+					}else {
+						showMessage('info','Operação realizada com sucesso!');
+					}
 					removeUrlParams('success');
 				}
 
