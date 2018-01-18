@@ -1,4 +1,5 @@
-body {
+body, html {
+	height: 100%;
 	background-color: #254970;
 	font-family: Calibri !important;
 }
@@ -62,6 +63,7 @@ label.control-label {
     background-position-y: top;
     height: 215px;
     width: 470px;
+    margin: 0 auto;
 }
 
 #titulo {
@@ -96,6 +98,7 @@ label.control-label {
     font-weight: bold;
     font-size: 9pt;
     vertical-align: top;
+    margin: 0 auto;
 }
 
 #loginError {

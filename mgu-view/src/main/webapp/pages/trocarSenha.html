@@ -2,93 +2,90 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8"/>
-		
+		<link rel="application icon" href="../../resources/img/favicon.ico" th:href="@{/resources/img/favicon.ico}"/>  
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet"/>
-		<link href="../resources/css/loginStyle.css" th:href="@{/resources/css/loginStyle.css}" rel="stylesheet" type="text/css"/>
+		<link th:href="@{/resources/css/login.css}" rel="stylesheet" type="text/css"/>
 	    <title th:text="#{sistema.titulo}">Nome do Sistema</title>
 
 		<script src='https://www.google.com/recaptcha/api.js?hl=pt-br'></script>	    
 	</head>
-	<body onload='document.forms[0].username.focus();'>
-		<div class="login-container">
-			
-			<div id="cabecalho"></div>
-			<div id="conteudo-form" class="container">
-				<form id="formulario" th:action="@{/senha/salvarNovaSenha}" method="post" th:object="${usuario}">
-					<div class="row">
-						<div class="col-sm-12">
-							<label id="titulo"><a th:href="@{/}">MGU</a> > Trocar Senha</td>
-						</label>
-					</div>
-					<div class="row">
-						<div class="col-sm-4">
-							<label for="username" class="col-form-label form-group control-label">Usuário:</label>
-						</div>
-						<div class="col-sm-8">
-							<input id="username" type="text" th:field="*{dcUsername}" class="loginInput" tabindex="1"/>
-						</div>	
-					</div>
-					<div class="row">
-						<div class="col-sm-4">
-							<label for="senhaAtual" class="col-form-label form-group control-label">Senha Atual:</label>
-						</div>
-						<div class="col-sm-8">
-							<input id="senhaAtual" type="password" th:field="*{senhaAtual}" class="loginInput" tabindex="2"/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-4">
-							<label for="senhaNova" class="col-form-label form-group control-label">Nova Senha:</label>
-						</div>
-						<div class="col-sm-8">
-							<input id="senhaNova" type="password" th:field="*{senhaNova}" class="loginInput" tabindex="3"/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-4">
-							<label for="confirmarSenhaNova" class="col-form-label form-group control-label">Confirmar Nova Senha:</label>
-						</div>
-						<div class="col-sm-8">
-							<input id="confirmarSenhaNova" type="password" th:field="*{confirmarSenhaNova}" class="loginInput" tabindex="4"/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-2">
-						</div>
-						<div class="col-sm-6">
-							<div class="g-recaptcha" data-sitekey="6LfgZz8UAAAAAIziASwL_Gcb0R5GcOCOm6IgYv45"></div>
-						</div>
-						<div class="col-sm-4">
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-12">
-							<span id="msgError" th:if="${msgError}" class="alert alert-danger col-sm-12" th:text="${msgError}"></span>
-							<span id="msgSucesso" th:if="${msgSucesso}" class="alert alert-success col-sm-12" th:text="${msgSucesso}"></span>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-4" style="text-align:center;">
-							<input class="btnTrocarSenha" type="button" onclick="window.history.go(-1);" value="Voltar" />
-						</div>
-						<div class="col-sm-4" style="text-align:center;">
-							<input class="btnTrocarSenha" type="button" onclick="limpaFormulario();" value="Limpar"/>
-						</div>
-						<div class="col-sm-4" style="text-align:center;">
-							<input class="btnTrocarSenha" type="submit" value="Salvar" tabindex="5"/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-12">
-							<p id="version" th:if="${session.versionLabel}" th:text="${session.versionLabel}"/>
-						</div>
-					</div>
-				</form>
-			</div>
-			
-		</div>
+	<body>
+		
+		 <div class="container-fluid">
+	        <div class="card card-container">
+	        	<img alt="" th:src="@{'/resources/img/login/login-top-bg.png'}" style="width: 100%">
+				    <div class="form-container container">
+						<form id="formulario" th:action="@{/senha/salvarNovaSenha}" method="post" th:object="${usuario}">
+					    	<div class="row">
+					    		<div class="col-sm-12">
+									<label id="titulo"><a th:href="@{/}">MGU</a> > Trocar Senha</td>
+					    		</div>
+					    	</div>
+					    	<div class="row">
+								<div class="col-sm-4">
+									<label for="username" class="col-form-label control-label">Usuário:</label>
+								</div>
+								<div class="col-sm-8 form-group">
+									<input id="username" type="text" th:field="*{dcUsername}" class="loginInput" tabindex="1"/>
+								</div>	
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="senhaAtual" class="col-form-label control-label">Senha Atual:</label>
+								</div>
+								<div class="col-sm-8 form-group">
+									<input id="senhaAtual" type="password" th:field="*{senhaAtual}" class="loginInput" tabindex="2"/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="senhaNova" class="col-form-label control-label">Nova Senha:</label>
+								</div>
+								<div class="col-sm-8 form-group">
+									<input id="senhaNova" type="password" th:field="*{senhaNova}" class="loginInput" tabindex="3"/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="confirmarSenhaNova" class="col-form-label control-label">Confirmar Nova Senha:</label>
+								</div>
+								<div class="col-sm-8 form-group">
+									<input id="confirmarSenhaNova" type="password" th:field="*{confirmarSenhaNova}" class="loginInput" tabindex="4"/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="g-recaptcha" data-sitekey="6LfgZz8UAAAAAIziASwL_Gcb0R5GcOCOm6IgYv45" style="transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<span id="msgError" th:if="${msgError}" class="alert alert-danger col-sm-12" th:text="${msgError}"></span>
+									<span id="msgSucesso" th:if="${msgSucesso}" class="alert alert-success col-sm-12" th:text="${msgSucesso}"></span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4" style="padding-bottom: 5px;text-align: center">
+									<input class="btnLogin" type="button" onclick="window.history.go(-1);" value="Voltar" style="margin: 0 auto" />
+								</div>
+								<div class="col-sm-4" style="padding-bottom: 5px;text-align: center">
+									<input class="btnLogin" type="button" onclick="limpaFormulario();" value="Limpar" style="margin: 0 auto"/>
+								</div>
+								<div class="col-sm-4" style="padding-bottom: 5px;text-align: center">
+									<input class="btnLogin" type="submit" value="Salvar" tabindex="5" style="margin: 0 auto"/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<p id="version" th:if="${session.versionLabel}" th:text="${session.versionLabel}"/>
+								</div>
+							</div>
+			            </form><!-- /form -->
+            		</div>
+	        </div><!-- /card-container -->
+	    </div><!-- /container -->
 		
 		<script type="text/javascript">
 			function limpaFormulario(){
