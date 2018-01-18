@@ -60,6 +60,7 @@ public class SenhaController {
 
 	@PostMapping( "/recuperarSenha" )
 	public String recuperarSenha( @RequestParam( "g-recaptcha-response" ) String recaptchaResponse, UsuarioCadastroDTO usuario, Model model, HttpServletRequest request ) {
+		logger.info( SenhaController.class + "recuperarSenha: " + usuario.getDcUsername() );
 		request.getSession().setAttribute( "versionLabel", versionLabel );
 		model.addAttribute( "usuario", usuario );
 
@@ -103,7 +104,8 @@ public class SenhaController {
 			return MappedViews.PROBLEMA_SENHA.getPath();
 		}
 
-		model.addAttribute( "msgSucesso", "Email enviado com sucesso!" );
+		logger.info( "Reset de senha realizado para:" + usuarioDB.getDcUsername() );
+		model.addAttribute( "msgSucesso", "Reset da senha realizado com sucesso!" );
 		return MappedViews.PROBLEMA_SENHA.getPath();
 
 	}
@@ -119,6 +121,7 @@ public class SenhaController {
 
 	@PostMapping( "/salvarNovaSenha" )
 	public String salvarNovaSenha( @RequestParam( "g-recaptcha-response" ) String recaptchaResponse, UsuarioCadastroDTO usuario, Model model, HttpServletRequest request ) {
+		logger.info( SenhaController.class + "salvarNovaSenha: " + usuario.getDcUsername() );
 		request.getSession().setAttribute( "versionLabel", versionLabel );
 		model.addAttribute( "usuario", usuario );
 
@@ -172,6 +175,7 @@ public class SenhaController {
 			return MappedViews.TROCAR_SENHA.getPath();
 		}
 
+		logger.info( "senha alterada para:" + usuarioDB.getDcUsername() );
 		model.addAttribute( "msgSucesso", "Senha alterada com sucesso!" );
 		return MappedViews.PROBLEMA_SENHA.getPath();
 
