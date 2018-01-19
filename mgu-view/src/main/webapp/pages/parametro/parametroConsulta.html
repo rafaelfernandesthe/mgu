@@ -4,134 +4,105 @@
 	layout:decorate="~{/_layout/layout.html}">
 
 <body>
-
 	<div layout:fragment="content">
 
 
 		<ul class="pui-breadcrumb">
 			<li><a href="#">Home</a></li>
-			<li><a href="#">Cadastro</a></li>
-			<li><a href="#">Parâmetro Sistema</a></li>
+			<li><a href="#">Configuração</a></li>
+			<li><a href="#">Parâmetros</a></li>
 		</ul>
 
 		<div class="painel-primary pui-panel"
-			th:title="#{pagina.cadastro}+' '+#{grupoPerfil}">
-			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}"
-				th:object="${usuario}">
+			th:title="#{pagina.configurar}+' '+#{parametros}">
+			<form action="#" method="post" th:action="@{/parametro/salvar}" th:object="${parametroSistema}">
 
 				<div th:include="~{/_layout/mensagem.html}"></div>
 
-
+				<input type="hidden" th:field="*{id}" />
 				<div class="row">
-					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome"
-							th:text="#{parametros.prazo}"> <span
-							style="color: red !important; font-weight: bold;">*</span>
-						</label>
+					<div class="col-sm-3">
+						<label id="label_prazoExpirarSenha" class="control-label" for="prazoExpirarSenha" th:text="#{parametros.prazo}"/>
 					</div>
 					<div class="col-sm-3 form-group">
-						<input class="form-control input-sm" id="nome"
-							th:field="*{dcUsername}" required="required" readonly="true" />
+						<input class="form-control input-sm" th:field="*{prazoExpirarSenha}" onkeypress="return apenasNumeros(event)" maxlength="3" th:disabled="*{flPrazoExpirarSenha} == 1 ? true : false" />
 					</div>
 
-					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="username"
-							th:text="#{parametros.senha.nunca.expira}">Senha Expira:
-						</label>
-					</div>
-					<div class="col-sm-1 form-group">
-						<select class="form-control input-sm" id="nivelEscalonamento"
-							th:field="*{nivelEscalonamento}" required>
-							<option value="">Sim</option>
-							<option value="">Não</option>
-						</select>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome"
-							th:text="#{parametros.bloquear.usuario}"> <span
-							style="color: red !important; font-weight: bold;">*</span>
-						</label>
-					</div>
-					<div class="col-sm-3 form-group">
-						<input class="form-control input-sm" id="nome"
-							th:field="*{dcUsername}" required="required" readonly="true" />
-					</div>
-
-					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="username"
-							th:text="#{parametros.senha.nunca.bloqueia}">Senha
-							Expira: </label>
-					</div>
-					<div class="col-sm-1 form-group">
-						<select class="form-control input-sm" id="nivelEscalonamento"
-							th:field="*{nivelEscalonamento}" required>
-							<option value="">Sim</option>
-							<option value="">Não</option>
-						</select>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="nome"
-							th:text="#{parametros.qtd.erro.senha}"> <span
-							style="color: red !important; font-weight: bold;">*</span>
-						</label>
-					</div>
-					<div class="col-sm-3 form-group">
-						<input class="form-control input-sm" id="nome"
-							th:field="*{dcUsername}" required="required" autofocus />
-					</div>
-
-					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="username"
-							th:text="#{parametros.limite.erro}">Limite erro: </label>
-					</div>
-					<div class="col-sm-1 form-group">
-						<select class="form-control input-sm" id="nivelEscalonamento"
-							th:field="*{nivelEscalonamento}" required>
-							<option value="">Não</option>
-							<option value="">Sim</option>
-						</select>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="username"
-							th:text="#{parametros.grupo.prestadora}">Grupo
-							Prestadora: </label>
+					<div class="col-sm-2">
+						<label class="control-label" for="flPrazoExpirarSenha"	th:text="#{parametros.senha.nunca.expira}">Senha nunca expira:</label>
 					</div>
 					<div class="col-sm-2 form-group">
-						<select class="form-control input-sm" id="nivelEscalonamento"
-							th:field="*{nivelEscalonamento}" required>
-							<option value="">Telmex</option>
+						<select class="form-control input-sm" id="fl_prazoExpirarSenha" th:field="*{flPrazoExpirarSenha}" onchange="enableOrDisable('prazoExpirarSenha')">
+							<option value="1">Sim</option>
+							<option value="0">Não</option>
 						</select>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-sm-2 form-group ">
-						<label class="control-label" for="username"
-							th:text="#{parametros.acesso.simultaneo}">Acesso
-							Simultaneo: </label>
+					<div class="col-sm-3">
+						<label id="label_bloquearInatividade" class="control-label" for="bloquearInatividade"	th:text="#{parametros.bloquear.usuario}"/>
 					</div>
-					<div class="col-sm-1 form-group">
-						<select class="form-control input-sm" id="nivelEscalonamento"
-							th:field="*{nivelEscalonamento}" required>
-							<option value="">Não</option>
-							<option value="">Sim</option>
+					<div class="col-sm-3 form-group">
+						<input class="form-control input-sm" th:field="*{bloquearInatividade}" onkeypress="return apenasNumeros(event)" maxlength="3" th:disabled="*{flBloquearInatividade} == 1 ? true : false" />
+					</div>
+
+					<div class="col-sm-2">
+						<label class="control-label" for="fl_bloquearInatividade"	th:text="#{parametros.senha.nunca.bloqueia}">Senha nunca bloqueia: </label>
+					</div>
+					<div class="col-sm-2 form-group">
+						<select class="form-control input-sm" id="fl_bloquearInatividade" th:field="*{flBloquearInatividade}" onchange="enableOrDisable('bloquearInatividade')">
+							<option value="1">Sim</option>
+							<option value="0">Não</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3">
+						<label id="label_qtdErrarSenha" class="control-label" for="qtdErrarSenha" th:text="#{parametros.qtd.erro.senha}"/>
+					</div>
+					<div class="col-sm-3 form-group">
+						<input class="form-control input-sm" th:field="*{qtdErrarSenha}" onkeypress="return apenasNumeros(event)" maxlength="3" th:disabled="*{flQtdErrarSenha} == 1 ? true : false" />
+					</div>
+
+					<div class="col-sm-2">
+						<label class="control-label" for="fl_qtdErrarSenha"	th:text="#{parametros.limite.erro}">Sem limites de erros:</label>
+					</div>
+					<div class="col-sm-2 form-group">
+						<select class="form-control input-sm" id="fl_qtdErrarSenha" th:field="*{flQtdErrarSenha}" onchange="enableOrDisable('qtdErrarSenha')">
+							<option value="1">Sim</option>
+							<option value="0">Não</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3">
+						<label class="control-label required" for="grupoPrestadora" th:text="#{parametros.grupo.prestadora}">Grupo Prestadora: </label>
+					</div>
+					<div class="col-sm-2 form-group">
+						<select class="form-control input-sm" id="grupoPrestadora" th:field="*{grupoPrestadora.id}" >
+							<option th:each="grupoPrestadora : ${listaGrupoPrestadora}" th:value="${grupoPrestadora.key}" th:text="${grupoPrestadora.value}">Grupo Prestadora</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3">
+						<label class="control-label required" for="acessoSimultaneo" th:text="#{parametros.acesso.simultaneo}">Acesso Simultaneo: </label>
+					</div>
+					<div class="col-sm-2 form-group">
+						<select class="form-control input-sm" id="acessoSimultaneo"	th:field="*{flAcessoSimultaneo}">
+							<option value="1">Sim</option>
+							<option value="0">Não</option>
 						</select>
 					</div>
 				</div>
 
-
 				<div class="form-group buttonsGroup">
-					<button class="pui-button" type="submit">
+					<a id="limparCampos" th:href="@{'/parametro'}">
+						<label th:text="#{botao.limpar}"></label>
+					</a>
+					<button id="submitBt" type="submit">
 						<label th:text="#{botao.cadastrar}"></label>
 					</button>
-					<a class="pui-button" th:href="@{'/usuarioCadastro'}"> <label
-						th:text="#{botao.limpar}"></label>
-					</a>
 				</div>
 
 			</form>
@@ -142,27 +113,47 @@
 	<div layout:fragment="javascript-support">
 		<script type="text/javascript" src="../../resources/js/jquery.mask.js"
 			th:src="@{/resources/js/jquery.mask.js}"></script>
-
-		<script>
-			$(function (){
-			  	var sourceData = [(${grupoPerfisSourceJSON})];
-			  	var targetData = [(${grupoPerfisTargetJSON})];
-				$('#listaGrupoPerfil').puipicklist({
-			        sourceCaption: 'Disponíveis',
-			        targetCaption: 'Selecionados',
-			        filter: true,
-			        filterMatchMode: 'contains',
-			        sourceData: sourceData,
-			        targetData: targetData,
-			        reponsive: true,
-				});
-				
-				$('#telefoneFixo').mask('(00) 0000-0000');
-				$('#telefone').mask('(00) 00000-0000');
-				$('#cpf').mask('999.999.999-99' );
-			});
 			
-		</script>
+		<script type="text/javascript">
+			function apenasNumeros(e){
+			    var tecla=(window.event)?event.keyCode:e.which;   
+			    if((tecla>47 && tecla<58)) return true;
+			    else{
+			    	if (tecla==8 || tecla==0) return true;
+				else  return false;
+			    }
+			}
+	
+			function enableOrDisable(campo) {
+				console.log($("#fl_"+campo).val()==1);
+				if($("#fl_"+campo).val()==1) {
+					 $("#"+campo).prop( "disabled", true );
+					 $("#"+campo).val("");
+					 $("#label_"+campo)[0].classList.remove("required");
+				}
+				else {
+					 $("#"+campo).prop( "disabled", false );
+					 $("#label_"+campo)[0].classList.add("required");
+				}
+				 
+			}
+
+			enableOrDisable('prazoExpirarSenha');
+			enableOrDisable('bloquearInatividade');
+			enableOrDisable('qtdErrarSenha');
+
+			$('#limparCampos').puibutton({
+				icon: 'fa-eraser',
+				click: function(event){
+				}
+			});
+
+			$('#submitBt').puibutton({
+				icon: 'fa-check',					
+			    click: function(event) {
+			    }
+			});
+  		</script>
 	</div>
 
 </body>
