@@ -5,18 +5,22 @@
 		<nav class="navbar navbar-icon-top navbar-default">
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
-					<div id="userBoxMobile" class="container-fluid hidden-sm hidden-md hidden-lg">
-						<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
+					<div id="userBoxMobile" class="col-xs-11 container-fluid hidden-sm hidden-md hidden-lg">
+						<div class="col-xs-4">
+							<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
 		    				Usuário: <span th:text="${#authentication.principal.nmUsuario}"></span> 
-		    			</span>
-		    			<br/>
-		    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
+		    				</span>
+						</div>
+						<div class="col-xs-4">
+							<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
 		    				Empresa: <span th:text="${#authentication.principal.prestadora}"></span>
-		    			</span> 
-		    			<br/>
-		    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
-		    				Grupo: <span th:text="${#authentication.principal.grupoPrestadora}"></span>
-		    			</span>
+		    				</span> 
+						</div>
+		    			<div class="col-xs-4">
+			    			<span style="color: #6179A1 !important;font-size: 12px !important;font-weight: normal;">
+			    				Grupo: <span th:text="${#authentication.principal.grupoPrestadora}"></span>
+			    			</span>
+		    			</div>
 					</div>
 					<button type="button" class="navbar-toggle collapsed"
 						data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"

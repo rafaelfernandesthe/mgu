@@ -99,7 +99,6 @@
 				<div class="form-group buttonsGroup">
 					<a id="limparCampos" th:href="@{'/parametro'}">
 						<label th:text="#{botao.limpar}"></label>
-						<span class="ui-button-icon-left ui-c fa fa-fw fa-eraser"></span>
 					</a>
 					<button id="submitBt" type="submit">
 						<label th:text="#{botao.cadastrar}"></label>
@@ -146,14 +145,6 @@
 			$('#limparCampos').puibutton({
 				icon: 'fa-eraser',
 				click: function(event){
-					$('#nome').val('');
-					$('#username').val('');
-					$('#email').val('');
-					$('#cargo').val('');
-					$('#telefone').val('');
-					$('#cpf').val('');
-					$('#grupoPerfilFiltro').puidropdown('selectValue', '');
-					$('#statusFiltro').puidropdown('selectValue', '');
 				}
 			});
 

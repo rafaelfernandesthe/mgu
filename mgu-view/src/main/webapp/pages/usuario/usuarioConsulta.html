@@ -140,7 +140,14 @@
 				$('#limparCampos').puibutton({
 					icon: 'fa-eraser',
 					click: function(event){
-						window.location.reload(false); 
+						$('#nome').val('');
+						$('#username').val('');
+						$('#email').val('');
+						$('#cargo').val('');
+						$('#telefone').val('');
+						$('#cpf').val('');
+						$('#grupoPerfilFiltro').puidropdown('selectValue', '');
+						$('#statusFiltro').puidropdown('selectValue', '');
 					}
 				});
 			
