@@ -98,11 +98,11 @@
 				$('#content').show();
 				
 				//mensagem padrão de sucesso
-				var param = getUrlParams('success');
-				if(param != undefined && param != '' && param != null){
+				var success = getUrlParams('success');
+				if(success != undefined && success != '' && success != null){
 					var msgText = getUrlParams('msgText');
 					if(msgText != undefined && msgText != '' && msgText != null){	
-						showMessage('info', unescape(msgText));
+						showMessage('info', decodeURIComponent(msgText));
 						removeUrlParams('msgText');
 					}else {
 						showMessage('info','Operação realizada com sucesso!');

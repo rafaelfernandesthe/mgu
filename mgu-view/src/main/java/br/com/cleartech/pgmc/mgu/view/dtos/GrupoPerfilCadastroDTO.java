@@ -92,4 +92,9 @@ public class GrupoPerfilCadastroDTO implements Serializable {
 		this.urlConsulta = urlConsulta;
 	}
 
+	@Override
+	public String toString() {
+		return "GrupoPerfilCadastroDTO [id=" + id + ", noGrupoPerfil=" + noGrupoPerfil + ", perfisIdList=" + perfisIdList + ", prestadora=" + prestadora.toString() + "]";
+	}
+
 }

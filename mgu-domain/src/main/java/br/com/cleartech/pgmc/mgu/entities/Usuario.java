@@ -110,7 +110,7 @@ public class Usuario implements Serializable {
 	private Date ultimoAcesso;
 
 	@Column( name = "QT_TENTATIVA_ACESSO" )
-	private Long qtTentativaAcesso;
+	private Long qtTentativaAcesso = 0l;
 
 	@Temporal( value = TemporalType.TIMESTAMP )
 	@Column( name = "ULTIMA_TROCA_SENHA" )
@@ -169,7 +169,7 @@ public class Usuario implements Serializable {
 	private boolean flEnvioEmail;
 
 	@Column( name = "FL_USUARIO_SISTEMA" )
-	private Integer flUsuarioSistema;
+	private Integer flUsuarioSistema = 0;
 
 	@Transient
 	@XmlElement( name = "grupo_prestadora" )

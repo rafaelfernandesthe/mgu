@@ -88,17 +88,16 @@ function show_puidialog(identifierDialog, reqType, urlTarget){
 	                click: function() {
 	                	$('#dlg').puidialog('show');
 	                	
-	                	var msgText = $.ajax({
+	                	$.ajax({
 		                    type: reqType,
-		                    async: false,
 		                    url: getAppPath() + urlTarget,
 		                    beforeSend: function (xhr) {
 		                        xhr.setRequestHeader(header, token);
 		                    },
 		                    context: this,
-		                }).responseText;
-	                	
-	                	document.location = document.location+'&success=1&msgText='+msgText;
+		                }).done(function(msg) {
+		                			document.location = document.location+'&success=1&msgText='+msg;
+		                		});
 	                	
 	                }
 	            },

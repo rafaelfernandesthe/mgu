@@ -33,7 +33,6 @@ import br.com.cleartech.pgmc.mgu.services.PerfilService;
 import br.com.cleartech.pgmc.mgu.services.PrestadoraPMSMercadoService;
 import br.com.cleartech.pgmc.mgu.services.UsuarioService;
 import br.com.cleartech.pgmc.mgu.utils.SistemaUtils;
-import br.com.cleartech.pgmc.mgu.utils.XmlUtils;
 
 @Component
 public class LoginControllerService {
@@ -72,9 +71,6 @@ public class LoginControllerService {
 	@Autowired
 	private DelegadoService delegadoService;
 
-	@Autowired
-	private LoginControllerService loginControllerService;
-
 	public Object processarLoginIntegracao( Usuario usuarioRequest ) throws Exception {
 		Boolean valido = ldapService.existeUsuario( usuarioRequest.getDcUsername(), usuarioRequest.getDcSenha() );
 		String sistemaUsuario = usuarioRequest.getSistema();
@@ -83,7 +79,7 @@ public class LoginControllerService {
 		// USUARIO VALIDO LDAP
 		if ( valido && usuario != null ) {
 
-			Object mguResponse = responseValidaDynamicsECredenciamento( usuarioRequest, sistemaUsuario, usuario );
+			Object mguResponse = responseValidaDynamicsECredenciamento( usuarioRequest, sistemaUsuario, usuario, false );
 			if ( mguResponse != null ) {
 				return mguResponse;
 			}
@@ -128,7 +124,7 @@ public class LoginControllerService {
 		// USUARIO VALIDO LDAP
 		if ( valido && usuario != null ) {
 
-			Object mguResponse = responseValidaDynamicsECredenciamento( usuarioRequest, sistemaUsuario, usuario );
+			Object mguResponse = responseValidaDynamicsECredenciamento( usuarioRequest, sistemaUsuario, usuario, true );
 			if ( mguResponse != null ) {
 				return mguResponse;
 			}
@@ -157,7 +153,7 @@ public class LoginControllerService {
 				}
 
 				// VALIDACAO USUARIO MENSAGERIA SNOA
-				if ( usuario.getFlUsuarioSistema().equals( 1 ) ) {
+				if ( usuario.getFlUsuarioSistema() != null && usuario.getFlUsuarioSistema().equals( 1 ) ) {
 					Perfil administrador = usuario.getPerfil();
 					Prestadora prestadora = usuario.getPrestadoras().get( 0 );
 					perfis = new ArrayList<PerfilDTO>();
@@ -191,17 +187,18 @@ public class LoginControllerService {
 
 	}
 
-	private Object responseValidaDynamicsECredenciamento( Usuario usuarioRequest, String sistemaUsuario, Usuario usuario ) {
+	private Object responseValidaDynamicsECredenciamento( Usuario usuarioRequest, String sistemaUsuario, Usuario usuario, boolean perfisAgrupado ) {
 		if ( SistemaUtils.DYNAMICS.equalsIgnoreCase( sistemaUsuario ) && !usuario.getFlEnviarDynamics() ) {
 			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_26 );
-		} else if ( !SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) && !usuario.getFlAprovado() ) {
+		} else if ( !usuario.getFlAprovado() && ( ( perfisAgrupado && SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) ) || ( !perfisAgrupado && !SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) ) ) ) {
 			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_8 );
 		}
+
 		return null;
 	}
 
 	private Object responseUsuarioInvalidoLdap( Usuario usuario ) {
-		usuario.setQtTentativaAcesso( usuario.getQtTentativaAcesso() + 1 );
+		usuario.setQtTentativaAcesso( usuario.getQtTentativaAcesso() == null ? 1 : usuario.getQtTentativaAcesso() + 1 );
 
 		ParametroSistema parametroSistema = parametroSistemaService.findByGrupoPrestadoraId( usuario.getPrestadoras().get( 0 ).getGrupoPrestadora().getId() );
 		if ( parametroSistema != null && parametroSistema.getFlQtdErrarSenha().equals( 1 ) ) {

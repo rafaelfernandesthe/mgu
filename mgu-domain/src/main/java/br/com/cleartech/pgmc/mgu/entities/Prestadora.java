@@ -124,4 +124,9 @@ public class Prestadora implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Prestadora [id=" + id + ", noPrestadora=" + noPrestadora + "]";
+	}
+
 }
