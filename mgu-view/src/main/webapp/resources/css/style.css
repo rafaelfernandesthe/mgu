@@ -168,10 +168,6 @@ body {
 	color: white !important;
 }
 
-.fa.fa-fw.fa-search {
-	color: lightblue !important;
-}
-
 .label {
 	text-align: right;
 }
@@ -205,7 +201,8 @@ img, .row-fluid {
 
 label.control-label {
 	width : 100%;
-	text-align: right;
+	text-align: left;
+	vertical-align: -webkit-baseline-middle;
 } 
 
 .field-error {
@@ -213,9 +210,28 @@ label.control-label {
 }
 
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
-    border: 10px solid #e0f79b;
-    background: #e0f79b;
+    border: 5px solid #e9e9e9;
+    background: #e9e9e9;
     color: #000000;
+}
+
+.ui-state-highlight, .ui-widget-content td.ui-state-highlight {
+    border: 2px solid #e9e9e9;
+    background: #e9e9e9;
+}
+
+.ui-growl-item-container {
+    position: relative;
+    margin: 0 0 10px 0;
+    opacity: 0.85;
+    filter: alpha(opacity=85);
+    border: none;
+}
+
+.ui-shadow {
+    -webkit-box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
 }
 
 .ui-dropdown {
@@ -246,6 +262,8 @@ label.control-label {
 
 .ui-breadcrumb {
 	margin: 10px 0px !important;	
+	pointer-events: none;
+  	cursor: default;
 }
 
 .ui-panel {

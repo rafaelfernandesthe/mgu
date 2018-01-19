@@ -7,6 +7,7 @@ $('.pui-panel').puipanel();
 $('.pui-dropdown').puidropdown();
 $('#growl').puigrowl();
 showMessage = function(level, msg) {
+	$('#growl').puigrowl('option', 'life', 15000);
     $('#growl').puigrowl('show', [{severity: level, summary: '', detail: msg}]);
     
 };
