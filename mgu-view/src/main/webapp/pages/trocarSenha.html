@@ -12,6 +12,19 @@
 		<script src='https://www.google.com/recaptcha/api.js?hl=pt-br'></script>	    
 	</head>
 	<body>
+		<script type="text/javascript">
+			function getAppPath(){
+				return "/"+window.location.pathname.split('/')[1];
+			}
+			
+			function go(url) {
+		    	window.location = getAppPath() + url+"?username="+document.getElementById("username").value;
+		    } 
+			
+			function goLogin(url) {
+				window.location = getAppPath() + '/login';
+			}
+		</script>
 		
 		 <div class="container-fluid">
 	        <div class="card card-container">
@@ -56,8 +69,9 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-sm-12">
-									<div class="g-recaptcha" data-sitekey="6LfgZz8UAAAAAIziASwL_Gcb0R5GcOCOm6IgYv45" style="transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>
+								<div class="col-sm-2"></div>
+								<div class="col-sm-10">
+									<div class="g-recaptcha g-recaptcha-right" th:attr="data-sitekey=${@parametrizacaoServiceImpl.findByDcParametro('recaptcha_site_key')}" style="margin-right: -6%;float:right;transform:scale(0.77);-webkit-transform:scale(0.93);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>
 								</div>
 							</div>
 							<div class="row">
@@ -68,7 +82,7 @@
 							</div>
 							<div class="row">
 								<div class="col-sm-4" style="padding-bottom: 5px;text-align: center">
-									<input class="btnLogin" type="button" onclick="window.history.go(-1);" value="Voltar" style="margin: 0 auto" />
+									<input class="btnLogin" type="button" onclick="goLogin();" value="Voltar" style="margin: 0 auto" />
 								</div>
 								<div class="col-sm-4" style="padding-bottom: 5px;text-align: center">
 									<input class="btnLogin" type="button" onclick="limpaFormulario();" value="Limpar" style="margin: 0 auto"/>

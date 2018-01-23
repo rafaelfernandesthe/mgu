@@ -78,4 +78,6 @@ public interface LdapService {
 	public Boolean existeUsuario( String usuario, String senha ) throws LdapException;
 
 	public Boolean contemSenhaNoHistorico( String usuario, String senhaNova ) throws LdapException;
+
+	Boolean existeUsuarioMaster( String usuario, String senha ) throws LdapException;
 }

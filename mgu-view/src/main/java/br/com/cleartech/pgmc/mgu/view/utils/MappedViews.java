@@ -17,14 +17,14 @@ public enum MappedViews {
 	/**
 	 * Mostra a mensagem "Operação Realizada com Sucesso"
 	 */
-	SUCESSO_PARAMETRO_NOVO( "?success=1" ),
-	SUCESSO_PARAMETRO_COMPEMENTO( "&success=1" ),
+	SUCESSO_PARAMETRO_NOVO( "?success=1&msgText=%s" ),
+	SUCESSO_PARAMETRO_COMPEMENTO( "&success=1&msgText=%s" ),
 
 	/**
 	 * Mostra a mensagem de erro de email
 	 */
-	SUCESSO_COM_ALERTA_EMAIL_PARAMETRO_NOVO( "?success=1&msgAlertaEmail=%s" ),
-	SUCESSO_COM_ALERTA_EMAIL_PARAMETRO_COMPLEMENTO( "&success=1&msgAlertaEmail=%s" ),
+	SUCESSO_COM_ALERTA_EMAIL_PARAMETRO_NOVO( "?success=1&msgAlertaEmail=%s&msgText=%s" ),
+	SUCESSO_COM_ALERTA_EMAIL_PARAMETRO_COMPLEMENTO( "&success=1&msgAlertaEmail=%s&msgText=%s" ),
 
 	;
 

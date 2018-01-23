@@ -96,7 +96,8 @@ function show_puidialog(identifierDialog, reqType, urlTarget){
 		                    },
 		                    context: this,
 		                }).done(function(msg) {
-		                			document.location = document.location+'&success=1&msgText='+msg;
+		                			var sucesso = msg.match(/sucesso/i) ? 1 : 0;
+		                			document.location = document.location+'&success='+sucesso+'&msgText='+msg;
 		                		});
 	                	
 	                }

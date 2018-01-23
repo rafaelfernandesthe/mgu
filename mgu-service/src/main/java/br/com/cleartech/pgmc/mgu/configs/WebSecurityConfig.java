@@ -43,10 +43,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure( HttpSecurity http ) throws Exception {
-		CharacterEncodingFilter filter = new CharacterEncodingFilter( "UTF-8" );
-		filter.setForceEncoding( true );
 		//@formatter:off
-        http.addFilterBefore( filter, CsrfFilter.class )
+        http.addFilterBefore( new CharacterEncodingFilter( "UTF-8", true ), CsrfFilter.class )
+        	.addFilterBefore( new WebLoggingFilter(), CsrfFilter.class )
             .authorizeRequests()
                 .antMatchers("/resources/js/*","/resources/img/*","/resources/img/login/*","/resources/css/*",
                 				"/senha/problemaSenha","/senha/trocarSenha", "/senha/recuperarSenha", "/senha/salvarNovaSenha").permitAll()

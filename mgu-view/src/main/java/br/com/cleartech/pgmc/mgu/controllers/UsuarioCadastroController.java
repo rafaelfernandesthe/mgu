@@ -58,7 +58,7 @@ public class UsuarioCadastroController {
 
 	@GetMapping( "/teste" )
 	public String teste( Model model ) {
-		ldapService.alterarUsuarioParaMaster( "rfernandes_claro" );
+		ldapService.alterarMasterParaUsuario( "rfernandes_claro" );
 		return init( model );
 	}
 
@@ -102,13 +102,14 @@ public class UsuarioCadastroController {
 		}
 
 		if ( !bindingResult.hasErrors() ) {
+			String mensagem = "Usuário salvo com sucesso!";
 			try {
 				LOGGER.info( "salvando: " + usuarioDto.toString() );
 				usuarioDto.setPrestadora( prestadoraService.findById( MguUtils.getUsuarioLogado().getIdPrestadora() ) );
 				usuarioService.salvar( usuarioDto.getUsuario(), false );
-				return "redirect:/usuarioConsulta/s" + MappedViews.SUCESSO_PARAMETRO_NOVO.getPath();
+				return "redirect:/usuarioConsulta/s" + String.format( MappedViews.SUCESSO_PARAMETRO_NOVO.getPath(), mensagem );
 			} catch ( MessagingException e ) {
-				return "redirect:/usuarioConsulta/s" + String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO_NOVO.getPath(), e.getMessage() );
+				return "redirect:/usuarioConsulta/s" + String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO_NOVO.getPath(), e.getMessage(), mensagem );
 			} catch ( Exception e ) {
 				bindingResult.addError( new ObjectError( "usuario", e.getMessage() ) );
 			}

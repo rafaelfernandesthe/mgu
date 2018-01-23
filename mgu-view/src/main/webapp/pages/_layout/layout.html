@@ -76,7 +76,7 @@
 	    	<div class="footer hidden-xs">
 		        <label style="float: left;">Sistema MGU</label>
 		      	<label th:if="${session.versionLabel}" th:text="${session.versionLabel}"/>
-		        <label style="float: right;">ABR Telecom © 2017</label>
+		        <label style="float: right;" th:text="${'ABR Telecom © ' + session.currentYear}">ABR Telecom © 2017</label>
 	    	</div>
 	    	<div class="footer visible-xs">
 		        <label style="float: left;">Sistema MGU </label>
@@ -100,15 +100,31 @@
 				//mensagem padrão de sucesso
 				var success = getUrlParams('success');
 				if(success != undefined && success != '' && success != null){
+					var msgTipo = success == '1' ? 'info' : 'error';
 					var msgText = getUrlParams('msgText');
 					if(msgText != undefined && msgText != '' && msgText != null){	
-						showMessage('info', decodeURIComponent(msgText));
+						try{
+							msgText = decodeURIComponent(msgText);
+						} catch(e){
+							console.log('falha na tentativa de decodeURIComponent()');
+							msgText = unescape(msgText);
+						}
+						
+						showMessage(msgTipo, msgText);
 						removeUrlParams('msgText');
 					}else {
 						showMessage('info','Operação realizada com sucesso!');
 					}
+					
+					var msgAlertaEmail = getUrlParams('msgAlertaEmail');
+					if(msgAlertaEmail != undefined && msgAlertaEmail != '' && msgAlertaEmail != null){
+						removeUrlParams('msgAlertaEmail');
+					}
+					
 					removeUrlParams('success');
 				}
+				
+					
 
 				//remover todos os parametros de url na tela de consulta 
 				//window.history.replaceState(null, null, window.location.pathname.replace(/\/s$/g,''));

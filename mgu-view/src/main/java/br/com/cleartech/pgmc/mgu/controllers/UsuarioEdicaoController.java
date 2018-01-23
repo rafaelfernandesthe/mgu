@@ -91,6 +91,7 @@ public class UsuarioEdicaoController {
 		usuarioDto.setGrupoPerfis( groupSelecteds );
 
 		if ( !bindingResult.hasErrors() ) {
+			String mensagem = "Usuário alterado com sucesso!";
 			try {
 				LOGGER.info( "salvando: " + usuarioDto.toString() );
 				usuarioDto.setPrestadora( prestadoraService.prestadoraPorUsername( MguUtils.getUsuarioLogado().getDcUsername() ) );
@@ -98,12 +99,12 @@ public class UsuarioEdicaoController {
 				usuarioService.salvarEditar( usuarioDto.getUsuario(), usuarioDB );
 
 				if ( usuarioDto.getUrlConsulta() != null ) {
-					return "redirect:" + usuarioDto.getUrlConsulta() + MappedViews.SUCESSO_PARAMETRO_COMPEMENTO.getPath();
+					return "redirect:" + usuarioDto.getUrlConsulta() + String.format( MappedViews.SUCESSO_PARAMETRO_COMPEMENTO.getPath(), mensagem );
 				} else {
-					return "redirect:/usuarioConsulta" + MappedViews.SUCESSO_PARAMETRO_NOVO.getPath();
+					return "redirect:/usuarioConsulta" + String.format( MappedViews.SUCESSO_PARAMETRO_NOVO.getPath(), mensagem );
 				}
 			} catch ( MessagingException e ) {
-				return "redirect:/usuarioConsulta" + String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO_NOVO.getPath(), e.getMessage() );
+				return "redirect:/usuarioConsulta" + String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO_NOVO.getPath(), e.getMessage(), mensagem );
 			} catch ( Exception e ) {
 				bindingResult.addError( new ObjectError( "usuario", e.getMessage() ) );
 			}

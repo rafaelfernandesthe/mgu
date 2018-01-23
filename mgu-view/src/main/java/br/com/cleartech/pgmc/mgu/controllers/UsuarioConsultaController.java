@@ -1,5 +1,6 @@
 package br.com.cleartech.pgmc.mgu.controllers;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.UriUtils;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
@@ -39,12 +41,12 @@ public class UsuarioConsultaController {
 		model.addAttribute( "usuario", new UsuarioConsultaDTO() );
 		model.addAttribute( "grupoPerfisJSON", MguUtils.getVO2JSON( getGrupoPerfis(), "id", "noGrupoPerfil" ) );
 		model.addAttribute( "usuariosJSON", MguUtils.getJSON( new ArrayList<Usuario>() ) );
-		model.addAttribute( "msgAlertaEmail", request.getParameter( "msgAlertaEmail" ) );
 		return MappedViews.USUARIO_CONSULTA.getPath();
 	}
 
 	@GetMapping( "/s" )
-	public String lista( @ModelAttribute( "usuario" ) UsuarioConsultaDTO usuarioDTO, Model model ) {
+	public String lista( @ModelAttribute( "usuario" ) UsuarioConsultaDTO usuarioDTO, Model model, HttpServletRequest request ) {
+		model.addAttribute( "msgAlertaEmail", request.getParameter( "msgAlertaEmail" ) );
 		List<Usuario> lista = usuarioService.find( usuarioDTO.getUsuario(), MguUtils.getUsuarioLogado().getIdPrestadora() );
 		model.addAttribute( "usuariosJSON", MguUtils.getJSON( lista ) );
 		return MappedViews.USUARIO_CONSULTA.getPath();
@@ -86,7 +88,7 @@ public class UsuarioConsultaController {
 			usuarioService.resetar( idUsuario, MguUtils.getUsuarioLogado().getDcUsername() );
 		} catch ( Exception e ) {
 			e.printStackTrace();
-			return "Ocorreu um erro ao tentar realizar o reset da senha!";
+			return "Ocorreu um erro ao tentar realizar o reset da senha!. " + e.getMessage();
 		}
 
 		return "Reset da senha realizado com sucesso!";
@@ -99,7 +101,7 @@ public class UsuarioConsultaController {
 			usuarioService.bloquear( usuarioService.find( idUsuario ), false );
 		} catch ( Exception e ) {
 			e.printStackTrace();
-			return "Ocorreu um erro ao tentar bloquear o Usuário";
+			return "Ocorreu um erro ao tentar bloquear o Usuário! " + e.getMessage();
 		}
 
 		return "Usuário bloqueado com sucesso!";
@@ -112,7 +114,7 @@ public class UsuarioConsultaController {
 			usuarioService.desbloquear( usuarioService.find( idUsuario ) );
 		} catch ( Exception e ) {
 			e.printStackTrace();
-			return "Ocorreu um erro ao tentar desbloquear o Usuário";
+			return "Ocorreu um erro ao tentar desbloquear o Usuário! " + e.getMessage();
 		}
 
 		return "Usuário desbloqueado com sucesso!";

@@ -1,5 +1,7 @@
 package br.com.cleartech.pgmc.mgu.controllers;
 
+import java.util.Calendar;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -26,6 +28,7 @@ public class LoginController {
 	@GetMapping( "/login" )
 	public String login( Model model, HttpServletRequest request ) {
 		request.getSession().setAttribute( "versionLabel", versionLabel );
+		request.getSession().setAttribute( "currentYear", Calendar.getInstance().get( Calendar.YEAR ) );
 
 		Object loginError = request.getSession().getAttribute( WebAttributes.AUTHENTICATION_EXCEPTION );
 		if ( loginError != null ) {

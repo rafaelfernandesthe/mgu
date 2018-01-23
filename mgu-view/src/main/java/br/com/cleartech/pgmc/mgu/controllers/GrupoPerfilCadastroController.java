@@ -75,7 +75,7 @@ public class GrupoPerfilCadastroController {
 				LOGGER.info( "salvando: " + grupoPerfilDto.toString() );
 				grupoPerfilDto.setPrestadora( prestadoraService.prestadoraPorUsername( MguUtils.getUsuarioLogado().getDcUsername() ) );
 				grupoPerfilService.salvar( grupoPerfilDto.getGrupoPerfil() );
-				return "redirect:/grupoPerfilConsulta/s" + MappedViews.SUCESSO_PARAMETRO_NOVO.getPath();
+				return "redirect:/grupoPerfilConsulta/s" + String.format( MappedViews.SUCESSO_PARAMETRO_NOVO.getPath(), "Grupo de Perfil Cadastrado com sucesso!" );
 			} catch ( Exception e ) {
 				bindingResult.addError( new ObjectError( "grupoPerfil", e.getMessage() ) );
 			}

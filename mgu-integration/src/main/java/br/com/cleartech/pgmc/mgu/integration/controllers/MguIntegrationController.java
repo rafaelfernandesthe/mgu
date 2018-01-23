@@ -68,7 +68,7 @@ public class MguIntegrationController {
 
 	@PostMapping( "/sistema" )
 	public MguResponse getPerfis( @RequestBody Sistema sistema ) throws Exception {
-		logger.info( "/sistema -> getPerfis(): " + sistema.toString() );
+		logger.info( sistema.toString() );
 		CodigoMensagem codigo = null;
 		MguResponse mgu = new MguResponse();
 		if ( sistema == null || sistema.getDcSistema() == null || sistema.getDcSistema().isEmpty() ) {
@@ -95,21 +95,21 @@ public class MguIntegrationController {
 
 	@PostMapping( "/integracao" )
 	public Object getLogin( @RequestBody Usuario usuarioRequest ) throws Exception {
-		logger.info( "/integracao -> getLogin(): " + usuarioRequest.toString() );
+		logger.info( usuarioRequest.toString() );
 		return loginControllerService.processarLoginIntegracao( usuarioRequest );
 
 	}
 
 	@PostMapping( "/integracaoperfil" )
 	public Object getLoginPerfisAgrupado( @RequestBody Usuario usuarioRequest ) throws Exception {
-		logger.info( "/integracaoperfil -> getLoginPerfisAgrupado(): " + usuarioRequest.toString() );
+		logger.info( usuarioRequest.toString() );
 		return loginControllerService.processarLoginIntegracaoPerfil( usuarioRequest );
 
 	}
 
 	@PostMapping( "/criarusuariomaster" )
 	public Object criarUsuarioMaster( @RequestBody UsuarioMasterRequest usuarioMaster ) {
-		logger.info( "/criarusuariomaster -> criarUsuarioMaster(): " + usuarioMaster.toString() );
+		logger.info( usuarioMaster.toString() );
 		Object mguResponse;
 		Usuario usuario;
 		Boolean existeUsuario;
@@ -161,7 +161,7 @@ public class MguIntegrationController {
 
 	@PostMapping( "/trocarusuariomaster" )
 	public Object trocarUsuarioMaster( @RequestBody UsuarioMasterRequest usuarioMasterNovoRequest ) {
-		logger.info( "/trocarusuariomaster -> trocarUsuarioMaster(): " + usuarioMasterNovoRequest.toString() );
+		logger.info( usuarioMasterNovoRequest.toString() );
 		Object mguResponse;
 		try {
 
@@ -209,7 +209,7 @@ public class MguIntegrationController {
 
 	@PostMapping( "/aprovarusuario" )
 	public Object aprovarUsuario( @RequestBody UsuarioMasterRequest usuarioMasterRequest ) throws Exception {
-		logger.info( "/aprovarusuario -> aprovarUsuario(): " + usuarioMasterRequest.toString() );
+		logger.info( usuarioMasterRequest.toString() );
 		Object mguResponse = null;
 		try {
 			Usuario usuario = usuarioService.findByUsername( usuarioMasterRequest.getUserName() );
@@ -228,7 +228,7 @@ public class MguIntegrationController {
 
 	@PostMapping( "/logout" )
 	public Object logout( @RequestBody LogoutRequest logoutRequest ) throws Exception {
-		logger.info( "/logout -> logout(): " + logoutRequest.toString() );
+		logger.info( logoutRequest.toString() );
 		acessoSimultaneoService.deletarByUsername( logoutRequest.getUsuario() );
 
 		MguResponse mguResponse = new MguResponse();
@@ -240,7 +240,7 @@ public class MguIntegrationController {
 
 	@PostMapping( "/consultaUsuario" )
 	public Object consultaUsuario( @RequestBody UsuarioMasterRequest usuarioMasterRequest ) throws Exception {
-		logger.info( "/consultaUsuario -> consultaUsuario(): " + usuarioMasterRequest.toString() );
+		logger.info( usuarioMasterRequest.toString() );
 		boolean usuarioExiste = usuarioService.existsByUsernameIgnoreCase( usuarioMasterRequest.getUserName() );
 		MguResponse mguResponse = new MguResponse();
 		if ( usuarioExiste ) {
@@ -256,7 +256,7 @@ public class MguIntegrationController {
 
 	@PostMapping( "/criarperfil" )
 	public Object criarPerfil( @RequestBody PerfilRequest perfilRequest ) throws Exception {
-		logger.info( "/criarperfil -> criarperfil(): " + perfilRequest.toString() );
+		logger.info( perfilRequest.toString() );
 		Sistema sistema = sistemaService.findByDcSistemaIgnoreCase( perfilRequest.getSistema().getNome() );
 		if ( sistema != null ) {
 			perfilService.criarPerfil( perfilRequest.getNome(), sistema );
@@ -268,7 +268,7 @@ public class MguIntegrationController {
 
 	@PostMapping( "/criarperfiloperadora" )
 	public Object criarPerfilOperadora( @RequestBody PerfilOperadoraRequest perfilOperadoraRequest ) throws Exception {
-		logger.info( "/criarperfiloperadora -> criarperfiloperadora(): " + perfilOperadoraRequest.toString() );
+		logger.info( perfilOperadoraRequest.toString() );
 		Sistema sistema = sistemaService.findByDcSistemaIgnoreCase( perfilOperadoraRequest.getSistema().getNome() );
 		if ( sistema != null ) {
 			List<TipoOperadora> tipoOperadoras = new ArrayList<TipoOperadora>();

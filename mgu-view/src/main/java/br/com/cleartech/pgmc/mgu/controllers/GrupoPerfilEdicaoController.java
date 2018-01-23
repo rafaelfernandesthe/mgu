@@ -72,12 +72,13 @@ public class GrupoPerfilEdicaoController {
 
 		if ( !bindingResult.hasErrors() ) {
 			try {
+				String mensagem = "Grupo de Perfil Alterado com sucesso!";
 				LOGGER.info( "salvando: " + grupoPerfilDto.toString() );
 				grupoPerfilService.salvarEditar( grupoPerfilDto.getGrupoPerfil(), grupoPerfilDB );
 				if ( grupoPerfilDto.getUrlConsulta() != null ) {
-					return "redirect:" + grupoPerfilDto.getUrlConsulta() + MappedViews.SUCESSO_PARAMETRO_COMPEMENTO.getPath();
+					return "redirect:" + grupoPerfilDto.getUrlConsulta() + String.format( MappedViews.SUCESSO_PARAMETRO_COMPEMENTO.getPath(), mensagem );
 				} else {
-					return "redirect:/grupoPerfilConsulta" + MappedViews.SUCESSO_PARAMETRO_NOVO.getPath();
+					return "redirect:/grupoPerfilConsulta" + String.format( MappedViews.SUCESSO_PARAMETRO_NOVO.getPath(), mensagem );
 				}
 			} catch ( Exception e ) {
 				bindingResult.addError( new ObjectError( "grupoPerfil", e.getMessage() ) );

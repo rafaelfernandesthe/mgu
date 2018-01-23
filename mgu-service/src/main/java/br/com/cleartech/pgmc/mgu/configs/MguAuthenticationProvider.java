@@ -42,11 +42,10 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 
 	@Override
 	protected MguUserDetails retrieveUser( String username, UsernamePasswordAuthenticationToken authentication ) throws AuthenticationException {
-		logger.info( "MguAuthenticationProvider.retrieveUser()" );
 		logger.info( "Tentativa de Login com {}", username );
 		String passwEncoded = GeradorSenha.md5( authentication.getCredentials().toString() );
 		try {
-			boolean usuarioLdapValido = ldapService.existeUsuario( authentication.getName(), passwEncoded );
+			boolean usuarioLdapValido = ldapService.existeUsuarioMaster( authentication.getName(), passwEncoded );
 			if ( !usuarioLdapValido ) {
 				throw new MguViewAuthenticationException( "Usuário ou senha inválidos" );
 			}

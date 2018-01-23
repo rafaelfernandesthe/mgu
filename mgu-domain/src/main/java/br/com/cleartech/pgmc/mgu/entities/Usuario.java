@@ -121,7 +121,7 @@ public class Usuario implements Serializable {
 	private String nuCpf;
 
 	@Column( name = "FL_APROVADO" )
-	private boolean flAprovado;
+	private boolean flAprovado = true;
 
 	@Column( name = "FL_PRIMEIRO_ACESSO_SNOA" )
 	private boolean flPrimeiroAcessoSNOA;

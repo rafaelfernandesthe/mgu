@@ -13,6 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.base.Strings;
+
+import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
+import br.com.cleartech.pgmc.mgu.services.ParametrizacaoService;
+
 @Service
 @RestController
 public class RecaptchaService {
@@ -20,15 +25,23 @@ public class RecaptchaService {
 	private static final Logger logger = LoggerFactory.getLogger( RecaptchaService.class );
 
 	@Value( "${google.recaptcha.secret}" )
-	String recaptchaSecret;
+	private String recaptchaSecret;
 
 	private static final String GOOGLE_RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify";
+	private static final String msgErroConfiguracao = "Erro na configuração do captcha. Favor entrar em contato com a Central de Serviços através do e-mail: suporte.pgmc@cleartech.com.br.";
 
 	@Autowired
-	RestTemplateBuilder restTemplateBuilder;
+	private RestTemplateBuilder restTemplateBuilder;
+
+	@Autowired
+	private ParametrizacaoService parametrizacaoService;
 
 	public String verifyRecaptcha( String ip, String recaptchaResponse ) {
 		Map<String, String> body = new HashMap<>();
+		String secretKey = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.CAPTCHA_SECRET_KEY.getDcParametro() );
+		if ( Strings.isNullOrEmpty( secretKey ) ) {
+			return msgErroConfiguracao;
+		}
 		body.put( "secret", "6LfgZz8UAAAAAC0rw4DREGCIvPnHDjN33Ck2jXP2" );
 		body.put( "response", recaptchaResponse );
 		body.put( "remoteip", ip );
@@ -50,7 +63,7 @@ public class RecaptchaService {
 			if ( errorCodes != null && !errorCodes.isEmpty() )
 				return "Valor informado no captcha invalido!";
 
-			return "Erro na configuração do captcha. Favor entrar em contato com a Central de Serviços através do e-mail: suporte.pgmc@cleartech.com.br.";
+			return msgErroConfiguracao;
 		} else {
 			return org.apache.commons.lang.StringUtils.EMPTY;
 		}

@@ -94,7 +94,7 @@ public class GrupoPerfilCadastroDTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "GrupoPerfilCadastroDTO [id=" + id + ", noGrupoPerfil=" + noGrupoPerfil + ", perfisIdList=" + perfisIdList + ", prestadora=" + prestadora.toString() + "]";
+		return "GrupoPerfilCadastroDTO [id=" + id + ", noGrupoPerfil=" + noGrupoPerfil + ", perfisIdList=" + perfisIdList + ", prestadora=" + prestadora + "]";
 	}
 
 }

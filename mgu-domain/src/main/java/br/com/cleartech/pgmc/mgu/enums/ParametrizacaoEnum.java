@@ -15,8 +15,12 @@ public enum ParametrizacaoEnum {
 	MAIL_HOST( "mail_host" ),
 	MAIL_PORT( "mail_port" ),
 	MAIL_USERNAME( "mail_username" ),
-	MAIL_PASSWORD( "mail_password" );
-	
+	MAIL_PASSWORD( "mail_password" ),
+	CAPTCHA_SITE_KEY( "recaptcha_site_key" ),
+	CAPTCHA_SECRET_KEY( "recaptcha_secret_key" ),
+
+	;
+
 	private String dcParametro;
 
 	private ParametrizacaoEnum( String dcParametro ) {

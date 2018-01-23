@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.mail.MessagingException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,8 @@ import br.com.cleartech.pgmc.mgu.wsdl.dynamics.DadosRetorno;
 @Service
 @Transactional
 public class UsuarioServiceImpl implements UsuarioService {
+
+	private static final Logger logger = LoggerFactory.getLogger( UsuarioService.class );
 
 	private final List<String> mensagensValidasDynamics = Arrays.asList( "Usuário criado com Sucesso", "Usuário ja possui cadastro. Foram adicionadas as permissões do PGMC", "Usuário ja possui CPF ou Email Cadastrado" );
 
@@ -169,6 +173,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		try {
 			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
+			logger.info( "dynamics ativo? " + dynamicsAtivo );
 			if ( dynamicsAtivo ) {
 				dynamicsService.alterar( usuarioDB, false );
 			}
@@ -248,14 +253,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 		// perfil do antigo.
 		Usuario usuarioMasterAntigo = findUsuarioMasterByUsernameAndIdPrestadora( usernameAnterior, usuarioMasterNovo.getPrestadoras().get( 0 ).getId() );
 		if ( usuarioMasterAntigo != null ) {
-			// usuario novo deve assumir mesmo valor de fl_aprovado do
-			// usuario antigo
-			usuarioMasterNovo.setFlAprovado( usuarioMasterAntigo.getFlAprovado() );
-
+			// usuario novo deve assumir mesmo valor de fl_aprovado do usuario
+			// antigo
+			usuarioMasterNovo.setFlAprovado( new Boolean( usuarioMasterAntigo.getFlAprovado() ) );
 			usuarioMasterNovo.getGrupoPerfis().addAll( new ArrayList<GrupoPerfil>( usuarioMasterAntigo.getGrupoPerfis() ) );
 
-			// usuarioXGrupoPerfilService.deletarPorUsuario( usuarioMasterAntigo
+			usuarioMasterAntigo.setGrupoPerfis( null );
 			bloquear( usuarioMasterAntigo, true );
+
 		}
 
 		usuarioMasterNovo.setFlMaster( true );

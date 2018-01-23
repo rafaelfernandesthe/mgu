@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import com.google.common.base.Strings;
+
 import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
 import br.com.cleartech.pgmc.mgu.services.ParametrizacaoService;
 
@@ -27,7 +29,7 @@ public class MailConfig {
 		String usernameMail = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_USERNAME.getDcParametro() );
 		String passwordMail = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_PASSWORD.getDcParametro() );
 		boolean auth = false;
-		if ( usernameMail != null && passwordMail != null ) {
+		if ( !Strings.isNullOrEmpty( usernameMail ) && !Strings.isNullOrEmpty( passwordMail ) ) {
 			auth = true;
 			mailSender.setUsername( usernameMail );
 			mailSender.setPassword( passwordMail );
@@ -35,8 +37,8 @@ public class MailConfig {
 
 		Properties props = mailSender.getJavaMailProperties();
 		props.put( "mail.smtp.auth", String.valueOf( auth ) );
-		//props.put( "mail.transport.protocol", "smtp" );
-		//props.put( "mail.smtp.starttls.enable", "true" );
+		// props.put( "mail.transport.protocol", "smtp" );
+		// props.put( "mail.smtp.starttls.enable", "true" );
 		// props.put( "mail.debug", "true" );
 
 		return mailSender;

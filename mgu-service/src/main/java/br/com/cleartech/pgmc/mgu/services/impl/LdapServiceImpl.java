@@ -53,32 +53,28 @@ public class LdapServiceImpl implements LdapService {
 	@Override
 	public void alterarUsuarioParaMaster( String usuario ) throws LdapException {
 		try {
-			usuario = "master_claro";
-			usuario = "rfernandes_claro";
 			LdapName dn = LdapNameBuilder.newInstance().add( getUserDn() ).add( "cn", usuario ).build();
 
 			//@formatter:off
 			ContainerCriteria query = LdapQueryBuilder.query()
 				.base( getGrupoDnMaster() )
 				.searchScope( SearchScope.SUBTREE )
-				.where( "uniqueMember" ).is( dn.toString() );
+				.attributes( "uniqueMember" )
+				.where( "uniqueMember" ).is( dn.toString() +","+ getLdapRoot());
 			//@formatter:on
 
 			AttributesMapper<?> attrs = new AttributesMapper<Object>() {
 				@Override
 				public Object mapFromAttributes( Attributes attrs ) throws NamingException {
-					return attrs.getAll();
+					return attrs.get( "uniqueMember" ).get();
 				}
 			};
 
 			List<?> result = ldapTemplate.search( query, attrs );
-			System.out.println( result );
 
-			if ( result == null || !result.isEmpty() ) {
+			// ja esta no grupo master
+			if ( !result.isEmpty() )
 				return;
-			} else if ( 1 == 1 ) {
-				return;
-			}
 
 			Attribute attr = new BasicAttribute( "uniqueMember", dn.toString() + "," + getLdapRoot() );
 
@@ -93,8 +89,38 @@ public class LdapServiceImpl implements LdapService {
 
 	@Override
 	public void alterarMasterParaUsuario( String usuario ) throws LdapException {
-		// TODO Auto-generated method stub
+		try {
+			LdapName dn = LdapNameBuilder.newInstance().add( getUserDn() ).add( "cn", usuario ).build();
 
+			//@formatter:off
+			ContainerCriteria query = LdapQueryBuilder.query()
+				.base( getGrupoDnMaster() )
+				.searchScope( SearchScope.SUBTREE )
+				.attributes( "uniqueMember" )
+				.where( "uniqueMember" ).is( dn.toString() +","+ getLdapRoot());
+			//@formatter:on
+
+			AttributesMapper<?> attrs = new AttributesMapper<Object>() {
+				@Override
+				public Object mapFromAttributes( Attributes attrs ) throws NamingException {
+					return attrs.get( "uniqueMember" ).get();
+				}
+			};
+
+			List<?> result = ldapTemplate.search( query, attrs );
+
+			if ( result.isEmpty() )
+				return;
+
+			Attribute attr = new BasicAttribute( "uniqueMember", dn.toString() + "," + getLdapRoot() );
+
+			ModificationItem item = new ModificationItem( DirContext.REMOVE_ATTRIBUTE, attr );
+			ldapTemplate.modifyAttributes( getGrupoDnMaster(), new ModificationItem[] { item } );
+
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new LdapException( "Erro ao alterarMasterParaUsuario" );
+		}
 	}
 
 	@Override
@@ -196,6 +222,34 @@ public class LdapServiceImpl implements LdapService {
 		if ( result.isEmpty() )
 			return false;
 		return true;
+	}
+
+	@Override
+	public Boolean existeUsuarioMaster( String usuario, String senha ) throws LdapException {
+		LdapName dn = LdapNameBuilder.newInstance().add( getUserDn() ).add( "cn", usuario ).build();
+
+		//@formatter:off
+		ContainerCriteria query = LdapQueryBuilder.query()
+			.base( getGrupoDnMaster() )
+			.searchScope( SearchScope.SUBTREE )
+			.attributes( "uniqueMember" )
+			.where( "uniqueMember" ).is( dn.toString() +","+ getLdapRoot());
+		//@formatter:on
+
+		AttributesMapper<?> attrs = new AttributesMapper<Object>() {
+			@Override
+			public Object mapFromAttributes( Attributes attrs ) throws NamingException {
+				System.out.println( attrs.toString() );
+				return attrs.get( "uniqueMember" ).get();
+			}
+		};
+
+		List<?> result = ldapTemplate.search( query, attrs );
+
+		if ( result.size() == 1 )
+			return existeUsuario( usuario, senha );
+
+		return false;
 	}
 
 	@Override
