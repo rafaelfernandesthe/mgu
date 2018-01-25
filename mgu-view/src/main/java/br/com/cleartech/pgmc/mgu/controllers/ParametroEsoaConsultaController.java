@@ -1,9 +1,7 @@
 package br.com.cleartech.pgmc.mgu.controllers;
 
-
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,12 +25,12 @@ import br.com.cleartech.pgmc.mgu.view.utils.MappedViews;
 import br.com.cleartech.pgmc.mgu.view.utils.MguUtils;
 
 @Controller
-@RequestMapping( "/parametro" )
-public class ParametroConsultaController {
+@RequestMapping( "/parametroEsoa" )
+public class ParametroEsoaConsultaController {
 
 	@Autowired
 	private ParametroSistemaService parametroSistemaService;
-	
+
 	@Autowired
 	private GrupoPrestadoraRepository grupoPrestadoraRepository;
 
@@ -46,15 +44,17 @@ public class ParametroConsultaController {
 			model.addAttribute( "parametroSistema", parametroSistema );
 		}
 
+		List<GrupoPrestadora> allGroups = grupoPrestadoraRepository.findAllByOrderByNoGrupoPrestadoraAsc();
+
 		MguUserDetails usuario = MguUtils.getUsuarioLogado();
 		Map<Long, String> listPrestadora = new LinkedHashMap<Long, String>();
 		listPrestadora.put( usuario.getIdGrupoPrestadora(), usuario.getGrupoPrestadora() );
 		model.addAttribute( "listaGrupoPrestadora", listPrestadora );
 
-		return MappedViews.PARAMETRO_CONSULTA.getPath();
+		return MappedViews.PARAMETRO_ESOA_CONSULTA.getPath();
 	}
 
-	@RequestMapping( value = "/salvar", method = POST )
+	@GetMapping( "/s" )
 	public String salvar( HttpServletRequest request, ModelMap model, @ModelAttribute( "parametroSistema" ) ParametroSistema parametroSistema, BindingResult result ) {
 
 		if ( !validaParametroSistema( parametroSistema, result ) ) {
@@ -62,14 +62,14 @@ public class ParametroConsultaController {
 			Map<Long, String> listPrestadora = new LinkedHashMap<Long, String>();
 			listPrestadora.put( usuario.getIdGrupoPrestadora(), usuario.getGrupoPrestadora() );
 			model.addAttribute( "listaGrupoPrestadora", listPrestadora );
-			return MappedViews.PARAMETRO_CONSULTA.getPath();
+			return MappedViews.PARAMETRO_ESOA_CONSULTA.getPath();
 		}
 
 		GrupoPrestadora grupoPrestadora = grupoPrestadoraRepository.findOne( parametroSistema.getGrupoPrestadora().getId() );
 		parametroSistema.setGrupoPrestadora( grupoPrestadora );
 		parametroSistemaService.salvar( parametroSistema );
 
-		return "redirect:/parametro" + MappedViews.SUCESSO_PARAMETRO_NOVO.getPath();
+		return "redirect:/parametroEsoa" + MappedViews.SUCESSO_PARAMETRO_NOVO.getPath();
 	}
 
 	private boolean validaParametroSistema( ParametroSistema parametroSistema, BindingResult result ) {
@@ -98,8 +98,6 @@ public class ParametroConsultaController {
 			result.addError( error );
 			valido = false;
 		}
-
-
 
 		return valido;
 	}

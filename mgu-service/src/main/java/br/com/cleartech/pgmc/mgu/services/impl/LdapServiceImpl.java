@@ -239,7 +239,6 @@ public class LdapServiceImpl implements LdapService {
 		AttributesMapper<?> attrs = new AttributesMapper<Object>() {
 			@Override
 			public Object mapFromAttributes( Attributes attrs ) throws NamingException {
-				System.out.println( attrs.toString() );
 				return attrs.get( "uniqueMember" ).get();
 			}
 		};

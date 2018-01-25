@@ -103,4 +103,12 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 
 		return query.list( ConstructorExpression.create( Usuario.class, qUsuario.id, qUsuario.nmUsuario, qUsuario.dcUsername, qUsuario.dcEmail ) );
 	}
+
+	@Override
+	public Usuario findLite( long idUsuario ) {
+		BooleanBuilder bb = new BooleanBuilder();
+		bb.and( qUsuario.id.eq( idUsuario ) );
+		return createQuery( bb ).singleResult( ConstructorExpression.create( Usuario.class, qUsuario.id, qUsuario.nmUsuario, qUsuario.dcUsername, qUsuario.dcEmail ) );
+	}
+
 }

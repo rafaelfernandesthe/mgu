@@ -20,4 +20,6 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
 	List<Usuario> findUsuarioDelegadoDisponivel( Long idUsuario, Long idPrestadora );
 
+	Usuario findLite( long idUsuario );
+
 }

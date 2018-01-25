@@ -142,14 +142,18 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		if ( usuarioDB.getFlMaster() ) {
 			boolean mudouDelegado = false;
-			if ( ( usuarioDB.getDelegado() == null && usuarioAtualizado.getDelegado() != null ) || ( usuarioDB.getDelegado() != null && !usuarioDB.equals( usuarioAtualizado.getDelegado() ) ) ) {
+			if ( ( usuarioDB.getDelegado() == null && usuarioAtualizado.getDelegado() != null ) || ( usuarioDB.getDelegado() != null && !usuarioDB.getDelegado().equals( usuarioAtualizado.getDelegado() ) ) ) {
 				mudouDelegado = true;
 			}
 			if ( mudouDelegado && usuarioDB.getDelegado() != null ) {
 				if ( !usuarioDB.getDelegado().getFlMaster() ) {
-					ldapService.alterarMasterParaUsuario( usuarioAtualizado.getDelegado().getDcUsername() );
+					ldapService.alterarMasterParaUsuario( usuarioDB.getDelegado().getDcUsername() );
 				}
-				emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.REMOVER_DELEGADO, usuarioDB.getDelegado() );
+				try {
+					emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.REMOVER_DELEGADO, usuarioDB.getDelegado() );
+				} catch ( Exception e ) {
+					// exceção de email sendo tratada no fim do metodo
+				}
 				delegadoService.removerDelegadoDeUsuarioMaster( usuarioDB );
 			}
 			if ( mudouDelegado && usuarioAtualizado.getDelegado() != null ) {
@@ -158,7 +162,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 				delegado.setUsuarioComum( usuarioAtualizado.getDelegado() );
 				delegado.setPrestadora( usuarioAtualizado.getPrestadoras().get( 0 ) );
 				delegadoService.salvar( delegado );
-				emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.ADICIONAR_DELEGADO, usuarioAtualizado.getDelegado() );
+				try {
+					emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.ADICIONAR_DELEGADO, usuarioAtualizado.getDelegado() );
+				} catch ( Exception e ) {
+					// exceção de email sendo tratada no fim do metodo
+				}
 				ldapService.alterarUsuarioParaMaster( usuarioAtualizado.getDelegado().getDcUsername() );
 			}
 		}
@@ -209,6 +217,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 		usuarioDB.setGrupoPerfis( usuarioAtualizado.getGrupoPerfis() );
 		usuarioDB.setFlBloqueio( usuarioAtualizado.getFlBloqueio() );
 		usuarioDB.setFlEnvioEmail( usuarioAtualizado.isFlEnvioEmail() );
+		usuarioDB.setFlEnviarDynamics( usuarioAtualizado.getFlEnviarDynamics() );
+		usuarioDB.setDelegado( usuarioAtualizado.getDelegado() );
 	}
 
 	@Override
@@ -313,7 +323,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		try {
 			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.DESBLOQUEAR_USUARIO, null );
-		} catch ( MessagingException e ) {
+		} catch ( Exception e ) {
 			throw new MessagingException( "MGU ALERTA: Usuário desbloqueado com sucesso porém não foi possível enviar a senha para o e-mail \"" + usuario.getDcUsername() + "\"" );
 		}
 
@@ -338,13 +348,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public void excluir( Long idUsuario ) throws Exception {
 		Usuario usuario = usuarioRepository.findOne( idUsuario );
 
-		try {
-			ldapService.deleteUser( usuario.getDcUsername(), usuario.getFlMaster() );
-		} catch ( Exception e ) {
-			e.printStackTrace();
-			// throw new LdapException( "LDAP ERRO: Não Foi possivel remover o
-			// usuario \"" + usuario.getDcUsername() + "\"" );
-		}
+		ldapService.deleteUser( usuario.getDcUsername(), usuario.getFlMaster() );
 
 		try {
 			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
@@ -353,16 +357,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
-			// throw new MguException( ERRO_CONEXAO_DYNAMICS );
+			throw new MguException( ERRO_CONEXAO_DYNAMICS );
 		}
 
 		try {
 			emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.REMOVER_USUARIO, null );
 		} catch ( MessagingException e ) {
 			e.printStackTrace();
-			// throw new MessagingException( "MGU ALERTA: Usuário excluído com
-			// sucesso porém não foi possível enviar o e-mail para \"" +
-			// usuario.getDcUsername() + "\"" );
+			throw new MessagingException( "MGU ALERTA: Usuário excluído com sucesso porém não foi possível enviar o e-mail para \"" + usuario.getDcUsername() + "\"" );
 		}
 
 		usuarioRepository.delete( idUsuario );
@@ -370,15 +372,19 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
-	public void resetar( Long idUsuario, String usuarioLogado ) throws Exception {
+	public void resetar( Long idUsuario, String usuarioLogado, boolean realizadoPeloMaster ) throws Exception {
 		Usuario usuario = usuarioRepository.findOne( idUsuario );
 
 		String novaSenha = GeradorSenha.getRandomPassword( 8 );
 		usuario.setDcSenha( novaSenha );
 		ldapService.alterarSenha( usuario.getDcUsername(), GeradorSenha.md5( novaSenha ) );
 
-		if ( !usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_NAO ) ) {
-			alteraBloqueioUsuario( usuario, BloqueioUsuario.BLOQUEADO_NAO, usuarioLogado );
+		if ( realizadoPeloMaster ) {
+			if ( !usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_NAO ) ) {
+				alteraBloqueioUsuario( usuario, BloqueioUsuario.BLOQUEADO_NAO, usuarioLogado );
+			}
+		} else {
+			alteraBloqueioUsuario( usuario, BloqueioUsuario.BLOQUEADO_EXPIRADA, usuarioLogado );
 		}
 
 		emailService.enviaByUsuarioAndAssunto( usuario, AssuntoEnum.REINICIAR_SENHA, null );
@@ -424,6 +430,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 			// TODO: Verificar se deve retornar
 			new MessagingException( "MGU ALERTA: Não foi possivel enviar email de desbloqueio para o usuario \"" + usuario.getDcUsername() + "\"" ).printStackTrace();
 		}
+	}
+
+	@Override
+	public Usuario findLite( long idUsuario ) {
+		return usuarioRepository.findLite( idUsuario );
 	}
 
 }

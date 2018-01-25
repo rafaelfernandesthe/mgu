@@ -64,12 +64,7 @@
 				var sourceData = [(${perfisSourceJSON})];
 			  	var targetData = [(${perfisTargetJSON})];
 			  	
-			  	carregaListaPerfil();
-				$('#telefoneFixo').mask('(00) 0000-0000');
-				$('#telefone').mask('(00) 00000-0000');
-				$('#cpf').mask('999.999.999-99' );
-				
-				function carregaListaPerfil(){
+			  	function carregaListaPerfil(sourceData, targetData){
 					$('#listaPerfil').puipicklist({
 				        sourceCaption: 'Disponíveis',
 				        targetCaption: 'Selecionados',
@@ -87,6 +82,11 @@
 					});
 					puipicklist_refresh("#perfisIdList");
 				}
+			  	
+			  	carregaListaPerfil(sourceData, targetData);
+				$('#telefoneFixo').mask('(00) 0000-0000');
+				$('#telefone').mask('(00) 00000-0000');
+				$('#cpf').mask('999.999.999-99' );
 				
 				$('#nome').keyup(function () {
 					this.value = this.value.replace(/[^\w._-]/g,'');
@@ -102,7 +102,8 @@
 				$('#limparCampos').puibutton({
 					icon: 'fa-eraser',
 					click: function(event){
-						carregaListaPerfil();
+						$('#nome').val('');
+						carregaListaPerfil(sourceData, targetData);
 					}
 				});
 				
@@ -113,7 +114,7 @@
 				    }
 				});
 			});
-		
+			
 		</script>
 	</div>
 

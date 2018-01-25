@@ -102,6 +102,7 @@ public class UsuarioCadastroDTO implements Serializable {
 		usuario.setFlBloqueio( this.getFlBloqueio() );
 		usuario.setFlEnvioEmail( this.getFlEnvioEmail() );
 		usuario.setPrestadoras( Arrays.asList( this.getPrestadora() ) );
+		usuario.setDelegado( this.getDelegado() );
 		return usuario;
 	}
 

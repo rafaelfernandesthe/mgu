@@ -15,7 +15,7 @@
 
 		<div class="painel-primary pui-panel"
 			th:title="#{pagina.configurar}+' '+#{parametros}">
-			<form action="#" method="post" th:action="@{/parametro/salvar}" th:object="${parametroSistema}">
+			<form id="formulario" action="#" method="post" th:action="@{/parametro/salvar}" th:object="${parametroSistema}">
 
 				<div th:include="~{/_layout/mensagem.html}"></div>
 
@@ -97,8 +97,11 @@
 				</div>
 
 				<div class="form-group buttonsGroup">
-					<a id="limparCampos" th:href="@{'/parametro'}">
-						<label th:text="#{botao.limpar}"></label>
+					<a id="voltar">
+						<label th:text="#{botao.voltar}"></label>
+					</a>
+					<a id="desfazer" th:href="@{'/parametro'}">
+						<label th:text="#{botao.desfazer}"></label>
 					</a>
 					<button id="submitBt" type="submit">
 						<label th:text="#{botao.cadastrar}"></label>
@@ -142,10 +145,15 @@
 			enableOrDisable('bloquearInatividade');
 			enableOrDisable('qtdErrarSenha');
 
-			$('#limparCampos').puibutton({
-				icon: 'fa-eraser',
-				click: function(event){
-				}
+			$('#voltar').puibutton({
+				icon: 'fa-arrow-circle-left',						
+			    click: function(event) {
+			    	document.location = document.referrer;
+			    }
+			});
+			
+			$('#desfazer').puibutton({
+				icon: 'fa-refresh',
 			});
 
 			$('#submitBt').puibutton({
@@ -153,6 +161,7 @@
 			    click: function(event) {
 			    }
 			});
+			
   		</script>
 	</div>
 

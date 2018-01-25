@@ -18,8 +18,7 @@ public class UsuarioConverter2Controller implements Converter<String, Usuario> {
 			return null;
 		}
 
-		Usuario loaded = service.find( Long.parseLong( source ) );
-		return loaded;
+		return service.findLite( Long.parseLong( source ) );
 	}
 
 }

@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.base.Strings;
+
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
 import br.com.cleartech.pgmc.mgu.services.DynamicsService;
@@ -165,7 +167,14 @@ public class DynamicsServiceImpl implements DynamicsService {
 	}
 
 	private String getEndpoint() {
-		// return "http://10.200.21.3:8091/UsuarioPgmc.svc?wsdl"; // LOCAL
-		return parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_URL.getDcParametro() );
+		// adicionar <system-properties><property name="mgu.development"
+		// value="true"/></system-properties> no servidor localhost
+		String prop = System.getProperty( "mgu.development" );
+		boolean isDevelopment = !Strings.isNullOrEmpty( prop ) ? Boolean.parseBoolean( prop ) : false;
+		if ( isDevelopment ) {
+			return "http://10.200.21.3:8091/UsuarioPgmc.svc?wsdl"; // LOCAL
+		} else {
+			return parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_URL.getDcParametro() );
+		}
 	}
 }

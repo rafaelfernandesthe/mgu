@@ -1,6 +1,5 @@
 package br.com.cleartech.pgmc.mgu.controllers;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.util.UriUtils;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
+import br.com.cleartech.pgmc.mgu.exceptions.LdapException;
 import br.com.cleartech.pgmc.mgu.services.GrupoPerfilService;
 import br.com.cleartech.pgmc.mgu.services.UsuarioService;
 import br.com.cleartech.pgmc.mgu.view.dtos.UsuarioConsultaDTO;
@@ -35,6 +34,9 @@ public class UsuarioConsultaController {
 
 	@Autowired
 	private GrupoPerfilService grupoPerfilService;
+
+	private static final String erroReset = "Ocorreu um erro ao tentar realizar o reset da senha! ";
+	private static final String erroExcluir = "Ocorreu um erro ao tentar excluir o Usuário! ";
 
 	@GetMapping
 	public String init( Model model, HttpServletRequest request ) {
@@ -73,9 +75,12 @@ public class UsuarioConsultaController {
 	public String excluir( @PathVariable Long idUsuario ) {
 		try {
 			usuarioService.excluir( idUsuario );
+		} catch ( LdapException e ) {
+			e.printStackTrace();
+			return erroExcluir + "Usuário não existe no LDAP!";
 		} catch ( Exception e ) {
 			e.printStackTrace();
-			return "Ocorreu um erro ao tentar excluir o Usuário!";
+			return erroExcluir + e.getMessage();
 		}
 
 		return "Usuário deletado com sucesso!";
@@ -84,11 +89,15 @@ public class UsuarioConsultaController {
 	@RequestMapping( method = RequestMethod.PUT, value = "/resetar/{idUsuario}" )
 	@ResponseBody
 	public String resetar( @PathVariable Long idUsuario ) {
+
 		try {
-			usuarioService.resetar( idUsuario, MguUtils.getUsuarioLogado().getDcUsername() );
+			usuarioService.resetar( idUsuario, MguUtils.getUsuarioLogado().getDcUsername(), true );
+		} catch ( LdapException e ) {
+			e.printStackTrace();
+			return erroReset + "Usuário não existe no LDAP!";
 		} catch ( Exception e ) {
 			e.printStackTrace();
-			return "Ocorreu um erro ao tentar realizar o reset da senha!. " + e.getMessage();
+			return erroReset + e.getMessage();
 		}
 
 		return "Reset da senha realizado com sucesso!";

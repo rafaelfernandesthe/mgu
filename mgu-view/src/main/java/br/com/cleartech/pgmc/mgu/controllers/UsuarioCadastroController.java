@@ -56,12 +56,6 @@ public class UsuarioCadastroController {
 
 	private Usuario usuario;
 
-	@GetMapping( "/teste" )
-	public String teste( Model model ) {
-		ldapService.alterarMasterParaUsuario( "rfernandes_claro" );
-		return init( model );
-	}
-
 	@GetMapping( { "", "/", "/salvar" } )
 	public String init( Model model ) {
 		List<GrupoPerfil> listaGrupoPerfilTotal = getGrupoPerfilList();

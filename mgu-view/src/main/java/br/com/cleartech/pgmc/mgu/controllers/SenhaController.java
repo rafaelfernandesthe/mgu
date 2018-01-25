@@ -88,7 +88,7 @@ public class SenhaController {
 			return MappedViews.PROBLEMA_SENHA.getPath();
 		}
 		try {
-			usuarioService.resetar( usuarioDB.getId(), "tela_resetar" );
+			usuarioService.resetar( usuarioDB.getId(), "tela_resetar", false );
 		} catch ( LdapException e ) {
 			model.addAttribute( "msgError", "Ocorreu um erro ao consultar o usuario, entre em contato com o administrador do sistema." );
 			return MappedViews.PROBLEMA_SENHA.getPath();

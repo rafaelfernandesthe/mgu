@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/_layout/layout.html}">
+
+<body>
+	<div layout:fragment="content">
+
+
+		<ul class="pui-breadcrumb">
+			<li><a href="#">Home</a></li>
+			<li><a href="#">Configuração</a></li>
+			<li><a href="#">Consultar Parâmetros</a></li>
+		</ul>
+
+		<div class="painel-primary pui-panel"
+			th:title="#{pagina.consulta}+' '+#{parametros}">
+			<form action="#" method="post" th:action="@{/parametroEsoa/s}" th:object="${parametroSistema}">
+
+				<div th:include="~{/_layout/mensagem.html}"></div>
+
+				<div class="row">
+					<div class="col-sm-2">
+						<label class="control-label" for="grupoPrestadora" th:text="#{grupoPrestadora}"/>
+					</div>
+					<div class="col-sm-2 form-group">
+						<select class="form-control input-sm" id="grupoPrestadora" th:field="*{grupoPrestadora}">
+							<option value="1">Sim</option>
+							<option value="0">Não</option>
+						</select>
+						
+						<div class="col-sm-4 form-group">
+							<select class="form-control input-sm" id="grupoPrestadora" th:field="*{grupoPrestadora}" >
+								<option value="">Selecione</option> 
+								<option th:each="gp : ${grupoPrestadora}" 
+							          th:value="${{gp}}" 
+							          th:text="${gp.noGrupoPrestadora}">
+								</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				
+				<div class="container-fluid pui-panel-toggleable" th:title="#{tabela.resultados}">
+					<div class="pui-datatableResult" id="usuarios"></div>
+				</div>
+				
+				<div id="parametros" title="Parametros">
+					<div id="tabelaParametros"></div>
+				</div>
+
+				<div class="form-group buttonsGroup">
+					<a id="voltar">
+						<label th:text="#{botao.voltar}"></label>
+					</a>
+					<a id="limparCampos" th:href="@{'/parametro'}">
+						<label th:text="#{botao.limpar}"></label>
+					</a>
+					<button id="submitBt" type="submit">
+						<label th:text="#{botao.cadastrar}"></label>
+					</button>
+				</div>
+
+			</form>
+		</div>
+
+	</div>
+
+	<div layout:fragment="javascript-support">
+		<script type="text/javascript" src="../../resources/js/jquery.mask.js"
+			th:src="@{/resources/js/jquery.mask.js}"></script>
+			
+		<script type="text/javascript">
+			function apenasNumeros(e){
+			    var tecla=(window.event)?event.keyCode:e.which;   
+			    if((tecla>47 && tecla<58)) return true;
+			    else{
+			    	if (tecla==8 || tecla==0) return true;
+				else  return false;
+			    }
+			}
+	
+			function enableOrDisable(campo) {
+				console.log($("#fl_"+campo).val()==1);
+				if($("#fl_"+campo).val()==1) {
+					 $("#"+campo).prop( "disabled", true );
+					 $("#"+campo).val("");
+					 $("#label_"+campo)[0].classList.remove("required");
+				}
+				else {
+					 $("#"+campo).prop( "disabled", false );
+					 $("#label_"+campo)[0].classList.add("required");
+				}
+				 
+			}
+
+			enableOrDisable('prazoExpirarSenha');
+			enableOrDisable('bloquearInatividade');
+			enableOrDisable('qtdErrarSenha');
+			
+			$('#voltar').puibutton({
+				icon: 'fa-arrow-circle-left',						
+			    click: function(event) {
+			    	document.location = document.referrer;
+			    }
+			});
+
+			$('#limparCampos').puibutton({
+				icon: 'fa-eraser',
+				click: function(event){
+				}
+			});
+
+			$('#submitBt').puibutton({
+				icon: 'fa-check',					
+			    click: function(event) {
+			    }
+			});
+  		</script>
+	</div>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 package br.com.cleartech.pgmc.mgu.configs;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -57,24 +56,22 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 		try {
 			Usuario usuario = usuarioService.findByUsername( username );
 
+			boolean isDelegado = false;
 			if ( usuario.getFlMaster() == false ) {
 				Delegado delegado = delegadoService.findByUsuarioComumDcUsername( usuario.getDcUsername() );
 				if ( delegado != null ) {
 					usuario.getPrestadoras().clear();
 					usuario.getPrestadoras().add( delegado.getPrestadora() );
+					isDelegado = true;
 				}
 			}
 
-			if ( usuario.getFlAprovado() == false ) {
-				throw new MguViewAuthenticationException( "Acesso Negado" );
+			if ( !usuario.getFlAprovado() || ( !usuario.getFlMaster() && !isDelegado ) || usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_ADM ) ) {
+				throw new MguViewAuthenticationException( "Acesso Negado, usuário sem permissao de acesso" );
 			}
 
-			if ( usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO ) ) {
-				throw new MguViewAuthenticationException( "Usuario deve trocar a senha no primeiro acesso" );
-			}
-
-			if ( usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_EXPIRADA ) ) {
-				throw new MguViewAuthenticationException( "Senha expirada" );
+			if ( usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO ) || usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_EXPIRADA ) ) {
+				throw new MguViewAuthenticationException( "Senha expirada ou temporária, a mesma deve ser trocada para ter acesso ao sistema." );
 			}
 
 			if ( usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_TENTATIVA ) ) {
@@ -89,6 +86,10 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 			}
 			usuarioDaSessao.setPrestadora( usuario.getPrestadoras().get( 0 ).getNoPrestadora() );
 			usuarioDaSessao.setIdPrestadora( usuario.getPrestadoras().get( 0 ).getId() );
+			usuarioDaSessao.getAuthorities().add( new SimpleGrantedAuthority( "USUARIO_MASTER" ) );
+			if ( usuarioDaSessao.getIdPrestadora() == 1 /* ESOA */ ) {
+				usuarioDaSessao.getAuthorities().add( new SimpleGrantedAuthority( "USUARIO_MASTER_ESOA" ) );
+			}
 			usuarioDaSessao.setGrupoPrestadora( usuario.getPrestadoras().get( 0 ).getGrupoPrestadora().getNoGrupoPrestadora() );
 			usuarioDaSessao.setIdGrupoPrestadora( usuario.getPrestadoras().get( 0 ).getGrupoPrestadora().getId() );
 
@@ -122,11 +123,15 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 		private List<SimpleGrantedAuthority> authorities;
 
 		@Override
-		public Collection<? extends GrantedAuthority> getAuthorities() {
-			if ( authorities == null ) {
-				authorities = Arrays.asList( new SimpleGrantedAuthority( "ADMIN" ) );
-			}
+		public Collection<SimpleGrantedAuthority> getAuthorities() {
+			if ( authorities == null )
+				authorities = new ArrayList<SimpleGrantedAuthority>();
+
 			return authorities;
+		}
+
+		public void setAuthorities( List<SimpleGrantedAuthority> authorities ) {
+			this.authorities = authorities;
 		}
 
 		@Override

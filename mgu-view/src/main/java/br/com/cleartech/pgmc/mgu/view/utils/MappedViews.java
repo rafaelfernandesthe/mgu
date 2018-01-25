@@ -13,6 +13,7 @@ public enum MappedViews {
 	GRUPO_PERFIL_CONSULTA( "/grupoPerfil/grupoPerfilConsulta.html" ),
 	GRUPO_PERFIL_EDICAO( "/grupoPerfil/grupoPerfilEdicao.html" ),
 	PARAMETRO_CONSULTA( "/parametro/parametroConsulta.html" ),
+	PARAMETRO_ESOA_CONSULTA( "/parametro/parametroEsoaConsulta.html" ),
 
 	/**
 	 * Mostra a mensagem "Operação Realizada com Sucesso"

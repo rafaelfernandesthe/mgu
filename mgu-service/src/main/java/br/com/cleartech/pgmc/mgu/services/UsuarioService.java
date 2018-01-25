@@ -35,8 +35,10 @@ public interface UsuarioService {
 
 	void excluir( Long idUsuario ) throws Exception;
 
-	void resetar( Long idUsuario, String usuarioLogado ) throws Exception;
+	void resetar( Long idUsuario, String usuarioLogado, boolean realizadoPeloMaster ) throws Exception;
 
 	void alterarSenha( Long idUsuario, String usuarioLogado, String novaSenha ) throws Exception;
+
+	Usuario findLite( long idUsuario );
 
 }

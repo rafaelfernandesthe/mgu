@@ -15,8 +15,6 @@
 		<div class="painel-primary pui-panel" th:title="#{pagina.cadastro}+' '+#{usuario}">
 			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}" th:object="${usuario}" >
 			
-				<a th:href="@{/usuarioCadastro/teste}"> teste </a>
-
 				<div th:include="~{/_layout/mensagem.html}"></div>
 
 				<div class="row">
@@ -125,9 +123,9 @@
 					<a id="voltar">
 						<label th:text="#{botao.voltar}"></label>
 					</a>
-					<button id="limparCampos" type="reset">
+					<a id="limparCampos">
 						<label th:text="#{botao.limpar}"></label>
-					</button>
+					</a>
 					<button id="submitBt" type="submit">
 						<label th:text="#{botao.cadastrar}"></label>
 					</button>
@@ -163,9 +161,20 @@
 				$('#limparCampos').puibutton({
 					icon: 'fa-eraser',
 					click: function(event){
+						$('#nome').val('');
+						$('#username').val('');
+						$('#email').val('');
+						$('#cargo').val('');
+						$('#telefone').val('');
+						$('#telefoneFixo').val('');
+						$('#cpf').val('');
+						$('#delegado').puidropdown('selectValue', '');
+						$('#flBloqueio1')[0].checked = true;
+						$('#flBloqueio2')[0].checked = false;
+						$('#flEnvioEmail1')[0].checked = true;
+						$('#flEnvioEmail2')[0].checked = false;
 						$('#nivelEscalonamento').puidropdown('selectValue', '');
-						declare_puipicklist('#listaGrupoPerfil', sourceData, targetData, 'grupoPerfisIdList');
-						
+						declare_puipicklist('#listaGrupoPerfil', sourceData.concat(targetData), [], 'grupoPerfisIdList');
 					}
 				});
 				

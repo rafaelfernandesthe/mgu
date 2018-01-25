@@ -45,7 +45,7 @@ public class GrupoPerfil implements Serializable {
 
 	@NotAudited
 	@ManyToMany
-	@JoinTable( name = "USUARIO_GRUPO_PERFIL", joinColumns = @JoinColumn( name = "fk_id_grupo_perfil" ), inverseJoinColumns = @JoinColumn( name = "fk_id_usuario" ) )
+	@JoinTable( name = "USUARIO_X_GRUPO_PERFIL", joinColumns = @JoinColumn( name = "pk_id_grupo_perfil" ), inverseJoinColumns = @JoinColumn( name = "pk_id_usuario" ) )
 	private List<Usuario> usuarios;
 
 	@NotAudited
