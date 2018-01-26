@@ -223,7 +223,6 @@ public class MguIntegrationController {
 		} catch ( MessagingException e ) {
 			mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_3, e.getMessage() );
 		}
-
 		return mguResponse;
 	}
 

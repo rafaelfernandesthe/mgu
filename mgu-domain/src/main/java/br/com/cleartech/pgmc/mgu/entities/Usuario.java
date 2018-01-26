@@ -136,6 +136,11 @@ public class Usuario implements Serializable {
 	@JoinColumn( name = "PK_ID_PERFIL" )
 	private Perfil perfil;
 
+	// bi-directional many-to-one association to Usuario
+	@NotAudited
+	@OneToMany( mappedBy = "delegado" )
+	private List<Usuario> usuarios;
+
 	// bi-directional many-to-one association to Delegado
 	@NotAudited
 	@OneToMany( mappedBy = "usuarioMaster" )
@@ -147,13 +152,13 @@ public class Usuario implements Serializable {
 
 	@NotAudited
 	@ManyToMany
-	@JoinTable( name = "USUARIO_X_GRUPO_PERFIL", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_GRUPO_PERFIL" ) )
+	@JoinTable( name = "USUARIO_GRUPO_PERFIL", joinColumns = @JoinColumn( name = "FK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "FK_ID_GRUPO_PERFIL" ) )
 	private List<GrupoPerfil> grupoPerfis;
 
 	@NotAudited
 	@ManyToMany
 	@Fetch( FetchMode.JOIN )
-	@JoinTable( name = "PRESTADORA_X_USUARIO", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_PRESTADORA" ) )
+	@JoinTable( name = "USUARIO_PRESTADORA", joinColumns = @JoinColumn( name = "FK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "FK_ID_PRESTADORA" ) )
 	private List<Prestadora> prestadoras;
 
 	@ManyToOne
@@ -363,13 +368,13 @@ public class Usuario implements Serializable {
 		this.delegado = usuario;
 	}
 
-	// public List<Usuario> getUsuarios() {
-	// return this.usuarios;
-	// }
-	//
-	// public void setUsuarios( List<Usuario> usuarios ) {
-	// this.usuarios = usuarios;
-	// }
+	public List<Usuario> getUsuarios() {
+		return this.usuarios;
+	}
+
+	public void setUsuarios( List<Usuario> usuarios ) {
+		this.usuarios = usuarios;
+	}
 
 	public Date getUltimoAcesso() {
 		return ultimoAcesso;
@@ -504,6 +509,11 @@ public class Usuario implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flAprovado + ", flPrimeiroAcessoSNOA=" + getFlPrimeiroAcessoSNOA() + ", perfil=" + perfil + ", usuarios=" + usuarios + ", grupoPerfis=" + grupoPerfis + ", flEnvioEmail=" + isFlEnvioEmail() + ", flUsuarioSistema=" + flUsuarioSistema + "]";
+	}
+
 	public String getStatus() {
 		status = getFlBloqueio().getI18n();
 		return status;
@@ -511,11 +521,6 @@ public class Usuario implements Serializable {
 
 	public void setStatus( String status ) {
 		this.status = status;
-	}
-
-	@Override
-	public String toString() {
-		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flAprovado + ", flPrimeiroAcessoSNOA=" + getFlPrimeiroAcessoSNOA() + ", perfil=" + perfil + ", flEnvioEmail=" + isFlEnvioEmail() + ", flUsuarioSistema=" + flUsuarioSistema + "]";
 	}
 
 }
