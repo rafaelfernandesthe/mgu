@@ -15,6 +15,7 @@ import br.com.cleartech.pgmc.mgu.entities.Delegado;
 import br.com.cleartech.pgmc.mgu.entities.ParametroSistema;
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
 import br.com.cleartech.pgmc.mgu.entities.Prestadora;
+import br.com.cleartech.pgmc.mgu.entities.PrestadoraXUsuario;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 import br.com.cleartech.pgmc.mgu.enums.CodigoMensagem;
@@ -131,8 +132,8 @@ public class LoginControllerService {
 
 			if ( !usuario.getFlAprovado() && SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) ) {
 				List<PerfilDTO> perfisUsuario = new ArrayList<PerfilDTO>();
-				for ( Prestadora prestadora : usuario.getPrestadoras() ) {
-					PerfilDTO perfil = new PerfilDTO( 666L, "SOLICITANTE", prestadora.getId(), prestadora.getNoPrestadora() );
+				for ( PrestadoraXUsuario prestadoraXusuario : usuario.getPrestadoraXUsuarios() ) {
+					PerfilDTO perfil = new PerfilDTO( 666L, "SOLICITANTE", prestadoraXusuario.getPrestadora().getId(), prestadoraXusuario.getPrestadora().getNoPrestadora() );
 					perfisUsuario.add( perfil );
 				}
 
@@ -155,7 +156,7 @@ public class LoginControllerService {
 				// VALIDACAO USUARIO MENSAGERIA SNOA
 				if ( usuario.getFlUsuarioSistema() != null && usuario.getFlUsuarioSistema().equals( 1 ) ) {
 					Perfil administrador = usuario.getPerfil();
-					Prestadora prestadora = usuario.getPrestadoras().get( 0 );
+					Prestadora prestadora = usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora();
 					perfis = new ArrayList<PerfilDTO>();
 					perfis.add( new PerfilDTO( administrador.getId(), administrador.getDcPerfil(), prestadora.getId(), prestadora.getNoPrestadora() ) );
 					return loginAgrupadoResponse( usuario, perfis, sistemaUsuario, usuario.getUsuarioLogado() );
@@ -200,7 +201,7 @@ public class LoginControllerService {
 	private Object responseUsuarioInvalidoLdap( Usuario usuario ) {
 		usuario.setQtTentativaAcesso( usuario.getQtTentativaAcesso() == null ? 1 : usuario.getQtTentativaAcesso() + 1 );
 
-		ParametroSistema parametroSistema = parametroSistemaService.findByGrupoPrestadoraId( usuario.getPrestadoras().get( 0 ).getGrupoPrestadora().getId() );
+		ParametroSistema parametroSistema = parametroSistemaService.findByGrupoPrestadoraId( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getGrupoPrestadora().getId() );
 		if ( parametroSistema != null && parametroSistema.getFlQtdErrarSenha().equals( 1 ) ) {
 			if ( parametroSistema.getQtdErrarSenha() != null && usuario.getQtTentativaAcesso() != null && usuario.getQtTentativaAcesso() > ( parametroSistema.getQtdErrarSenha() ) ) {
 				usuario.setFlBloqueio( BloqueioUsuario.BLOQUEADO_TENTATIVA );
@@ -218,7 +219,7 @@ public class LoginControllerService {
 	}
 
 	private Object responseValidaParametroSistema( String sistemaUsuario, Usuario usuario, List<PerfilDTO> perfis ) {
-		ParametroSistema parametroSistema = parametroSistemaService.findByGrupoPrestadoraId( usuario.getPrestadoras().get( 0 ).getGrupoPrestadora().getId() );
+		ParametroSistema parametroSistema = parametroSistemaService.findByGrupoPrestadoraId( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getGrupoPrestadora().getId() );
 
 		if ( parametroSistema != null ) {
 			// Senha expirada
@@ -370,27 +371,27 @@ public class LoginControllerService {
 			usuarioResponse.setPrimeiroAcesso( usuario.getFlPrimeiroAcessoSNOA() ? 1 : 0 );
 		}
 
-		for ( Prestadora prestadora : usuario.getPrestadoras() ) {
+		for ( PrestadoraXUsuario prestadoraXUsuario : usuario.getPrestadoraXUsuarios() ) {
 
 			if ( umaVez ) {
 				/*
 				 * Ajuste de sistema para funcionar o SNOA como ANATEL
 				 */
-				if ( prestadora.getId().equals( 1L ) && ( SistemaUtils.SNOA.equalsIgnoreCase( sistemaUsuario ) || SistemaUtils.SOIA.equalsIgnoreCase( sistemaUsuario ) ) ) {
+				if ( prestadoraXUsuario.getPrestadora().getId().equals( 1L ) && ( SistemaUtils.SNOA.equalsIgnoreCase( sistemaUsuario ) || SistemaUtils.SOIA.equalsIgnoreCase( sistemaUsuario ) ) ) {
 					loginResponse.setSemPrestadora( false );
-					loginResponse.setPerfilGed( "PERFIL_GED_" + prestadora.getGrupoPrestadora().getNoGrupoPrestadora().toUpperCase().trim() );
+					loginResponse.setPerfilGed( "PERFIL_GED_" + prestadoraXUsuario.getPrestadora().getGrupoPrestadora().getNoGrupoPrestadora().toUpperCase().trim() );
 					loginResponse.setIsPMS( true );
 					break;
 				} else {
-					grupoPrestadoraResponse.setIdGrupoPrestadora( prestadora.getGrupoPrestadora().getId() );
-					grupoPrestadoraResponse.setNomeGrupoPrestadora( prestadora.getGrupoPrestadora().getNoGrupoPrestadora() );
+					grupoPrestadoraResponse.setIdGrupoPrestadora( prestadoraXUsuario.getPrestadora().getGrupoPrestadora().getId() );
+					grupoPrestadoraResponse.setNomeGrupoPrestadora( prestadoraXUsuario.getPrestadora().getGrupoPrestadora().getNoGrupoPrestadora() );
 
-					if ( IDS_PMS.contains( prestadora.getGrupoPrestadora().getId() ) ) {
+					if ( IDS_PMS.contains( prestadoraXUsuario.getPrestadora().getGrupoPrestadora().getId() ) ) {
 						loginResponse.setIsPMS( true );
-						if ( prestadora.getGrupoPrestadora().getId().equals( ID_PMS_VIVO ) ) {
-							loginResponse.setPerfilGed( "PERFIL_GED_" + prestadora.getGrupoPrestadora().getNoGrupoPrestadora().toUpperCase().substring( 0, 4 ).trim() );
+						if ( prestadoraXUsuario.getPrestadora().getGrupoPrestadora().getId().equals( ID_PMS_VIVO ) ) {
+							loginResponse.setPerfilGed( "PERFIL_GED_" + prestadoraXUsuario.getPrestadora().getGrupoPrestadora().getNoGrupoPrestadora().toUpperCase().substring( 0, 4 ).trim() );
 						} else {
-							loginResponse.setPerfilGed( "PERFIL_GED_" + prestadora.getGrupoPrestadora().getNoGrupoPrestadora().toUpperCase().trim() );
+							loginResponse.setPerfilGed( "PERFIL_GED_" + prestadoraXUsuario.getPrestadora().getGrupoPrestadora().getNoGrupoPrestadora().toUpperCase().trim() );
 						}
 					}
 
@@ -398,10 +399,10 @@ public class LoginControllerService {
 				umaVez = Boolean.FALSE;
 			}
 
-			if ( idPrestadoras != null && idPrestadoras.contains( prestadora.getId() ) ) {
+			if ( idPrestadoras != null && idPrestadoras.contains( prestadoraXUsuario.getId() ) ) {
 				PrestadoraResponse prestadoraResponse = new PrestadoraResponse();
-				prestadoraResponse.setId( prestadora.getId() );
-				prestadoraResponse.setNome( prestadora.getNoPrestadora() );
+				prestadoraResponse.setId( prestadoraXUsuario.getId() );
+				prestadoraResponse.setNome( prestadoraXUsuario.getPrestadora().getNoPrestadora() );
 				grupoPrestadoraResponse.getPrestadoras().add( prestadoraResponse );
 			}
 
@@ -409,14 +410,14 @@ public class LoginControllerService {
 				boolean imprimePrestadora = Boolean.TRUE;
 
 				for ( PerfilDTO perfil : perfis ) {
-					if ( perfil.getIdOperadora().equals( prestadora.getId() ) ) {
+					if ( perfil.getIdOperadora().equals( prestadoraXUsuario.getId() ) ) {
 						if ( imprimePrestadora ) {
 							PrestadoraResponse prestadoraResponse = new PrestadoraResponse();
-							prestadoraResponse.setId( prestadora.getId() );
-							prestadoraResponse.setNome( prestadora.getNoPrestadora() );
+							prestadoraResponse.setId( prestadoraXUsuario.getId() );
+							prestadoraResponse.setNome( prestadoraXUsuario.getPrestadora().getNoPrestadora() );
 							if ( SistemaUtils.SNOA.equalsIgnoreCase( sistemaUsuario ) ) {
 								if ( usuario.getFlMaster() == false ) {
-									Delegado delegado = delegadoService.findByUsuarioComumDcUsernameAndPrestadoraId( usuario.getDcUsername(), prestadora.getId() );
+									Delegado delegado = delegadoService.findByUsuarioComumDcUsernameAndPrestadoraId( usuario.getDcUsername(), prestadoraXUsuario.getId() );
 									prestadoraResponse.setMaster( delegado == null ? 0 : 1 );
 								} else {
 									prestadoraResponse.setMaster( 1 );

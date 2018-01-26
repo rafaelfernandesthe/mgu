@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import br.com.cleartech.pgmc.mgu.entities.Delegado;
+import br.com.cleartech.pgmc.mgu.entities.PrestadoraXUsuario;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 import br.com.cleartech.pgmc.mgu.exceptions.LdapException;
@@ -60,8 +61,8 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 			if ( usuario.getFlMaster() == false ) {
 				Delegado delegado = delegadoService.findByUsuarioComumDcUsername( usuario.getDcUsername() );
 				if ( delegado != null ) {
-					usuario.getPrestadoras().clear();
-					usuario.getPrestadoras().add( delegado.getPrestadora() );
+					usuario.getPrestadoraXUsuarios().clear();
+					usuario.getPrestadoraXUsuarios().add( new PrestadoraXUsuario( delegado.getPrestadora(), usuario ) );
 					isDelegado = true;
 				}
 			}
@@ -81,17 +82,17 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 			MguUserDetails usuarioDaSessao = new MguUserDetails();
 			usuarioDaSessao.setNmUsuario( usuario.getNmUsuario() );
 			usuarioDaSessao.setDcUsername( usuario.getDcUsername() );
-			if ( usuario.getPrestadoras().isEmpty() ) {
+			if ( usuario.getPrestadoraXUsuarios().isEmpty() ) {
 				throw new MguViewAuthenticationException( "Usuário não possui prestadora associada" );
 			}
-			usuarioDaSessao.setPrestadora( usuario.getPrestadoras().get( 0 ).getNoPrestadora() );
-			usuarioDaSessao.setIdPrestadora( usuario.getPrestadoras().get( 0 ).getId() );
+			usuarioDaSessao.setPrestadora( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getNoPrestadora() );
+			usuarioDaSessao.setIdPrestadora( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getId() );
 			usuarioDaSessao.getAuthorities().add( new SimpleGrantedAuthority( "USUARIO_MASTER" ) );
 			if ( usuarioDaSessao.getIdPrestadora() == 1 /* ESOA */ ) {
 				usuarioDaSessao.getAuthorities().add( new SimpleGrantedAuthority( "USUARIO_MASTER_ESOA" ) );
 			}
-			usuarioDaSessao.setGrupoPrestadora( usuario.getPrestadoras().get( 0 ).getGrupoPrestadora().getNoGrupoPrestadora() );
-			usuarioDaSessao.setIdGrupoPrestadora( usuario.getPrestadoras().get( 0 ).getGrupoPrestadora().getId() );
+			usuarioDaSessao.setGrupoPrestadora( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getGrupoPrestadora().getNoGrupoPrestadora() );
+			usuarioDaSessao.setIdGrupoPrestadora( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getGrupoPrestadora().getId() );
 
 			logger.info( "Login realizado com sucesso" );
 			return usuarioDaSessao;

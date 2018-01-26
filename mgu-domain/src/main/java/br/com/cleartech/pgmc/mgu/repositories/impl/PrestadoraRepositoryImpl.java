@@ -33,7 +33,7 @@ public class PrestadoraRepositoryImpl extends QuerydslJpaRepositoryAux<Prestador
 		BooleanBuilder bb = new BooleanBuilder();
 		Usuario usuario = usuarioRepository.findByUsername( dcUsername );
 		if ( usuario.getFlMaster() ) {
-			bb.and( qPrestadora.usuarios.any().dcUsername.eq( dcUsername ) );
+			bb.and( qPrestadora.prestadoraXUsuarios.any().usuario.dcUsername.eq( dcUsername ) );
 		} else {
 			bb.and( qPrestadora.delegados.any().usuarioComum.dcUsername.eq( dcUsername ) );
 		}

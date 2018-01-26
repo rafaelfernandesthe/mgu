@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
+import br.com.cleartech.pgmc.mgu.entities.GrupoPerfilXPerfil;
 import br.com.cleartech.pgmc.mgu.repositories.GrupoPerfilRepository;
+import br.com.cleartech.pgmc.mgu.repositories.GrupoPerfilXPerfilRepository;
+import br.com.cleartech.pgmc.mgu.repositories.PerfilRepository;
 import br.com.cleartech.pgmc.mgu.services.GrupoPerfilService;
 
 @Component
@@ -16,9 +19,18 @@ public class GrupoPerfilServiceImpl implements GrupoPerfilService {
 	@Autowired
 	private GrupoPerfilRepository grupoPerfilRepository;
 
+	@Autowired
+	private GrupoPerfilXPerfilRepository grupoPerfilXPerfilRepository;
+
+	@Autowired
+	private PerfilRepository perfilRepositrory;
+
 	@Override
-	public GrupoPerfil salvar( GrupoPerfil grupoPerfil ) {
-		return grupoPerfilRepository.save( grupoPerfil );
+	public GrupoPerfil salvar( GrupoPerfil grupoPerfil, List<GrupoPerfilXPerfil> perfisX ) {
+		for ( GrupoPerfilXPerfil gp : grupoPerfil.getGrupoPerfilXPerfils() ) {
+			grupoPerfilXPerfilRepository.save( new GrupoPerfilXPerfil( grupoPerfil, perfilRepositrory.findOne( gp.getPerfil().getId() ) ) );
+		}
+		return grupoPerfil;
 	}
 
 	@Override
@@ -67,8 +79,8 @@ public class GrupoPerfilServiceImpl implements GrupoPerfilService {
 
 	@Override
 	public GrupoPerfil salvarEditar( GrupoPerfil grupoPerfilAtualizado, GrupoPerfil grupoPerfilDB ) {
-		grupoPerfilDB.setPerfis( grupoPerfilAtualizado.getPerfis() );
 		grupoPerfilRepository.save( grupoPerfilDB );
+		grupoPerfilXPerfilRepository.save( grupoPerfilAtualizado.getGrupoPerfilXPerfils() );
 		return grupoPerfilDB;
 	}
 

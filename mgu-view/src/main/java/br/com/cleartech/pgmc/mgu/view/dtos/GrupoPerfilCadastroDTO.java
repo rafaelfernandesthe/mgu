@@ -1,11 +1,13 @@
 package br.com.cleartech.pgmc.mgu.view.dtos;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
+import br.com.cleartech.pgmc.mgu.entities.GrupoPerfilXPerfil;
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
 import br.com.cleartech.pgmc.mgu.entities.Prestadora;
 
@@ -31,7 +33,7 @@ public class GrupoPerfilCadastroDTO implements Serializable {
 	public GrupoPerfilCadastroDTO( GrupoPerfil grupoPerfil ) {
 		this.setId( grupoPerfil.getId() );
 		this.setNoGrupoPerfil( grupoPerfil.getNoGrupoPerfil() );
-		this.setPerfis( grupoPerfil.getPerfis() );
+		this.setPerfisX( grupoPerfil.getGrupoPerfilXPerfils() );
 		this.setPrestadora( grupoPerfil.getPrestadora() );
 	}
 
@@ -39,7 +41,7 @@ public class GrupoPerfilCadastroDTO implements Serializable {
 		GrupoPerfil grupoPerfil = new GrupoPerfil();
 		grupoPerfil.setId( this.getId() );
 		grupoPerfil.setNoGrupoPerfil( this.getNoGrupoPerfil() );
-		grupoPerfil.setPerfis( this.getPerfis() );
+		grupoPerfil.setGrupoPerfilXPerfils( this.getPerfisX() );
 		grupoPerfil.setPrestadora( this.getPrestadora() );
 		return grupoPerfil;
 	}
@@ -72,8 +74,23 @@ public class GrupoPerfilCadastroDTO implements Serializable {
 		return perfis;
 	}
 
+	public List<GrupoPerfilXPerfil> getPerfisX() {
+		List<GrupoPerfilXPerfil> gpXpList = new ArrayList<GrupoPerfilXPerfil>();
+		for ( Perfil perfil : perfis ) {
+			gpXpList.add( new GrupoPerfilXPerfil( new GrupoPerfil( id ), perfil ) );
+		}
+		return gpXpList;
+	}
+
 	public void setPerfis( List<Perfil> perfis ) {
 		this.perfis = perfis;
+	}
+
+	public void setPerfisX( List<GrupoPerfilXPerfil> grupoPerfilXPerfil ) {
+		perfis = new ArrayList<Perfil>();
+		for ( GrupoPerfilXPerfil gpXp : grupoPerfilXPerfil ) {
+			perfis.add( gpXp.getPerfil() );
+		}
 	}
 
 	public Prestadora getPrestadora() {

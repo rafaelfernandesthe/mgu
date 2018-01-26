@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -24,8 +24,6 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
@@ -145,16 +143,14 @@ public class Usuario implements Serializable {
 	@OneToMany( mappedBy = "usuarioComum" )
 	private List<Delegado> delegadosComuns;
 
+	// bi-directional many-to-one association to UsuarioXGrupoPerfil
 	@NotAudited
-	@ManyToMany
-	@JoinTable( name = "USUARIO_X_GRUPO_PERFIL", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_GRUPO_PERFIL" ) )
-	private List<GrupoPerfil> grupoPerfis;
+	@OneToMany( mappedBy = "usuario", cascade = CascadeType.ALL )
+	private List<UsuarioXGrupoPerfil> usuarioXGrupoPerfils;
 
 	@NotAudited
-	@ManyToMany
-	@Fetch( FetchMode.JOIN )
-	@JoinTable( name = "PRESTADORA_X_USUARIO", joinColumns = @JoinColumn( name = "PK_ID_USUARIO" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_PRESTADORA" ) )
-	private List<Prestadora> prestadoras;
+	@OneToMany( mappedBy = "usuario", fetch = FetchType.EAGER, cascade = CascadeType.ALL )
+	private List<PrestadoraXUsuario> prestadoraXUsuarios;
 
 	@ManyToOne
 	@JoinColumn( name = "FK_NIVEL_ESCALONAMENTO" )
@@ -178,6 +174,11 @@ public class Usuario implements Serializable {
 	private Boolean usuarioLogado = false;
 
 	public Usuario() {}
+
+	public Usuario( Long id ) {
+		super();
+		this.id = id;
+	}
 
 	public Usuario( Long id, String nmUsuario, String dcUsername, String dcEmail, String dcCargo, String dcTelefone, String nuCpf, BloqueioUsuario flBloqueio ) {
 		this.id = id;
@@ -387,24 +388,26 @@ public class Usuario implements Serializable {
 		this.qtTentativaAcesso = qtTentativaAcesso;
 	}
 
-	public List<GrupoPerfil> getGrupoPerfis() {
-		if ( grupoPerfis == null )
-			grupoPerfis = new ArrayList<GrupoPerfil>();
-		return grupoPerfis;
+	public List<UsuarioXGrupoPerfil> getUsuarioXGrupoPerfils() {
+		if ( usuarioXGrupoPerfils == null ) {
+			usuarioXGrupoPerfils = new ArrayList<UsuarioXGrupoPerfil>();
+		}
+		return usuarioXGrupoPerfils;
 	}
 
-	public void setGrupoPerfis( List<GrupoPerfil> grupoPerfis ) {
-		this.grupoPerfis = grupoPerfis;
+	public void setUsuarioXGrupoPerfils( List<UsuarioXGrupoPerfil> usuarioXGrupoPerfils ) {
+		this.usuarioXGrupoPerfils = usuarioXGrupoPerfils;
 	}
 
-	public List<Prestadora> getPrestadoras() {
-		if ( prestadoras == null )
-			prestadoras = new ArrayList<Prestadora>();
-		return prestadoras;
+	public List<PrestadoraXUsuario> getPrestadoraXUsuarios() {
+		if ( prestadoraXUsuarios == null ) {
+			prestadoraXUsuarios = new ArrayList<PrestadoraXUsuario>();
+		}
+		return prestadoraXUsuarios;
 	}
 
-	public void setPrestadoras( List<Prestadora> prestadoras ) {
-		this.prestadoras = prestadoras;
+	public void setPrestadoraXUsuarios( List<PrestadoraXUsuario> prestadoraXUsuarios ) {
+		this.prestadoraXUsuarios = prestadoraXUsuarios;
 	}
 
 	public NivelEscalonamento getNivelEscalonamento() {

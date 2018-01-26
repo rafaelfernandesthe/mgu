@@ -1,11 +1,11 @@
 package br.com.cleartech.pgmc.mgu.view.dtos;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
+import br.com.cleartech.pgmc.mgu.entities.UsuarioXGrupoPerfil;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 
 public class UsuarioConsultaDTO extends DTOSearchBase {
@@ -65,7 +65,7 @@ public class UsuarioConsultaDTO extends DTOSearchBase {
 		usuario.setDcTelefone( this.getDcTelefone() );
 		usuario.setNuCpf( this.getNuCpf() );
 		if ( this.getGrupoPerfilFiltro() != null ) {
-			usuario.setGrupoPerfis( Arrays.asList( new GrupoPerfil( this.getGrupoPerfilFiltro().longValue() ) ) );
+			usuario.getUsuarioXGrupoPerfils().add( new UsuarioXGrupoPerfil( new GrupoPerfil( grupoPerfilFiltro.longValue() ), usuario ) );
 		}
 		usuario.setFlBloqueio( BloqueioUsuario.getByInt( this.getStatusFiltro() ) );
 		return usuario;

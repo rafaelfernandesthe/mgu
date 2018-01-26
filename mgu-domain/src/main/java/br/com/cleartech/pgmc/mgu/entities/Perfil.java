@@ -11,8 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -55,9 +53,8 @@ public class Perfil implements Serializable {
 	private String dcDescricao;
 
 	@NotAudited
-	@ManyToMany
-	@JoinTable( name = "GRUPO_PERFIL_X_PERFIL", joinColumns = @JoinColumn( name = "PK_ID_PERFIL" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_GRUPO_PERFIL" ) )
-	private List<GrupoPerfil> grupoPerfis;
+	@OneToMany( mappedBy = "perfil" )
+	private List<GrupoPerfilXPerfil> grupoPerfilXPerfils;
 
 	// @NotAudited
 	// @ManyToMany
@@ -131,12 +128,15 @@ public class Perfil implements Serializable {
 		this.sistema = sistema;
 	}
 
-	public List<GrupoPerfil> getGrupoPerfis() {
-		return grupoPerfis;
+	public List<GrupoPerfilXPerfil> getGrupoPerfilXPerfils() {
+		if ( grupoPerfilXPerfils == null ) {
+			grupoPerfilXPerfils = new ArrayList<GrupoPerfilXPerfil>();
+		}
+		return grupoPerfilXPerfils;
 	}
 
-	public void setGrupoPerfis( List<GrupoPerfil> grupoPerfis ) {
-		this.grupoPerfis = grupoPerfis;
+	public void setGrupoPerfilXPerfils( List<GrupoPerfilXPerfil> grupoPerfilXPerfils ) {
+		this.grupoPerfilXPerfils = grupoPerfilXPerfils;
 	}
 
 	public List<Usuario> getUsuarios() {

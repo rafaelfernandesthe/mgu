@@ -3,10 +3,11 @@ package br.com.cleartech.pgmc.mgu.services;
 import java.util.List;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
+import br.com.cleartech.pgmc.mgu.entities.GrupoPerfilXPerfil;
 
 public interface GrupoPerfilService {
 
-	public GrupoPerfil salvar( GrupoPerfil grupoPerfil );
+	GrupoPerfil salvar( GrupoPerfil grupoPerfil, List<GrupoPerfilXPerfil> perfisX );
 
 	public List<GrupoPerfil> findAll();
 

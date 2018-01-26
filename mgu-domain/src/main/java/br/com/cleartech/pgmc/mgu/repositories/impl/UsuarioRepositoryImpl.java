@@ -48,7 +48,7 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 	@Override
 	public Usuario findUsuarioMasterByUsernameAndIdPrestadora( String username, Long idPrestadora ) {
 		JPAQuery query = new JPAQuery( getEm() );
-		query.from( qUsuario ).innerJoin( qUsuario.prestadoras, qPrestadora );
+		query.from( qUsuario ).innerJoin( qUsuario.prestadoraXUsuarios.any().prestadora, qPrestadora );
 		BooleanBuilder bb = new BooleanBuilder();
 		bb.and( qUsuario.dcUsername.eq( username ) );
 		bb.and( qPrestadora.id.eq( idPrestadora ) );
@@ -59,7 +59,7 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 	@Override
 	public List<Usuario> find( Usuario usuario, Long prestadoraId ) {
 		BooleanBuilder bb = new BooleanBuilder();
-		bb.and( qUsuario.prestadoras.any().id.eq( prestadoraId ) );
+		bb.and( qUsuario.prestadoraXUsuarios.any().prestadora.id.eq( prestadoraId ) );
 
 		if ( !StringUtils.isEmpty( usuario.getNmUsuario() ) ) {
 			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( "usuario.nmUsuario", usuario.getNmUsuario() ) );
@@ -79,8 +79,8 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 		if ( !StringUtils.isEmpty( usuario.getNuCpf() ) ) {
 			bb.and( qUsuario.nuCpf.eq( usuario.getNuCpf() ).or( qUsuario.nuCpf.eq( usuario.getNuCpfWithMask() ) ) );
 		}
-		if ( !usuario.getGrupoPerfis().isEmpty() ) {
-			bb.and( qUsuario.grupoPerfis.any().id.eq( usuario.getGrupoPerfis().get( 0 ).getId() ) );
+		if ( !usuario.getUsuarioXGrupoPerfils().isEmpty() ) {
+			bb.and( qUsuario.usuarioXGrupoPerfils.any().grupoPerfil.id.eq( usuario.getUsuarioXGrupoPerfils().get( 0 ).getGrupoPerfil().getId() ) );
 		}
 		if ( usuario.getFlBloqueio() != null ) {
 			bb.and( qUsuario.flBloqueio.eq( usuario.getFlBloqueio() ) );
@@ -94,7 +94,7 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 		BooleanBuilder bb = new BooleanBuilder();
 		QDelegado qDelegado = QDelegado.delegado;
 		bb.and( qUsuario.id.ne( idUsuario ) );
-		bb.and( qUsuario.prestadoras.any().id.eq( idPrestadora ) );
+		bb.and( qUsuario.prestadoraXUsuarios.any().prestadora.id.eq( idPrestadora ) );
 		bb.and( qDelegado.id.isNull().or( qDelegado.usuarioMaster.id.eq( idUsuario ) ) );
 
 		JPAQuery query = new JPAQuery( this.getEm() );

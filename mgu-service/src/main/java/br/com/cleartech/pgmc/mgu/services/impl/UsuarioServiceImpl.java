@@ -15,10 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.cleartech.pgmc.mgu.entities.Delegado;
-import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
+import br.com.cleartech.pgmc.mgu.entities.GrupoPerfilXPerfil;
 import br.com.cleartech.pgmc.mgu.entities.LogSenhaUsuario;
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
+import br.com.cleartech.pgmc.mgu.entities.UsuarioXGrupoPerfil;
 import br.com.cleartech.pgmc.mgu.enums.AssuntoEnum;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
@@ -160,7 +161,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 				Delegado delegado = new Delegado();
 				delegado.setUsuarioMaster( usuarioDB );
 				delegado.setUsuarioComum( usuarioAtualizado.getDelegado() );
-				delegado.setPrestadora( usuarioAtualizado.getPrestadoras().get( 0 ) );
+				delegado.setPrestadora( usuarioAtualizado.getPrestadoraXUsuarios().get( 0 ).getPrestadora() );
 				delegadoService.salvar( delegado );
 				try {
 					emailService.enviaByUsuarioAndAssunto( usuarioAtualizado, AssuntoEnum.ADICIONAR_DELEGADO, usuarioAtualizado.getDelegado() );
@@ -214,7 +215,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		usuarioDB.setDcTelefone( usuarioAtualizado.getDcTelefone() );
 		usuarioDB.setDcTelefoneFixo( usuarioAtualizado.getDcTelefoneFixo() );
 		usuarioDB.setNivelEscalonamento( usuarioAtualizado.getNivelEscalonamento() );
-		usuarioDB.setGrupoPerfis( usuarioAtualizado.getGrupoPerfis() );
+		usuarioDB.setUsuarioXGrupoPerfils( usuarioAtualizado.getUsuarioXGrupoPerfils() );
 		usuarioDB.setFlBloqueio( usuarioAtualizado.getFlBloqueio() );
 		usuarioDB.setFlEnvioEmail( usuarioAtualizado.isFlEnvioEmail() );
 		usuarioDB.setFlEnviarDynamics( usuarioAtualizado.getFlEnviarDynamics() );
@@ -238,13 +239,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	private boolean existsPerfilDynamics( Usuario usuario ) {
 		Perfil perfilDynamics = perfilService.findByDcPerfilAndSistemaDcSistema( "DYNAMICS", "DYNAMICS" );
-		for ( GrupoPerfil gpUsuario : usuario.getGrupoPerfis() ) {
-			for ( GrupoPerfil gpDynamics : perfilDynamics.getGrupoPerfis() ) {
-				if ( gpUsuario.getId().equals( gpDynamics.getId() ) ) {
+		for ( UsuarioXGrupoPerfil usuarioXGrupoPerfil : usuario.getUsuarioXGrupoPerfils() ) {
+			for ( GrupoPerfilXPerfil gpDynamics : perfilDynamics.getGrupoPerfilXPerfils() ) {
+				if ( usuarioXGrupoPerfil.getGrupoPerfil().getId().equals( gpDynamics.getGrupoPerfil().getId() ) ) {
 					return true;
 				}
 			}
 		}
+
 		return false;
 	}
 
@@ -261,14 +263,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public void substituirUsuarioMaster( Usuario usuarioMasterNovo, String usernameAnterior ) throws Exception {
 		// Atribuindo o perfil do usuário antigo para o novo e excluindo o
 		// perfil do antigo.
-		Usuario usuarioMasterAntigo = findUsuarioMasterByUsernameAndIdPrestadora( usernameAnterior, usuarioMasterNovo.getPrestadoras().get( 0 ).getId() );
+		Usuario usuarioMasterAntigo = findUsuarioMasterByUsernameAndIdPrestadora( usernameAnterior, usuarioMasterNovo.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getId() );
 		if ( usuarioMasterAntigo != null ) {
 			// usuario novo deve assumir mesmo valor de fl_aprovado do usuario
 			// antigo
 			usuarioMasterNovo.setFlAprovado( new Boolean( usuarioMasterAntigo.getFlAprovado() ) );
-			usuarioMasterNovo.getGrupoPerfis().addAll( new ArrayList<GrupoPerfil>( usuarioMasterAntigo.getGrupoPerfis() ) );
+			usuarioMasterNovo.getUsuarioXGrupoPerfils().addAll( new ArrayList<UsuarioXGrupoPerfil>( usuarioMasterAntigo.getUsuarioXGrupoPerfils() ) );
 
-			usuarioMasterAntigo.setGrupoPerfis( null );
+			usuarioMasterAntigo.setUsuarioXGrupoPerfils( null );
 			bloquear( usuarioMasterAntigo, true );
 
 		}

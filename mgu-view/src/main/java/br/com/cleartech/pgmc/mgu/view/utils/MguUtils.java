@@ -52,7 +52,7 @@ public class MguUtils {
 	public static String preparePerfilToJson( List<Perfil> listaPerfil ) {
 		List<ValueObject> fields = new ArrayList<ValueObject>();
 		for ( Perfil p : listaPerfil ) {
-			p.setGrupoPerfis( null );
+			p.setGrupoPerfilXPerfils( null );
 			p.setListaPerfil( null );
 			p.setPerfilAcessoOperadoras( null );
 			p.setUsuarios( null );
@@ -96,5 +96,5 @@ public class MguUtils {
 	public static MguUserDetails getUsuarioLogado() {
 		return (MguUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
-	
+
 }

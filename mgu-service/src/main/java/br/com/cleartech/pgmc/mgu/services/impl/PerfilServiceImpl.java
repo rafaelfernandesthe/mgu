@@ -13,7 +13,7 @@ import br.com.cleartech.pgmc.mgu.dtos.PerfilDTO;
 import br.com.cleartech.pgmc.mgu.entities.AcessoOperadora;
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
 import br.com.cleartech.pgmc.mgu.entities.PerfilAcessoOperadora;
-import br.com.cleartech.pgmc.mgu.entities.Prestadora;
+import br.com.cleartech.pgmc.mgu.entities.PrestadoraXUsuario;
 import br.com.cleartech.pgmc.mgu.entities.Sistema;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.TipoOperadora;
@@ -65,13 +65,13 @@ public class PerfilServiceImpl implements PerfilService {
 		Usuario usuario = usuarioRepository.findByUsername( username );
 
 		Set<PerfilDTO> perfisDTO = new HashSet<PerfilDTO>();
-		for ( Prestadora prestadora : usuario.getPrestadoras() ) {
-			TipoOperadora tipo = parametrizacaoService.retornaTipoOperadora( prestadora.getId() );
+		for ( PrestadoraXUsuario prestadoraXusuario : usuario.getPrestadoraXUsuarios() ) {
+			TipoOperadora tipo = parametrizacaoService.retornaTipoOperadora( prestadoraXusuario.getPrestadora().getId() );
 			for ( Perfil perfil : perfis ) {
 				List<PerfilAcessoOperadora> perfilAcessoOperadoras = perfil.getPerfilAcessoOperadoras();
 				for ( PerfilAcessoOperadora perfilAcesso : perfilAcessoOperadoras ) {
 					if ( perfilAcesso.getAcessoOperadora().getTipoOperadora().equals( tipo ) ) {
-						perfisDTO.add( new PerfilDTO( perfil.getId(), perfil.getDcPerfil(), prestadora.getId(), prestadora.getNoPrestadora() ) );
+						perfisDTO.add( new PerfilDTO( perfil.getId(), perfil.getDcPerfil(), prestadoraXusuario.getPrestadora().getId(), prestadoraXusuario.getPrestadora().getNoPrestadora() ) );
 					}
 				}
 			}

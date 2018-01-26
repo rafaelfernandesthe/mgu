@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -40,16 +39,14 @@ public class Prestadora implements Serializable {
 	private GrupoPrestadora grupoPrestadora;
 
 	// bi-directional many-to-one association to PrestadoraXUsuario
-	@ManyToMany
-	@JoinTable( name = "PRESTADORA_X_USUARIO", joinColumns = @JoinColumn( name = "PK_ID_PRESTADORA" ), inverseJoinColumns = @JoinColumn( name = "PK_ID_USUARIO" ) )
-	private List<Usuario> usuarios;
+	@OneToMany( mappedBy = "prestadora" )
+	private List<PrestadoraXUsuario> prestadoraXUsuarios;
 
 	@OneToMany( mappedBy = "prestadora" )
-	private List<Delegado> delegados = new ArrayList<Delegado>();
+	private List<Delegado> delegados;
 
-	@ManyToMany
-	@JoinTable( name = "PRESTADORA_MODULO", joinColumns = @JoinColumn( name = "ID_PRESTADORA" ), inverseJoinColumns = @JoinColumn( name = "ID_MODULO" ) )
-	private List<Modulo> modulos;
+	@OneToMany( mappedBy = "prestadora", cascade = CascadeType.ALL )
+	private List<PrestadoraModulo> modulos;
 
 	public Prestadora() {}
 
@@ -83,20 +80,34 @@ public class Prestadora implements Serializable {
 		this.grupoPrestadora = grupoPrestadora;
 	}
 
-	public List<Usuario> getUsuarios() {
-		return usuarios;
+	public List<PrestadoraXUsuario> getPrestadoraXUsuarios() {
+		if ( prestadoraXUsuarios == null ) {
+			prestadoraXUsuarios = new ArrayList<PrestadoraXUsuario>();
+		}
+		return prestadoraXUsuarios;
 	}
 
-	public void setUsuarios( List<Usuario> usuarios ) {
-		this.usuarios = usuarios;
+	public void setPrestadoraXUsuarios( List<PrestadoraXUsuario> prestadoraXUsuarios ) {
+		this.prestadoraXUsuarios = prestadoraXUsuarios;
 	}
 
-	public List<Modulo> getModulos() {
+	public List<PrestadoraModulo> getModulos() {
+		if ( modulos == null ) {
+			modulos = new ArrayList<PrestadoraModulo>();
+		}
 		return modulos;
 	}
 
-	public void setModulos( List<Modulo> modulos ) {
+	public void setModulos( List<PrestadoraModulo> modulos ) {
 		this.modulos = modulos;
+	}
+
+	public List<Delegado> getDelegados() {
+		return delegados;
+	}
+
+	public void setDelegados( List<Delegado> delegados ) {
+		this.delegados = delegados;
 	}
 
 	@Override

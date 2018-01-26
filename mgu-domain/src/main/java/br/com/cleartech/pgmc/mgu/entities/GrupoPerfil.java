@@ -6,12 +6,12 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -39,14 +39,12 @@ public class GrupoPerfil implements Serializable {
 	private String noGrupoPerfil;
 
 	@NotAudited
-	@ManyToMany
-	@JoinTable( name = "grupo_perfil_x_perfil", joinColumns = @JoinColumn( name = "pk_id_grupo_perfil" ), inverseJoinColumns = @JoinColumn( name = "pk_id_perfil" ) )
-	private List<Perfil> perfis = new ArrayList<Perfil>();
+	@OneToMany( mappedBy = "grupoPerfil", orphanRemoval = true, fetch = FetchType.EAGER )
+	private List<GrupoPerfilXPerfil> grupoPerfilXPerfils;
 
 	@NotAudited
-	@ManyToMany
-	@JoinTable( name = "USUARIO_X_GRUPO_PERFIL", joinColumns = @JoinColumn( name = "pk_id_grupo_perfil" ), inverseJoinColumns = @JoinColumn( name = "pk_id_usuario" ) )
-	private List<Usuario> usuarios;
+	@OneToMany( mappedBy = "grupoPerfil" )
+	private List<UsuarioXGrupoPerfil> usuarioXGrupoPerfils;
 
 	@NotAudited
 	@ManyToOne
@@ -88,24 +86,26 @@ public class GrupoPerfil implements Serializable {
 		this.prestadora = prestadora;
 	}
 
-	public List<Perfil> getPerfis() {
-		if ( perfis == null )
-			perfis = new ArrayList<Perfil>();
-		return perfis;
+	public List<GrupoPerfilXPerfil> getGrupoPerfilXPerfils() {
+		if ( grupoPerfilXPerfils == null ) {
+			grupoPerfilXPerfils = new ArrayList<GrupoPerfilXPerfil>();
+		}
+		return grupoPerfilXPerfils;
 	}
 
-	public void setPerfis( List<Perfil> perfis ) {
-		this.perfis = perfis;
+	public void setGrupoPerfilXPerfils( List<GrupoPerfilXPerfil> grupoPerfilXPerfils ) {
+		this.grupoPerfilXPerfils = grupoPerfilXPerfils;
 	}
 
-	public List<Usuario> getUsuarios() {
-		if ( usuarios == null )
-			usuarios = new ArrayList<Usuario>();
-		return usuarios;
+	public List<UsuarioXGrupoPerfil> getUsuarioXGrupoPerfils() {
+		if ( usuarioXGrupoPerfils == null ) {
+			usuarioXGrupoPerfils = new ArrayList<UsuarioXGrupoPerfil>();
+		}
+		return usuarioXGrupoPerfils;
 	}
 
-	public void setUsuarios( List<Usuario> usuarios ) {
-		this.usuarios = usuarios;
+	public void setUsuarioXGrupoPerfils( List<UsuarioXGrupoPerfil> usuarioXGrupoPerfils ) {
+		this.usuarioXGrupoPerfils = usuarioXGrupoPerfils;
 	}
 
 	@Override

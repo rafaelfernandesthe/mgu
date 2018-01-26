@@ -53,7 +53,7 @@ public class PerfilRepositoryImpl extends QuerydslJpaRepositoryAux<Perfil, Long>
 	@Override
 	public List<Perfil> findByPrestadora( Long idPrestadora, String usernameUsuarioLogado, TipoOperadora tipoOperadora ) {
 		JPAQuery q = new JPAQuery( getEm() );
-		q.from( qModulo ).where( qModulo.prestadoras.any().id.eq( idPrestadora ) );
+		q.from( qModulo ).where( qModulo.prestadoras.any().prestadora.id.eq( idPrestadora ) );
 		List<Modulo> modulos = q.list( qModulo );
 
 		Set<String> listaModulo = new HashSet<String>();
@@ -91,7 +91,7 @@ public class PerfilRepositoryImpl extends QuerydslJpaRepositoryAux<Perfil, Long>
 	public List<PerfilDTO> findByUsernameAndSistema( String username, String sistema ) {
 
 		JPAQuery query = new JPAQuery( getEm() );
-		query.from( qPerfil ).innerJoin( qPerfil.grupoPerfis, qGrupoPerfil ).innerJoin( qGrupoPerfil.usuarios, qUsuario ).innerJoin( qUsuario.prestadoras, qPrestadora );
+		query.from( qPerfil ).innerJoin( qPerfil.grupoPerfilXPerfils.any().grupoPerfil, qGrupoPerfil ).innerJoin( qGrupoPerfil.usuarioXGrupoPerfils.any().usuario, qUsuario ).innerJoin( qUsuario.prestadoraXUsuarios.any().prestadora, qPrestadora );
 
 		BooleanBuilder bb = new BooleanBuilder();
 		bb.and( qPerfil.sistema.dcSistema.equalsIgnoreCase( sistema ) );
@@ -99,7 +99,7 @@ public class PerfilRepositoryImpl extends QuerydslJpaRepositoryAux<Perfil, Long>
 
 		// Clausula para limitar acesso por modulo do credenciamento
 		JPASubQuery subQuery = new JPASubQuery();
-		subQuery.from( qModulo ).innerJoin( qModulo.prestadoras, qPrestadora ).innerJoin( qPrestadora.usuarios, qUsuario );
+		subQuery.from( qModulo ).innerJoin( qModulo.prestadoras.any().prestadora, qPrestadora ).innerJoin( qPrestadora.prestadoraXUsuarios.any().usuario, qUsuario );
 		BooleanBuilder bbSub = new BooleanBuilder();
 		bbSub.and( qUsuario.dcUsername.eq( username ) );
 
@@ -112,7 +112,7 @@ public class PerfilRepositoryImpl extends QuerydslJpaRepositoryAux<Perfil, Long>
 	public boolean checkIsPerfilABRTOrCTECH( String perfil ) {
 		BooleanBuilder bb = new BooleanBuilder();
 		JPAQuery query = new JPAQuery( getEm() );
-		query.from( qPerfil ).innerJoin( qPerfil.grupoPerfis, qGrupoPerfil );
+		query.from( qPerfil ).innerJoin( qPerfil.grupoPerfilXPerfils.any().grupoPerfil, qGrupoPerfil );
 
 		bb.andAnyOf( qPerfil.dcPerfil.endsWith( "_ABRT" ), qPerfil.dcPerfil.endsWith( "_CTECH" ) );
 		bb.and( qPerfil.dcPerfil.eq( perfil ) );
@@ -129,7 +129,9 @@ public class PerfilRepositoryImpl extends QuerydslJpaRepositoryAux<Perfil, Long>
 
 		// Clausula para limitar acesso por modulo do credenciamento
 		JPASubQuery subQuery = new JPASubQuery();
-		subQuery.from( qModulo ).innerJoin( qModulo.prestadoras, qPrestadora ).innerJoin( qPrestadora.usuarios, qUsuario );
+		// subQuery.from( qModulo ).innerJoin( qModulo.prestadoras, qPrestadora
+		// ).innerJoin( qPrestadora.usuarios, qUsuario );
+		subQuery.from( qModulo ).innerJoin( qModulo.prestadoras.any().prestadora, qPrestadora ).innerJoin( qPrestadora.prestadoraXUsuarios.any().usuario, qUsuario );
 		BooleanBuilder bbSub = new BooleanBuilder();
 		bbSub.and( qUsuario.dcUsername.eq( username ) );
 
@@ -153,7 +155,7 @@ public class PerfilRepositoryImpl extends QuerydslJpaRepositoryAux<Perfil, Long>
 	@Override
 	public List<Perfil> findByGrupoPerfil( Long grupoPerfilId ) {
 		BooleanBuilder bb = new BooleanBuilder();
-		bb.and( qPerfil.grupoPerfis.any().id.eq( grupoPerfilId ) );
+		bb.and( qPerfil.grupoPerfilXPerfils.any().grupoPerfil.id.eq( grupoPerfilId ) );
 		return createQuery( bb ).distinct().list( ConstructorExpression.create( Perfil.class, qPerfil.id, qPerfil.dcPerfil, qPerfil.dcDescricao, qPerfil.sistema ) );
 	}
 

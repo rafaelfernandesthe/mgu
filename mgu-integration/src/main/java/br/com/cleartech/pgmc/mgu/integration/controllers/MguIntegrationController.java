@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
 import br.com.cleartech.pgmc.mgu.entities.Prestadora;
+import br.com.cleartech.pgmc.mgu.entities.PrestadoraXUsuario;
 import br.com.cleartech.pgmc.mgu.entities.Sistema;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
@@ -133,7 +134,7 @@ public class MguIntegrationController {
 				usuario.setFlMaster( true );
 				usuario.setFlBloqueio( BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO );
 
-				usuario.getPrestadoras().add( prestadora );
+				usuario.getPrestadoraXUsuarios().add( new PrestadoraXUsuario( prestadora, usuario ) );
 
 				Boolean valor = usuarioService.existsByUsernameIgnoreCase( usuario.getDcUsername() );
 				if ( valor ) {
@@ -184,7 +185,7 @@ public class MguIntegrationController {
 			}
 
 			Usuario usuarioMasterNovo = usuarioMasterNovoRequest.masterToUsuario();
-			usuarioMasterNovo.getPrestadoras().add( prestadora );
+			usuarioMasterNovo.getPrestadoraXUsuarios().add( new PrestadoraXUsuario( prestadora, usuarioMasterNovo ) );
 			usuarioMasterNovo.setFlMaster( true );
 			usuarioMasterNovo.setFlBloqueio( BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO );
 			usuarioMasterNovo.setFlAprovado( true );

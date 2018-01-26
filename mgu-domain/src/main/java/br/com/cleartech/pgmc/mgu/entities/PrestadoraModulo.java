@@ -1,13 +1,12 @@
 package br.com.cleartech.pgmc.mgu.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -16,24 +15,26 @@ import javax.xml.bind.annotation.XmlRootElement;
  * 
  */
 @Entity
-@Table( name = "MODULO" )
-@XmlRootElement( name = "MODULO" )
-public class Modulo implements Serializable {
+@Table( name = "PRESTADORA_MODULO" )
+@XmlRootElement( name = "PRESTADORA_MODULO" )
+public class PrestadoraModulo implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6603254076317355781L;
+	private static final long serialVersionUID = 8126380926020849620L;
 
 	@Id
-	@Column( name = "ID_MODULO" )
+	@Column( name = "ID_PRESTADORA_MODULO" )
 	private Long id;
 
-	@Column( name = "DC_MODULO" )
-	private String dcModulo;
+	@ManyToOne
+	@JoinColumn( name = "ID_MODULO" )
+	private Modulo modulo;
 
-	@OneToMany( mappedBy = "modulo" )
-	private List<PrestadoraModulo> prestadoras;
+	@ManyToOne
+	@JoinColumn( name = "ID_PRESTADORA" )
+	private Prestadora prestadora;
 
 	public Long getId() {
 		return id;
@@ -43,23 +44,20 @@ public class Modulo implements Serializable {
 		this.id = id;
 	}
 
-	public String getDcModulo() {
-		return dcModulo;
+	public Modulo getModulo() {
+		return modulo;
 	}
 
-	public void setDcModulo( String dcModulo ) {
-		this.dcModulo = dcModulo;
+	public void setModulo( Modulo modulo ) {
+		this.modulo = modulo;
 	}
 
-	public List<PrestadoraModulo> getPrestadoras() {
-		if ( prestadoras == null ) {
-			prestadoras = new ArrayList<PrestadoraModulo>();
-		}
-		return prestadoras;
+	public Prestadora getPrestadora() {
+		return prestadora;
 	}
 
-	public void setPrestadoras( List<PrestadoraModulo> prestadoras ) {
-		this.prestadoras = prestadoras;
+	public void setPrestadora( Prestadora prestadora ) {
+		this.prestadora = prestadora;
 	}
 
 	@Override
@@ -78,7 +76,7 @@ public class Modulo implements Serializable {
 			return false;
 		if ( getClass() != obj.getClass() )
 			return false;
-		Modulo other = (Modulo) obj;
+		PrestadoraModulo other = (PrestadoraModulo) obj;
 		if ( id == null ) {
 			if ( other.id != null )
 				return false;

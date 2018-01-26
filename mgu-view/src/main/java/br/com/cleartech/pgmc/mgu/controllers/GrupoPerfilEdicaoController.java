@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class GrupoPerfilEdicaoController {
 	@GetMapping( "/{idGrupoPerfil}" )
 	public String init( Model model, @PathVariable Long idGrupoPerfil, HttpServletRequest request ) {
 		GrupoPerfil grupoPerfilDB = grupoPerfilService.find( idGrupoPerfil );
-
+		Hibernate.initialize( grupoPerfilDB.getGrupoPerfilXPerfils() );
 		GrupoPerfilCadastroDTO grupoPerfilDto = new GrupoPerfilCadastroDTO( grupoPerfilDB );
 		String lastPage = request.getHeader( "Referer" );
 		if ( lastPage != null ) {

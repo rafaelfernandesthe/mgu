@@ -1,6 +1,7 @@
 package br.com.cleartech.pgmc.mgu.view.dtos;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,7 +12,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.NivelEscalonamento;
 import br.com.cleartech.pgmc.mgu.entities.Prestadora;
+import br.com.cleartech.pgmc.mgu.entities.PrestadoraXUsuario;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
+import br.com.cleartech.pgmc.mgu.entities.UsuarioXGrupoPerfil;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 
 public class UsuarioCadastroDTO implements Serializable {
@@ -77,14 +80,14 @@ public class UsuarioCadastroDTO implements Serializable {
 		this.setDcTelefoneFixo( usuario.getDcTelefoneFixo() );
 		this.setNuCpf( usuario.getNuCpf() );
 		this.setNivelEscalonamento( usuario.getNivelEscalonamento() );
-		this.setGrupoPerfis( usuario.getGrupoPerfis() );
+		this.setGrupoPerfisX( usuario.getUsuarioXGrupoPerfils() );
 		this.setFlBloqueio( usuario.getFlBloqueio() );
 		this.setFlEnvioEmail( usuario.isFlEnvioEmail() );
 		this.setFlMaster( usuario.getFlMaster() );
 		this.setDelegado( usuario.getDelegado() );
 
-		if ( !usuario.getPrestadoras().isEmpty() )
-			this.setPrestadora( usuario.getPrestadoras().get( 0 ) );
+		if ( !usuario.getPrestadoraXUsuarios().isEmpty() )
+			this.setPrestadora( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora() );
 	}
 
 	public Usuario getUsuario() {
@@ -98,10 +101,10 @@ public class UsuarioCadastroDTO implements Serializable {
 		usuario.setDcTelefoneFixo( this.getDcTelefoneFixo() );
 		usuario.setNuCpf( this.getNuCpf() );
 		usuario.setNivelEscalonamento( this.getNivelEscalonamento() );
-		usuario.setGrupoPerfis( this.getGrupoPerfis() );
+		usuario.setUsuarioXGrupoPerfils( this.getGrupoPerfisX() );
 		usuario.setFlBloqueio( this.getFlBloqueio() );
 		usuario.setFlEnvioEmail( this.getFlEnvioEmail() );
-		usuario.setPrestadoras( Arrays.asList( this.getPrestadora() ) );
+		usuario.setPrestadoraXUsuarios( Arrays.asList( new PrestadoraXUsuario( this.getPrestadora(), new Usuario( id ) ) ) );
 		usuario.setDelegado( this.getDelegado() );
 		return usuario;
 	}
@@ -182,8 +185,23 @@ public class UsuarioCadastroDTO implements Serializable {
 		return grupoPerfis;
 	}
 
+	public List<UsuarioXGrupoPerfil> getGrupoPerfisX() {
+		List<UsuarioXGrupoPerfil> uXgpList = new ArrayList<UsuarioXGrupoPerfil>();
+		for ( GrupoPerfil gp : grupoPerfis ) {
+			uXgpList.add( new UsuarioXGrupoPerfil( gp, new Usuario( id ) ) );
+		}
+		return uXgpList;
+	}
+
 	public void setGrupoPerfis( List<GrupoPerfil> grupoPerfis ) {
 		this.grupoPerfis = grupoPerfis;
+	}
+
+	public void setGrupoPerfisX( List<UsuarioXGrupoPerfil> grupoPerfisX ) {
+		this.grupoPerfis = new ArrayList<GrupoPerfil>();
+		for ( UsuarioXGrupoPerfil uXgp : grupoPerfisX ) {
+			this.grupoPerfis.add( uXgp.getGrupoPerfil() );
+		}
 	}
 
 	public List<Integer> getGrupoPerfisIdList() {

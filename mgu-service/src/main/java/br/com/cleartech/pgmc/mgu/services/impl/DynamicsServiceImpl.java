@@ -56,7 +56,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		marshaller.marshal( nomeUsuario, System.out );
 		d.setNome( nomeUsuario );
 
-		JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadoras().get( 0 ).getNoPrestadora() );
+		JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getNoPrestadora() );
 		marshaller.marshal( prest, System.out );
 		d.setNomePrestadora( prest );
 
@@ -79,7 +79,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		marshaller.marshal( email, System.out );
 		d.setEmail( email );
 
-		JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadoras().get( 0 ).getId() ) );
+		JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getId() ) );
 		marshaller.marshal( spid, System.out );
 		d.setSpidPrestadora( spid );
 
@@ -112,17 +112,17 @@ public class DynamicsServiceImpl implements DynamicsService {
 			marshaller.marshal( nomeUsuario, System.out );
 			d.setNome( nomeUsuario );
 
-			if ( usuario.getPrestadoras().isEmpty() ) {
+			if ( usuario.getPrestadoraXUsuarios().isEmpty() ) {
 				logger.warn( "PROBLEMAS NA INTEGACAO -> prestadora == null" );
 				return;
 			}
 
-			JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadoras().get( 0 ).getId() ) );
+			JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getId() ) );
 			marshaller.marshal( spid, System.out );
 			d.setSpidPrestadora( spid );
 
-			if ( usuario.getPrestadoras().get( 0 ).getNoPrestadora() != null ) {
-				JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadoras().get( 0 ).getNoPrestadora() );
+			if ( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getNoPrestadora() != null ) {
+				JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadoraXUsuarios().get( 0 ).getPrestadora().getNoPrestadora() );
 				marshaller.marshal( prest, System.out );
 				d.setNomePrestadora( prest );
 			}
