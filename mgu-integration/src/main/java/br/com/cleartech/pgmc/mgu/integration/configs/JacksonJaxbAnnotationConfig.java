@@ -10,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
 @Configuration
@@ -38,6 +40,7 @@ public class JacksonJaxbAnnotationConfig extends WebMvcConfigurationSupport {
 		objectMapper.registerModule( new JaxbAnnotationModule() );
 		// objectMapper.setSerializationInclusion( Include.NON_NULL );
 		objectMapper.setSerializationInclusion( Include.NON_EMPTY );
+		( (XmlMapper) objectMapper ).enable( ToXmlGenerator.Feature.WRITE_XML_DECLARATION );
 
 		converters.add( new MappingJackson2XmlHttpMessageConverter( objectMapper ) );
 		// converters.add( customJackson2HttpMessageConverter() );
