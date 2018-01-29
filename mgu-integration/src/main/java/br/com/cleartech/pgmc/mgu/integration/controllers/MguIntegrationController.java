@@ -104,7 +104,6 @@ public class MguIntegrationController {
 	public Object getLoginPerfisAgrupado( @RequestBody Usuario usuarioRequest ) throws Exception {
 		logger.info( usuarioRequest.toString() );
 		return loginControllerService.processarLoginIntegracaoPerfil( usuarioRequest );
-
 	}
 
 	@PostMapping( "/criarusuariomaster" )

@@ -175,6 +175,9 @@
 						$('#flEnvioEmail2')[0].checked = false;
 						$('#nivelEscalonamento').puidropdown('selectValue', '');
 						declare_puipicklist('#listaGrupoPerfil', sourceData.concat(targetData), [], 'grupoPerfisIdList');
+						$('.alert').hide();
+						$('.field-error').removeClass('field-error');
+						window.location = '#content';
 					}
 				});
 				

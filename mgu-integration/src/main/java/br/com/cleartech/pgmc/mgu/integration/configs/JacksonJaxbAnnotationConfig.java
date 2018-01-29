@@ -10,7 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator.Feature;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
 @Configuration

@@ -79,7 +79,7 @@ public class LoginControllerService {
 		// USUARIO VALIDO LDAP
 		if ( valido && usuario != null ) {
 
-			Object mguResponse = responseValidaDynamicsECredenciamento( usuarioRequest, sistemaUsuario, usuario, false );
+			Object mguResponse = responseValidaDynamicsECredenciamento( usuarioRequest, sistemaUsuario, usuario );
 			if ( mguResponse != null ) {
 				return mguResponse;
 			}
@@ -124,7 +124,7 @@ public class LoginControllerService {
 		// USUARIO VALIDO LDAP
 		if ( valido && usuario != null ) {
 
-			Object mguResponse = responseValidaDynamicsECredenciamento( usuarioRequest, sistemaUsuario, usuario, true );
+			Object mguResponse = responseValidaDynamicsECredenciamento( usuarioRequest, sistemaUsuario, usuario );
 			if ( mguResponse != null ) {
 				return mguResponse;
 			}
@@ -185,12 +185,22 @@ public class LoginControllerService {
 
 		return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_1 );
 
+		// MguResponse mguResponse = new MguResponse();
+		// mguResponse.setRetorno( 1 );
+		// mguResponse.setDescricao( new String( "usuário ou senha está
+		// incorreto.".getBytes(), Charsets.ISO_8859_1 ) );
+		// mguResponse.setDescricao( "Usuário ou senha está incorreto." );
+		// mguResponse.setDados( null );
+		// mguResponse.setIdPerfil( null );
+		//
+		// return mguResponse;
+
 	}
 
-	private Object responseValidaDynamicsECredenciamento( Usuario usuarioRequest, String sistemaUsuario, Usuario usuario, boolean perfisAgrupado ) {
+	private Object responseValidaDynamicsECredenciamento( Usuario usuarioRequest, String sistemaUsuario, Usuario usuario ) {
 		if ( SistemaUtils.DYNAMICS.equalsIgnoreCase( sistemaUsuario ) && !usuario.getFlEnviarDynamics() ) {
 			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_26 );
-		} else if ( !usuario.getFlAprovado() && ( ( perfisAgrupado && SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) ) || ( !perfisAgrupado && !SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) ) ) ) {
+		} else if ( !usuario.getFlAprovado() && !SistemaUtils.CREDENCIAMENTO.equalsIgnoreCase( sistemaUsuario ) ) {
 			return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_8 );
 		}
 

@@ -137,9 +137,9 @@ public class Usuario implements Serializable {
 	private Perfil perfil;
 
 	// bi-directional many-to-one association to Usuario
-	@NotAudited
-	@OneToMany( mappedBy = "delegado" )
-	private List<Usuario> usuarios;
+	// @NotAudited
+	// @OneToMany( mappedBy = "delegado" )
+	// private List<Usuario> usuarios;
 
 	// bi-directional many-to-one association to Delegado
 	@NotAudited
@@ -368,14 +368,6 @@ public class Usuario implements Serializable {
 		this.delegado = usuario;
 	}
 
-	public List<Usuario> getUsuarios() {
-		return this.usuarios;
-	}
-
-	public void setUsuarios( List<Usuario> usuarios ) {
-		this.usuarios = usuarios;
-	}
-
 	public Date getUltimoAcesso() {
 		return ultimoAcesso;
 	}
@@ -511,7 +503,7 @@ public class Usuario implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flArovado=" + flAprovado + ", flPrimeiroAcessoSNOA=" + getFlPrimeiroAcessoSNOA() + ", perfil=" + perfil + ", usuarios=" + usuarios + ", grupoPerfis=" + grupoPerfis + ", flEnvioEmail=" + isFlEnvioEmail() + ", flUsuarioSistema=" + flUsuarioSistema + "]";
+		return "Usuario [id=" + id + ", dcCargo=" + dcCargo + ", dcEmail=" + dcEmail + ", flEnviarDynamics=" + flEnviarDynamics + ", sistema=" + sistema + ", dcTelefone=" + dcTelefone + ", dcTelefoneFixo=" + dcTelefoneFixo + ", flMaster=" + flMaster + ", flBloqueio=" + flBloqueio + ", flPrimeiroAcesso=" + flPrimeiroAcesso + ", nmUsuario=" + nmUsuario + ", dcUsername=" + dcUsername + ", nuCpf=" + nuCpf + ", flAprovado=" + flAprovado + ", flPrimeiroAcessoSNOA=" + getFlPrimeiroAcessoSNOA() + ", perfil=" + perfil + ", flEnvioEmail=" + isFlEnvioEmail() + ", flUsuarioSistema=" + flUsuarioSistema + "]";
 	}
 
 	public String getStatus() {

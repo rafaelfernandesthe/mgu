@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.AssuntoEnum;
@@ -44,15 +45,15 @@ public class EmailServiceImpl implements EmailService {
 				break;
 			case REMOVER_DELEGADO:
 				cabecalho = "Permissão de acesso modificada";
-				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Acesso ao PGMC &#150; Permiss&atilde;o de acesso modificada", "A sua permiss&atilde;o de acesso ao PGMC foi alterada com sucesso, voc&ecirc; foi removido do n&iacute;vel de delegado por <b>" + usuario.getNmUsuario() + "</b> para acessar o PGMC." ) );
 				if ( delegado != null ) {
+					corpoEmail.append( getEmailSemDadosBody( delegado.getNmUsuario(), "Acesso ao PGMC &#150; Permiss&atilde;o de acesso modificada", "A sua permiss&atilde;o de acesso ao PGMC foi alterada com sucesso, voc&ecirc; foi removido do n&iacute;vel de delegado por <b>" + usuario.getNmUsuario() + "</b> para acessar o PGMC." ) );
 					sendEmail( delegado.getDcEmail(), cabecalho, corpoEmail.toString() );
 				}
 				return;
 			case ADICIONAR_DELEGADO:
 				cabecalho = "Permissão de acesso modificada";
-				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Acesso ao PGMC &#150; Permiss&atilde;o de acesso modificada", "A sua permiss&atilde;o de acesso ao PGMC foi alterada com sucesso, voc&ecirc; foi delegado por <b>" + usuario.getNmUsuario() + "</b> para acessar o PGMC." ) );
 				if ( delegado != null ) {
+					corpoEmail.append( getEmailSemDadosBody( delegado.getNmUsuario(), "Acesso ao PGMC &#150; Permiss&atilde;o de acesso modificada", "A sua permiss&atilde;o de acesso ao PGMC foi alterada com sucesso, voc&ecirc; foi delegado por <b>" + usuario.getNmUsuario() + "</b> para acessar o PGMC." ) );
 					sendEmail( delegado.getDcEmail(), cabecalho, corpoEmail.toString() );
 				}
 				return;
@@ -116,14 +117,14 @@ public class EmailServiceImpl implements EmailService {
 		emailBody.append( "	<div align=center>" );
 		emailBody.append( "		<table border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>" );
 		emailBody.append( "			<tr style='height:64.75pt'>" );
-		emailBody.append( "				<td id=\"titulo\"><p>" + titulo + "</p>" );
+		emailBody.append( "				<td id=\"titulo\"><p>" + encode( titulo ) + "</p>" );
 		emailBody.append( "				</td>" );
 		emailBody.append( "				<td id=\"icone\" width=159 colspan=2>&nbsp;</p>" );
 		emailBody.append( "				</td>" );
 		emailBody.append( "			</tr>" );
 		emailBody.append( "			<tr>" );
 		emailBody.append( "				<td id=\"corpo\" colspan=\"3\">" );
-		emailBody.append( "					Prezado(a), " + nmUsuario );
+		emailBody.append( "					Prezado(a), " + encode( nmUsuario ) );
 		emailBody.append( "				</td>" );
 		emailBody.append( "			</tr>" );
 		emailBody.append( "			<tr>" );
@@ -151,7 +152,7 @@ public class EmailServiceImpl implements EmailService {
 		emailBody.append( "			</tr>" );
 		emailBody.append( "			<tr>" );
 		emailBody.append( "				<td id=\"corpo\" colspan=\"3\">" );
-		emailBody.append( "					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull; Usu&aacute;rio: <b>" + username + "</b>" );
+		emailBody.append( "					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull; Usu&aacute;rio: <b>" + encode( username ) + "</b>" );
 		emailBody.append( "				</td>" );
 		emailBody.append( "			</tr>" );
 		emailBody.append( "			<tr>" );
@@ -178,14 +179,14 @@ public class EmailServiceImpl implements EmailService {
 		emailBody.append( "	<div align=center>" );
 		emailBody.append( "		<table border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>" );
 		emailBody.append( "			<tr style='height:64.75pt'>" );
-		emailBody.append( "				<td id=\"titulo\"><p>" + titulo + "</p>" );
+		emailBody.append( "				<td id=\"titulo\"><p>" + encode( titulo ) + "</p>" );
 		emailBody.append( "				</td>" );
 		emailBody.append( "				<td id=\"icone\" width=159 colspan=2>&nbsp;</p>" );
 		emailBody.append( "				</td>" );
 		emailBody.append( "			</tr>" );
 		emailBody.append( "			<tr>" );
 		emailBody.append( "				<td id=\"corpo\" colspan=\"3\">" );
-		emailBody.append( "					Prezado(a), " + nmUsuario );
+		emailBody.append( "					Prezado(a), " + encode( nmUsuario ) );
 		emailBody.append( "				</td>" );
 		emailBody.append( "			</tr>" );
 		emailBody.append( "			<tr>" );
@@ -209,6 +210,10 @@ public class EmailServiceImpl implements EmailService {
 		emailBody.append( "</html>" );
 
 		return emailBody.toString();
+	}
+
+	private String encode( String nmUsuario ) {
+		return HtmlUtils.htmlEscape( nmUsuario );
 	}
 
 }

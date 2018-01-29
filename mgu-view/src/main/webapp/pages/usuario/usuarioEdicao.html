@@ -193,12 +193,19 @@
 						$('#telefone').val('');
 						$('#telefoneFixo').val('');
 						$('#delegado').puidropdown('selectValue', '');
-						$('#flBloqueio1')[0].checked = true;
-						$('#flBloqueio2')[0].checked = false;
+						if($('#flBloqueio1')[0] != undefined){
+							$('#flBloqueio1')[0].checked = true;
+						}
+						if($('#flBloqueio2')[0] != undefined){
+							$('#flBloqueio2')[0].checked = false;
+						}
 						$('#flEnvioEmail1')[0].checked = true;
 						$('#flEnvioEmail2')[0].checked = false;
 						$('#nivelEscalonamento').puidropdown('selectValue', '');
 						declare_puipicklist('#listaGrupoPerfil', sourceData.concat(targetData), [], 'grupoPerfisIdList');
+						$('.alert').hide();
+						$('.field-error').removeClass('field-error');
+						window.location = '#content';
 					}
 				});
 				
