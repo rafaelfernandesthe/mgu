@@ -42,7 +42,7 @@
 			    	
 			            <img alt="" th:src="@{'/resources/img/header.png'}" src="../../resources/img/header.png">
 			    	</div>
-			        
+			    	
 					<div class="row-fluid" th:include="/_layout/menu.html :: menu"></div>
 			         
 			    </div>
@@ -69,6 +69,12 @@
 				<div id="dlg">
 					<img th:src="@{/resources/img/carregando.gif}"/>
 				</div>
+				<div id="session-expired-modal" style="display:none;">
+	                <p>Sua sessão expirou por inatividade.</p>
+	                <div style="text-align:center">
+		                <div id="botaoLogin">Ir para página de Login</div>
+	                </div>
+				</div>
 		    </section>
 	    </div>
 	    
@@ -92,6 +98,7 @@
 		<script type="text/javascript" src="../../resources/js/mgu-commons.js" th:src="@{/resources/js/mgu-commons.js}"></script>
 		
 		<script>
+		
 			$(function (){
 				//usuario nao deve conseguir ver a pagina sendo 'montada'
 				//no style.css tem #content {display:none;}
@@ -124,12 +131,59 @@
 					removeUrlParams('success');
 				}
 				
+				$('#session-expired-modal').puidialog({
+					showEffect: 'fade',
+				    hideEffect: 'fade',
+				    effectSpeed: 'slow',
+				    closable: false,
+				    draggable: false,
+				    resizable: false,
+				    minimizable: false,
+				    maximizable: false,
+					responsive: true,
+				    modal: true,
+				    width: 300,
+				    title: 'Sessão Expirada',
+				});
+				
+				$('#botaoLogin').puibutton({
+					icon : 'fa-refresh',					
+					click : function (event){
+						document.location = getAppPath()+'/login';
+					}
+				});
+				
 					
 
 				//remover todos os parametros de url na tela de consulta 
 				//window.history.replaceState(null, null, window.location.pathname.replace(/\/s$/g,''));
 	
 			});
+			
+			//10 minutos
+			var sessionTime = 10 * 60 * 1000;
+			
+			var countDownDate = new Date().getTime() + sessionTime;
+			// Update the count down every 1 second
+			var x = setInterval(function() {
+			  var now = new Date().getTime();
+			  var distance = countDownDate - now;
+
+			  // Time calculations for minutes and seconds
+			  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+			  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+			  // Display the result in the element with id="tempoSessao"
+			  document.getElementById("tempoSessao").innerHTML = 'Sessão expira em ' + minutes + "m " + seconds + "s ";
+
+			  // If the count down is finished, write some text 
+			  if (distance < 0) {
+			    clearInterval(x);
+			    document.getElementById("tempoSessao").innerHTML = "Sessão expirada!";
+			    $('#session-expired-modal').puidialog('show');
+			  }
+			}, 1000);
+			
 		</script>
 		
 		<div layout:fragment="javascript-support"></div>		

@@ -38,6 +38,7 @@ public class WebLoggingFilter implements Filter {
 	public void doFilter( final ServletRequest request, final ServletResponse response, final FilterChain chain ) throws IOException, ServletException {
 		if ( request instanceof HttpServletRequest ) {
 			String requestStr = "%s - %s - %s - %s";
+			( (HttpServletRequest) request ).getSession(false);
 			url = ( (HttpServletRequest) request ).getRequestURL().toString();
 
 			if ( url != null && !url.contains( "." ) ) {

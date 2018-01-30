@@ -19,6 +19,8 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import br.com.cleartech.pgmc.mgu.configs.SessionListener;
+
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
@@ -31,6 +33,7 @@ public class MguViewApplication implements WebApplicationInitializer {
 
 		servletContext.addListener( new ContextLoaderListener( applicationContext ) );
 		servletContext.addListener( new RequestContextListener() );
+		servletContext.addListener( new SessionListener() );
 
 		ServletRegistration.Dynamic dispatcher = servletContext.addServlet( "dispatcher", dispatcherServlet( applicationContext ) );
 		dispatcher.setAsyncSupported( true );

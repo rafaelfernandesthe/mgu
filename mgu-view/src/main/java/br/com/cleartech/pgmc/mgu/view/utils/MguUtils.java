@@ -57,7 +57,11 @@ public class MguUtils {
 			p.setPerfilAcessoOperadoras( null );
 			p.setUsuarios( null );
 			if ( p.getSistema() != null ) {
-				p.setDcDescricao( p.getDcDescricao() + "+" + p.getSistema().getDcSistema() );
+				if ( p.getDcDescricao().length() > 45 ) {
+					p.setDcDescricao( p.getDcDescricao().substring( 0, 45 ) + "+" + p.getSistema().getDcSistema() );
+				} else {
+					p.setDcDescricao( p.getDcDescricao() + "+" + p.getSistema().getDcSistema() );
+				}
 			}
 			p.setSistema( null );
 			fields.add( new ValueObject( String.valueOf( p.getId() ), p.getDcDescricao() ) );
@@ -96,5 +100,5 @@ public class MguUtils {
 	public static MguUserDetails getUsuarioLogado() {
 		return (MguUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
-	
+
 }

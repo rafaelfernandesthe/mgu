@@ -184,17 +184,6 @@ public class LoginControllerService {
 		}
 
 		return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_1 );
-
-		// MguResponse mguResponse = new MguResponse();
-		// mguResponse.setRetorno( 1 );
-		// mguResponse.setDescricao( new String( "usuário ou senha está
-		// incorreto.".getBytes(), Charsets.ISO_8859_1 ) );
-		// mguResponse.setDescricao( "Usuário ou senha está incorreto." );
-		// mguResponse.setDados( null );
-		// mguResponse.setIdPerfil( null );
-		//
-		// return mguResponse;
-
 	}
 
 	private Object responseValidaDynamicsECredenciamento( Usuario usuarioRequest, String sistemaUsuario, Usuario usuario ) {

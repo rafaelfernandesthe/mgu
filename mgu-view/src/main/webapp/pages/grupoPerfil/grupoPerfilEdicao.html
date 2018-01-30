@@ -102,6 +102,9 @@
 					icon: 'fa-eraser',
 					click: function(event){
 						carregaListaPerfil(sourceData.concat(targetData), []);
+						$('.alert').hide();
+						$('.field-error').removeClass('field-error');
+						window.location = '#content';
 					}
 				});
 				

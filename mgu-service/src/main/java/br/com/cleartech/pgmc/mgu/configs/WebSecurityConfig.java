@@ -44,8 +44,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure( HttpSecurity http ) throws Exception {
 		//@formatter:off
-        http.addFilterBefore( new CharacterEncodingFilter( "UTF-8", true ), CsrfFilter.class )
+        http
+        	.addFilterBefore( new CharacterEncodingFilter( "UTF-8", true ), CsrfFilter.class )
         	.addFilterBefore( new WebLoggingFilter(), CsrfFilter.class )
+        	.csrf().ignoringAntMatchers( "/login","/logout" ).and()
             .authorizeRequests()
                 .antMatchers("/resources/js/*","/resources/img/*","/resources/img/login/*","/resources/css/*",
                 				"/senha/problemaSenha","/senha/trocarSenha", "/senha/recuperarSenha", "/senha/salvarNovaSenha").permitAll()

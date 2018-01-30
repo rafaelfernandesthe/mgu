@@ -19,7 +19,7 @@ public class MguLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler imple
 	@Override
 	public void onLogoutSuccess( HttpServletRequest request, HttpServletResponse response, Authentication authentication ) throws IOException, ServletException {
 
-		logger.info( "Logout {} ", authentication.getName() );
+		logger.info( "Logout {} ", authentication != null ? authentication.getName() : "Sessão expirada!" );
 		logger.info( request.getHeader( "Referer" ) );
 
 		super.onLogoutSuccess( request, response, authentication );

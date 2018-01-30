@@ -65,7 +65,25 @@ function declare_puipicklist(identifierPicklist, sourceData, targetData, fieldNa
         reponsive: true,
 	});
 	puipicklist_refresh("#"+fieldName);
-	
+}
+
+function declare_puipicklistCustom(identifierPicklist, sourceData, targetData, fieldName){
+	$(identifierPicklist).puipicklist({
+		sourceCaption: 'Disponíveis',
+		targetCaption: 'Selecionados',
+		filter: true,
+		filterMatchMode: 'contains',
+		sourceData: sourceData,
+		targetData: targetData,
+		reponsive: true,
+		content: function(option) {
+			var labelParts = option.label.toString().split("+");
+			if(!labelParts[1])
+				labelParts[1]="";
+			return '<div><span style="text-align:left">'+labelParts[0]+'</span><span style="float:right">'+ labelParts[1] +'</span></div>';
+		},
+	});
+	puipicklist_refresh("#"+fieldName);
 }
 
 function show_puidialog(identifierDialog, reqType, urlTarget){
