@@ -15,6 +15,8 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 
+import br.com.cleartech.pgmc.mgu.view.converters.GrupoPrestadoraConverter2Controller;
+import br.com.cleartech.pgmc.mgu.view.converters.GrupoPrestadoraConverter2Page;
 import br.com.cleartech.pgmc.mgu.view.converters.NivelEscalonamentoConverter2Controller;
 import br.com.cleartech.pgmc.mgu.view.converters.NivelEscalonamentoConverter2Page;
 import br.com.cleartech.pgmc.mgu.view.converters.UsuarioConverter2Controller;
@@ -43,6 +45,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		registry.addConverter( nivelEscalonamentoConverter2Controller() );
 		registry.addConverter( new UsuarioConverter2Page() );
 		registry.addConverter( usuarioConverter2Controller() );
+		registry.addConverter( new GrupoPrestadoraConverter2Page() );
+		registry.addConverter( grupoPrestadoraConverter2Controller() );
 		// registry.addConverterFactory( autocompleteConverterFactory() );
 	}
 
@@ -54,6 +58,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	@Bean
 	public UsuarioConverter2Controller usuarioConverter2Controller() {
 		return new UsuarioConverter2Controller();
+	}
+
+	@Bean
+	public GrupoPrestadoraConverter2Controller grupoPrestadoraConverter2Controller() {
+		return new GrupoPrestadoraConverter2Controller();
 	}
 
 	// @Bean

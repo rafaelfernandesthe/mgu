@@ -1,5 +1,7 @@
 package br.com.cleartech.pgmc.mgu.services.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,5 +28,9 @@ public class ParametroSistemaServiceImpl implements ParametroSistemaService {
 		return parametroSistemaRepository.findByGrupoPrestadoraId( idGrupoPrestadora );
 	}
 
+	@Override
+	public List<ParametroSistema> findAll() {
+		return (List<ParametroSistema>) parametroSistemaRepository.findAll();
+	}
 
 }

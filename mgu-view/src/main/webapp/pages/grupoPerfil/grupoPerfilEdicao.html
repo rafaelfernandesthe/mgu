@@ -67,29 +67,11 @@
 			  	var sourceData = [(${perfisSourceJSON})];
 			  	var targetData = [(${perfisTargetJSON})];
 			  	
-			  	carregaListaPerfil(sourceData,targetData);
+				declare_puipicklistCustom('#listaPerfil', sourceData, targetData, 'perfisIdList');
 				$('#telefoneFixo').mask('(00) 0000-0000');
 				$('#telefone').mask('(00) 00000-0000');
 				$('#cpf').mask('999.999.999-99' );
 				
-				function carregaListaPerfil(sourceData,targetData){
-					$('#listaPerfil').puipicklist({
-				        sourceCaption: 'Disponíveis',
-				        targetCaption: 'Selecionados',
-				        filter: true,
-				        filterMatchMode: 'contains',
-				        sourceData: sourceData,
-				        targetData: targetData,
-				        reponsive: true,
-				        content: function(option) {
-				        	var labelParts = option.label.toString().split("+");
-				        	if(!labelParts[1])
-					        	labelParts[1]="";
-					        return '<div><span style="text-align:left">'+labelParts[0]+'</span><span style="float:right">'+ labelParts[1] +'</span></div>';
-				        },
-					});
-					puipicklist_refresh("#perfisIdList");
-				}
 			
 				$('#voltar').puibutton({
 					icon: 'fa-arrow-circle-left',
@@ -101,7 +83,7 @@
 				$('#limparCampos').puibutton({
 					icon: 'fa-eraser',
 					click: function(event){
-						carregaListaPerfil(sourceData.concat(targetData), []);
+						$('.ui-picklist-button-removeall').puibutton('option','click').call();
 						$('.alert').hide();
 						$('.field-error').removeClass('field-error');
 						window.location = '#content';

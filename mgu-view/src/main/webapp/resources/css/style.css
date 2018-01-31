@@ -309,3 +309,7 @@ label.control-label {
   }
   
 }
+
+.ui-widget-overlay {
+	opacity: .3;
+}

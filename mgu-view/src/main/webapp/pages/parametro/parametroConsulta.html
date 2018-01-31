@@ -148,7 +148,7 @@
 			$('#voltar').puibutton({
 				icon: 'fa-arrow-circle-left',						
 			    click: function(event) {
-			    	document.location = document.referrer;
+			    	history.go(-1);
 			    }
 			});
 			

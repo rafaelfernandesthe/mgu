@@ -59,9 +59,11 @@
 	<div layout:fragment="javascript-support">
 
 		<script>
+			var sourceData;
+	  		var targetData;
 			$(function (){
-				var sourceData = [(${perfisSourceJSON})];
-			  	var targetData = [(${perfisTargetJSON})];
+				sourceData = [(${perfisSourceJSON})];
+			  	targetData = [(${perfisTargetJSON})];
 			  	
 			  	declare_puipicklistCustom('#listaPerfil', sourceData, targetData, 'perfisIdList');
 			  	
@@ -79,7 +81,7 @@
 				$('#limparCampos').puibutton({
 					icon: 'fa-eraser',
 					click: function(event){
-						declare_puipicklistCustom('#listaPerfil', sourceData, targetData, 'perfisIdList');
+						$('.ui-picklist-button-removeall').puibutton('option','click').call();
 						$('#nome').val('');
 						$('.alert').hide();
 						$('.field-error').removeClass('field-error');

@@ -202,7 +202,7 @@
 						$('#flEnvioEmail1')[0].checked = true;
 						$('#flEnvioEmail2')[0].checked = false;
 						$('#nivelEscalonamento').puidropdown('selectValue', '');
-						declare_puipicklist('#listaGrupoPerfil', sourceData.concat(targetData), [], 'grupoPerfisIdList');
+						$('.ui-picklist-button-removeall').puibutton('option','click').call();
 						$('.alert').hide();
 						$('.field-error').removeClass('field-error');
 						window.location = '#content';

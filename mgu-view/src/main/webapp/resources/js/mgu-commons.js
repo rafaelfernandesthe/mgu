@@ -63,6 +63,7 @@ function declare_puipicklist(identifierPicklist, sourceData, targetData, fieldNa
         sourceData: sourceData,
         targetData: targetData,
         reponsive: true,
+        effect : null
 	});
 	puipicklist_refresh("#"+fieldName);
 }
@@ -76,6 +77,7 @@ function declare_puipicklistCustom(identifierPicklist, sourceData, targetData, f
 		sourceData: sourceData,
 		targetData: targetData,
 		reponsive: true,
+		effect : null,
 		content: function(option) {
 			var labelParts = option.label.toString().split("+");
 			if(!labelParts[1])
