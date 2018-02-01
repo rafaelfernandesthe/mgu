@@ -73,7 +73,7 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 			}
 
 			if ( !usuario.getFlAprovado() || ( !usuario.getFlMaster() && !isDelegado ) || usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_ADM ) ) {
-				throw new MguViewAuthenticationException( "Acesso Negado, usuário sem permissao de acesso" );
+				throw new MguViewAuthenticationException( "Acesso Negado, usuário sem permissão de acesso" );
 			}
 
 			if ( usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO ) || usuario.getFlBloqueio().equals( BloqueioUsuario.BLOQUEADO_EXPIRADA ) ) {
