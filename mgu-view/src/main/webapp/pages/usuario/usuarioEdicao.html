@@ -11,7 +11,7 @@
 			<li><a href="#">Editar</a></li>
 		</ul>
 
-		<div class="painel-primary pui-panel" th:title="#{pagina.edicao}+' '+#{grupoPerfil}">
+		<div class="painel-primary pui-panel" th:title="#{pagina.edicao}+' '+#{usuario}">
 			<form action="#" method="post" th:action="@{/usuarioEdicao/salvar}" th:object="${usuario}" >
 
 				<div th:include="~{/_layout/mensagem.html}"></div>

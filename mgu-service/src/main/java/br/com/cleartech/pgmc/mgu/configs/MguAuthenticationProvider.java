@@ -15,6 +15,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.google.common.base.Strings;
+
 import br.com.cleartech.pgmc.mgu.entities.Delegado;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
@@ -42,6 +44,10 @@ public class MguAuthenticationProvider extends AbstractUserDetailsAuthentication
 	@Override
 	protected MguUserDetails retrieveUser( String username, UsernamePasswordAuthenticationToken authentication ) throws AuthenticationException {
 		logger.info( "Tentativa de Login com {}", username );
+		if ( Strings.isNullOrEmpty( authentication.getName() ) || Strings.isNullOrEmpty( authentication.getCredentials().toString() ) ) {
+			throw new MguViewAuthenticationException( "Acesso Negado" );
+		}
+		
 		String passwEncoded = GeradorSenha.md5( authentication.getCredentials().toString() );
 		try {
 			boolean usuarioLdapValido = ldapService.existeUsuarioMaster( authentication.getName(), passwEncoded );

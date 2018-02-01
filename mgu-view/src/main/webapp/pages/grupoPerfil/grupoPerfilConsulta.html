@@ -24,12 +24,15 @@
 				</div>
 
 				<div class="form-group buttonsGroup">
-					<button id="submitBt" type="submit">
-						<label th:text="#{botao.consultar}"></label>
-					</button>
+					<a id="voltar">
+						<label th:text="#{botao.voltar}"></label>
+					</a>
 					<a id="limparCampos">
 						<label th:text="#{botao.limpar}"></label>
 					</a>
+					<button id="submitBt" type="submit">
+						<label th:text="#{botao.consultar}"></label>
+					</button>
 				</div>
 			</form>
 		</div>
@@ -39,7 +42,7 @@
 		</div>
 		
 		<div id="dlgExcluir" title="Excluir?" style="display:none;">
-			Deseja realmente excluir o Grupo de Perfil selecionado?
+			Deseja realmente excluir esse grupo?
 		</div>
 	</div>
 
@@ -64,6 +67,13 @@
 			            {field: 'noGrupoPerfil', headerText: 'Nome'},
 			        ],
 			        datasource: localData,
+				});
+				
+				$('#voltar').puibutton({
+					icon: 'fa-arrow-circle-left',						
+				    click: function(event) {
+				    	document.location = document.referrer;
+				    }
 				});
 				
 				$('#submitBt').puibutton({

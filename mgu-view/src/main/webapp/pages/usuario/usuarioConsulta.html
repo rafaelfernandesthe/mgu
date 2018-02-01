@@ -90,12 +90,15 @@
 				</div>
 
 				<div class="form-group buttonsGroup">
-					<button id="buttonFind" type="submit"> 
-						<label th:text="#{botao.consultar}"></label>
-					</button>
+					<a id="voltar">
+						<label th:text="#{botao.voltar}"></label>
+					</a>
 					<a id="limparCampos"> 
 						<label th:text="#{botao.limpar}"></label>
 					</a>
+					<button id="buttonFind" type="submit"> 
+						<label th:text="#{botao.consultar}"></label>
+					</button>
 				</div>
 
 			</form>
@@ -109,10 +112,10 @@
 			<div id="tabelaGruposUsuario"></div>
 		</div>
 		<div id="dlgExcluir" title="Excluir?" style="display:none;">
-			Deseja realmente excluir o usuário selecionado?
+			Deseja realmente excluir esse usuário?
 		</div>
 		<div id="dlgResetar" title="Resetar?" style="display:none;">
-			Deseja realmente resetar o usuário selecionado?
+			Deseja realmente resetar a senha do usuário?
 		</div>
 		<div id="dlgBloquear" title="Bloquear?" style="display:none;">
 			Deseja realmente bloquear o usuário selecionado?
@@ -129,6 +132,13 @@
 			$(function (){
 				$('#cpf').mask('999.999.999-99' );
 				$('#telefone').mask('(00) 00000-0000');
+				
+				$('#voltar').puibutton({
+					icon: 'fa-arrow-circle-left',						
+				    click: function(event) {
+				    	document.location = document.referrer;
+				    }
+				});
 				
 				$("#buttonFind").puibutton({
 					icon: 'fa-search',

@@ -1,6 +1,5 @@
 package br.com.cleartech.pgmc.mgu.controllers;
 
-
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.LinkedHashMap;
@@ -32,7 +31,7 @@ public class ParametroConsultaController {
 
 	@Autowired
 	private ParametroSistemaService parametroSistemaService;
-	
+
 	@Autowired
 	private GrupoPrestadoraRepository grupoPrestadoraRepository;
 
@@ -69,7 +68,7 @@ public class ParametroConsultaController {
 		parametroSistema.setGrupoPrestadora( grupoPrestadora );
 		parametroSistemaService.salvar( parametroSistema );
 
-		return "redirect:/parametro" + MappedViews.SUCESSO_PARAMETRO_NOVO.getPath();
+		return "redirect:/parametro" + String.format( MappedViews.SUCESSO_PARAMETRO_NOVO.getPath(), "Parâmetro salvo com sucesso!" );
 	}
 
 	private boolean validaParametroSistema( ParametroSistema parametroSistema, BindingResult result ) {
@@ -98,8 +97,6 @@ public class ParametroConsultaController {
 			result.addError( error );
 			valido = false;
 		}
-
-
 
 		return valido;
 	}
