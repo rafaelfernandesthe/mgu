@@ -200,7 +200,7 @@ public class LoginControllerService {
 		usuario.setQtTentativaAcesso( usuario.getQtTentativaAcesso() == null ? 1 : usuario.getQtTentativaAcesso() + 1 );
 
 		ParametroSistema parametroSistema = parametroSistemaService.findByGrupoPrestadoraId( usuario.getPrestadoras().get( 0 ).getGrupoPrestadora().getId() );
-		if ( parametroSistema != null && parametroSistema.getFlQtdErrarSenha().equals( 1 ) ) {
+		if ( parametroSistema != null && parametroSistema.getFlQtdErrarSenha().equals( 0 ) ) {
 			if ( parametroSistema.getQtdErrarSenha() != null && usuario.getQtTentativaAcesso() != null && usuario.getQtTentativaAcesso() > ( parametroSistema.getQtdErrarSenha() ) ) {
 				usuario.setFlBloqueio( BloqueioUsuario.BLOQUEADO_TENTATIVA );
 				usuarioService.salvar( usuario );
@@ -232,7 +232,6 @@ public class LoginControllerService {
 				}
 			}
 
-			logger.info( "Usuário bloqueado por inatividade? {}", parametroSistema.getFlBloquearInatividade().equals( 0 ) );
 			// Bloqueado por inatividade
 			if ( parametroSistema.getFlBloquearInatividade().equals( 0 ) ) {
 				logger.info( "Último acesso: {}", usuario.getUltimoAcesso() );
@@ -241,7 +240,7 @@ public class LoginControllerService {
 				} else {
 					int diff = (int) ( ( new Date().getTime() - usuario.getUltimoAcesso().getTime() ) / ( 1000 * 60 * 60 * 24 ) );
 					logger.info( "Dias de inatividade: {}", diff );
-					if ( diff >= parametroSistema.getPrazoExpirarSenha() ) {
+					if ( diff >= parametroSistema.getBloquearInatividade() ) {
 						return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_31 );
 					}
 				}
@@ -251,6 +250,7 @@ public class LoginControllerService {
 				if ( parametroSistema.getFlAcessoSimultaneo().equals( 0 ) ) {
 					boolean usuarioLogado = acessoSimultaneoService.existsByUsername( usuario.getDcUsername() );
 					usuario.setUsuarioLogado( usuarioLogado );
+					usuario.setSistema( sistemaUsuario );
 					acessoSimultaneoService.salvarByUsuario( usuario );
 				}
 			} catch ( Exception e ) {

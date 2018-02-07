@@ -69,9 +69,15 @@ public class UsuarioCadastroController {
 	@PostMapping( "/salvar" )
 	public String salvar( @Validated @ModelAttribute( "usuario" ) UsuarioCadastroDTO usuarioDto, BindingResult bindingResult, Model model ) {
 
-		// carregar grupos
-		List<GrupoPerfil> groupSelecteds = MguUtils.idListToGrupoPerfilList( usuarioDto.getGrupoPerfisIdList() );
-		usuarioDto.setGrupoPerfis( groupSelecteds );
+		List<GrupoPerfil> groupSelecteds = new ArrayList<GrupoPerfil>();
+
+		if ( usuarioDto.getGrupoPerfisIdList().isEmpty() ) {
+			bindingResult.addError( new FieldError( "usuario", "grupoPerfisIdList", usuarioDto.getGrupoPerfisIdList(), false, null, null, "Grupo de Perfil(s) é obrigatório." ) );
+		} else {
+			// carregar grupos
+			groupSelecteds = MguUtils.idListToGrupoPerfilList( usuarioDto.getGrupoPerfisIdList() );
+			usuarioDto.setGrupoPerfis( groupSelecteds );
+		}
 
 		if ( StringUtils.isEmpty( usuarioDto.getNuCpf() ) ) {
 			bindingResult.addError( new FieldError( "usuario", "nuCpf", usuarioDto.getNuCpf(), false, null, null, "CPF é obrigatório." ) );

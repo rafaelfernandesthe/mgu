@@ -8,7 +8,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mysema.query.BooleanBuilder;
+import com.mysema.query.jpa.JPQLQuery;
 import com.mysema.query.types.ConstructorExpression;
+import com.mysema.query.types.Order;
+import com.mysema.query.types.OrderSpecifier;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.QGrupoPerfil;
@@ -32,7 +35,8 @@ public class GrupoPerfilRepositoryImpl extends QuerydslJpaRepositoryAux<GrupoPer
 	public List<GrupoPerfil> findByPrestadora( Long idPrestadora ) {
 		BooleanBuilder bb = new BooleanBuilder();
 		bb.and( qGrupoPerfil.prestadora.id.eq( idPrestadora ) );
-		return findAll( bb );
+		JPQLQuery query = createQuery( bb ).orderBy( new OrderSpecifier<String>( Order.ASC, qGrupoPerfil.noGrupoPerfil ) );
+		return query.list( qGrupoPerfil );
 	}
 
 	@Override
@@ -43,7 +47,8 @@ public class GrupoPerfilRepositoryImpl extends QuerydslJpaRepositoryAux<GrupoPer
 		if ( noGrupoPerfil != null )
 			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( "grupoPerfil.noGrupoPerfil", noGrupoPerfil ) );
 
-		return findAll( bb );
+		JPQLQuery query = createQuery( bb ).orderBy( new OrderSpecifier<String>( Order.ASC, qGrupoPerfil.noGrupoPerfil.toLowerCase() ) );
+		return query.list( qGrupoPerfil );
 	}
 
 	@Override

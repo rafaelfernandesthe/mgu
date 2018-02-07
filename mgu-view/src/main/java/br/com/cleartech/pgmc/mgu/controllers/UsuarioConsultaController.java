@@ -75,9 +75,6 @@ public class UsuarioConsultaController {
 	public String excluir( @PathVariable Long idUsuario ) {
 		try {
 			usuarioService.excluir( idUsuario );
-		} catch ( LdapException e ) {
-			e.printStackTrace();
-			return erroExcluir + "Usuário não existe no LDAP!";
 		} catch ( Exception e ) {
 			e.printStackTrace();
 			return erroExcluir + e.getMessage();

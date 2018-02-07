@@ -22,7 +22,7 @@ public class AcessoSimultaneoServiceImpl implements AcessoSimultaneoService {
 	@Override
 	public boolean existsByUsername( String username ) {
 		List<AcessoSimultaneo> acessosSimultaneos = acessoSimultaneoRepository.findByUsername( username );
-		return acessosSimultaneos.isEmpty() ? true : false;
+		return acessosSimultaneos.isEmpty() ? false : true;
 	}
 
 	@Override

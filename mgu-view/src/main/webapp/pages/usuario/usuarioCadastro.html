@@ -16,7 +16,7 @@
 			<form action="#" method="post" th:action="@{/usuarioCadastro/salvar}" th:object="${usuario}" >
 			
 				<div th:include="~{/_layout/mensagem.html}"></div>
-
+				
 				<div class="row">
 					<div class="col-sm-2 form-group ">
 						<label class="control-label required" for="nome" th:text="#{nmUsuario}">Nome</label>
@@ -102,7 +102,7 @@
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label required" for="bloqueado" th:text="#{flBloqueio}">Bloqueado: </label>
+						<label class="control-label" for="bloqueado" th:text="#{flBloqueio}">Bloqueado: </label>
 					</div>
 					<div id="bloqueado" class="col-sm-2 form-group">
 						<label class="radio-inline"> <input type="radio" th:value="BLOQUEADO_PRIMEIROACESSO" th:field="*{flBloqueio}">Não</label> 
@@ -111,7 +111,7 @@
 				</div>
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label required" for="enviaEmail" th:text="#{flEnvioEmail}">Envia E-mail: </label>
+						<label class="control-label" for="enviaEmail" th:text="#{flEnvioEmail}">Envia E-mail: </label>
 					</div>
 					<div id="enviaEmail" class="col-sm-4 form-group">
 						<label class="radio-inline"> <input type="radio" th:value="false" th:field="*{flEnvioEmail}">Não</label> 

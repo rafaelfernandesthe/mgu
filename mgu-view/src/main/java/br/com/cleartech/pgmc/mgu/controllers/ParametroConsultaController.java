@@ -74,20 +74,20 @@ public class ParametroConsultaController {
 	private boolean validaParametroSistema( ParametroSistema parametroSistema, BindingResult result ) {
 		boolean valido = true;
 
-		if ( parametroSistema.getFlPrazoExpirarSenha() != null && parametroSistema.getFlPrazoExpirarSenha() == 0 && parametroSistema.getPrazoExpirarSenha() == null ) {
-			ObjectError error = new ObjectError( "prazoExpirarSenha", "Prazo para expirar Senha é obrigatório." );
+		if ( isNullOuZero( parametroSistema.getFlPrazoExpirarSenha() ) && isNullOuZero( parametroSistema.getPrazoExpirarSenha() ) ) {
+			ObjectError error = new ObjectError( "prazoExpirarSenha", "Prazo para expirar Senha é obrigatório e deve ser diferente de 0(zero)." );
 			result.addError( error );
 			valido = false;
 		}
 
-		if ( parametroSistema.getFlBloquearInatividade() != null && parametroSistema.getFlBloquearInatividade() == 0 && parametroSistema.getBloquearInatividade() == null ) {
-			ObjectError error = new ObjectError( "bloquearInatividade", "Bloquear usuário por inatividade é obrigatório." );
+		if ( isNullOuZero( parametroSistema.getFlBloquearInatividade() ) && isNullOuZero( parametroSistema.getBloquearInatividade() ) ) {
+			ObjectError error = new ObjectError( "bloquearInatividade", "Bloquear usuário por inatividade é obrigatório e deve ser diferente de 0(zero)." );
 			result.addError( error );
 			valido = false;
 		}
 
-		if ( parametroSistema.getFlQtdErrarSenha() != null && parametroSistema.getFlQtdErrarSenha() == 0 && parametroSistema.getQtdErrarSenha() == null ) {
-			ObjectError error = new ObjectError( "qtdErrarSenha", "Quantidade de vezes que o usuário pode errar a senha é obrigatório." );
+		if ( isNullOuZero( parametroSistema.getFlQtdErrarSenha() ) && isNullOuZero( parametroSistema.getQtdErrarSenha() ) ) {
+			ObjectError error = new ObjectError( "qtdErrarSenha", "Quantidade de vezes que o usuário pode errar a senha é obrigatório e deve ser diferente de 0(zero)." );
 			result.addError( error );
 			valido = false;
 		}
@@ -99,5 +99,12 @@ public class ParametroConsultaController {
 		}
 
 		return valido;
+	}
+
+	private boolean isNullOuZero( Integer value ) {
+		if ( value == null || value == 0 ) {
+			return true;
+		}
+		return false;
 	}
 }

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class WsLoggingFilter implements Filter {
 
 	/**
-	 * Logging todo o request da aplicação para auditoria
+	 * Logging todo o request no WS para auditoria
 	 */
 	private final static Logger LOGGER = LoggerFactory.getLogger( WsLoggingFilter.class );
 

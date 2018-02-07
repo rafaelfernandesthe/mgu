@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 
 import com.mysema.query.BooleanBuilder;
+import com.mysema.query.jpa.JPQLQuery;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.ConstructorExpression;
 import com.mysema.query.types.Order;
@@ -86,7 +87,8 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 			bb.and( qUsuario.flBloqueio.eq( usuario.getFlBloqueio() ) );
 		}
 
-		return createQuery( bb ).list( ConstructorExpression.create( Usuario.class, qUsuario.id, qUsuario.nmUsuario, qUsuario.dcUsername, qUsuario.dcEmail, qUsuario.dcCargo, qUsuario.dcTelefone, qUsuario.nuCpf, qUsuario.flBloqueio ) );
+		JPQLQuery query = createQuery( bb ).orderBy( new OrderSpecifier<String>( Order.ASC, qUsuario.nmUsuario.toLowerCase() ) );
+		return query.list( ConstructorExpression.create( Usuario.class, qUsuario.id, qUsuario.nmUsuario, qUsuario.dcUsername, qUsuario.dcEmail, qUsuario.dcCargo, qUsuario.dcTelefone, qUsuario.nuCpf, qUsuario.flBloqueio ) );
 	}
 
 	@Override
@@ -99,7 +101,7 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 
 		JPAQuery query = new JPAQuery( this.getEm() );
 		query.from( qUsuario ).leftJoin( qUsuario.delegadosComuns, qDelegado ).where( bb );
-		query.orderBy( new OrderSpecifier<>( Order.ASC, qUsuario.dcUsername ) );
+		query.orderBy( new OrderSpecifier<String>( Order.ASC, qUsuario.nmUsuario.toLowerCase() ) );
 
 		return query.list( ConstructorExpression.create( Usuario.class, qUsuario.id, qUsuario.nmUsuario, qUsuario.dcUsername, qUsuario.dcEmail ) );
 	}
@@ -109,6 +111,23 @@ public class UsuarioRepositoryImpl extends QuerydslJpaRepositoryAux<Usuario, Lon
 		BooleanBuilder bb = new BooleanBuilder();
 		bb.and( qUsuario.id.eq( idUsuario ) );
 		return createQuery( bb ).singleResult( ConstructorExpression.create( Usuario.class, qUsuario.id, qUsuario.nmUsuario, qUsuario.dcUsername, qUsuario.dcEmail ) );
+	}
+
+	@Override
+	public boolean existsDelegadoComUsuario( Long idUsuario ) {
+		boolean exists = false;
+		BooleanBuilder bb = new BooleanBuilder();
+		bb.and( qUsuario.delegado.id.eq( idUsuario ) );
+		exists = createQuery( bb ).exists();
+
+		if ( exists )
+			return true;
+
+		JPAQuery query = new JPAQuery( getEm() );
+		QDelegado qDelegado = QDelegado.delegado;
+		query.from( qDelegado );
+		query.where( qDelegado.usuarioComum.id.eq( idUsuario ) );
+		return query.exists();
 	}
 
 }

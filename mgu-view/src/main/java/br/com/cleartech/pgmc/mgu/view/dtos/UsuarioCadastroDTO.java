@@ -1,12 +1,12 @@
 package br.com.cleartech.pgmc.mgu.view.dtos;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.NivelEscalonamento;
@@ -48,7 +48,6 @@ public class UsuarioCadastroDTO implements Serializable {
 
 	private Prestadora prestadora;
 
-	@NotEmpty
 	private List<Integer> grupoPerfisIdList;
 
 	private BloqueioUsuario flBloqueio = BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO;
@@ -187,6 +186,9 @@ public class UsuarioCadastroDTO implements Serializable {
 	}
 
 	public List<Integer> getGrupoPerfisIdList() {
+		if ( grupoPerfisIdList == null ) {
+			grupoPerfisIdList = new ArrayList<Integer>();
+		}
 		return grupoPerfisIdList;
 	}
 

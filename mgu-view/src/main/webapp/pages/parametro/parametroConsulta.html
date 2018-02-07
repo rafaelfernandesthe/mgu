@@ -79,7 +79,7 @@
 						<label class="control-label required" for="grupoPrestadora" th:text="#{parametros.grupo.prestadora}">Grupo Prestadora: </label>
 					</div>
 					<div class="col-sm-2 form-group">
-						<select class="form-control input-sm" id="grupoPrestadora" th:field="*{grupoPrestadora.id}" >
+						<select class="form-control input-sm pui-dropdown" id="grupoPrestadora" th:field="*{grupoPrestadora.id}" >
 							<option th:each="grupoPrestadora : ${listaGrupoPrestadora}" th:value="${grupoPrestadora.key}" th:text="${grupoPrestadora.value}">Grupo Prestadora</option>
 						</select>
 					</div>
@@ -89,7 +89,7 @@
 						<label class="control-label required" for="acessoSimultaneo" th:text="#{parametros.acesso.simultaneo}">Acesso Simultaneo: </label>
 					</div>
 					<div class="col-sm-2 form-group">
-						<select class="form-control input-sm" id="acessoSimultaneo"	th:field="*{flAcessoSimultaneo}">
+						<select class="form-control input-sm" id="acessoSimultaneo" th:field="*{flAcessoSimultaneo}">
 							<option value="1">Sim</option>
 							<option value="0">Não</option>
 						</select>

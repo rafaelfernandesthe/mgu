@@ -33,41 +33,41 @@ public class EmailServiceImpl implements EmailService {
 		switch ( assunto ) {
 			case CRIAR_USUARIO:
 				cabecalho = "Credenciamento ESOA - Credenciais de acesso";
-				corpoEmail.append( getEmailBody( usuario.getNmUsuario(), usuario.getDcUsername(), usuario.getSenhaSemMD5(), "Credenciamento ESOA &#45; Credenciais de acesso", "A cria&ccedil;&atilde;o do seu usu&aacute;rio foi um sucesso. Seguem os dados de acesso:" ) );
+				corpoEmail.append( getEmailBody( usuario.getNmUsuario(), usuario.getDcUsername(), usuario.getSenhaSemMD5(), "Credenciamento ESOA - Credenciais de acesso", "A cria&ccedil;&atilde;o do seu usu&aacute;rio foi um sucesso. Seguem os dados de acesso:" ) );
 				break;
 			case BLOQUEAR_USUARIO:
 				cabecalho = "Bloqueio de usuário";
-				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Bloqueio de usu&aacute;rio", "O usu&aacute;rio <b>" + usuario.getNmUsuario() + "</b> foi bloqueado pelo administrador do sistema" ) );
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Bloqueio de usuário", "O usu&aacute;rio <b>" + encode( usuario.getNmUsuario() ) + "</b> foi bloqueado pelo administrador do sistema" ) );
 				break;
 			case DESBLOQUEAR_USUARIO:
 				cabecalho = "Usuário desbloqueado";
-				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Usu&aacute;rio desbloqueado", "O usu&aacute;rio <b>" + usuario.getNmUsuario() + "</b> foi desbloqueado pelo administrador do sistema" ) );
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Usuário desbloqueado", "O usu&aacute;rio <b>" + encode( usuario.getNmUsuario() ) + "</b> foi desbloqueado pelo administrador do sistema" ) );
 				break;
 			case REMOVER_DELEGADO:
 				cabecalho = "Permissão de acesso modificada";
 				if ( delegado != null ) {
-					corpoEmail.append( getEmailSemDadosBody( delegado.getNmUsuario(), "Acesso ao PGMC &#150; Permiss&atilde;o de acesso modificada", "A sua permiss&atilde;o de acesso ao PGMC foi alterada com sucesso, voc&ecirc; foi removido do n&iacute;vel de delegado por <b>" + usuario.getNmUsuario() + "</b> para acessar o PGMC." ) );
+					corpoEmail.append( getEmailSemDadosBody( delegado.getNmUsuario(), "Acesso ao PGMC - Permissão de acesso modificada", "A sua permiss&atilde;o de acesso ao PGMC foi alterada com sucesso, voc&ecirc; foi removido do n&iacute;vel de delegado por <b>" + encode( usuario.getNmUsuario() ) + "</b> para acessar o PGMC." ) );
 					sendEmail( delegado.getDcEmail(), cabecalho, corpoEmail.toString() );
 				}
 				return;
 			case ADICIONAR_DELEGADO:
 				cabecalho = "Permissão de acesso modificada";
 				if ( delegado != null ) {
-					corpoEmail.append( getEmailSemDadosBody( delegado.getNmUsuario(), "Acesso ao PGMC &#150; Permiss&atilde;o de acesso modificada", "A sua permiss&atilde;o de acesso ao PGMC foi alterada com sucesso, voc&ecirc; foi delegado por <b>" + usuario.getNmUsuario() + "</b> para acessar o PGMC." ) );
+					corpoEmail.append( getEmailSemDadosBody( delegado.getNmUsuario(), "Acesso ao PGMC - Permissão de acesso modificada", "A sua permiss&atilde;o de acesso ao PGMC foi alterada com sucesso, voc&ecirc; foi delegado por <b>" + encode( usuario.getNmUsuario() ) + "</b> para acessar o PGMC." ) );
 					sendEmail( delegado.getDcEmail(), cabecalho, corpoEmail.toString() );
 				}
 				return;
 			case REMOVER_USUARIO:
 				cabecalho = "Usuário removido do sistema";
-				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Usu&aacute;rio removido do sistema", "O usu&aacute;rio <b>" + usuario.getNmUsuario() + "</b> foi removido do sistema, a partir deste momento não possui mais acesso ao PGMC" ) );
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Usuário removido do sistema", "O usu&aacute;rio <b>" + encode( usuario.getNmUsuario() ) + "</b> foi removido do sistema, a partir deste momento n&atilde;o possui mais acesso ao PGMC" ) );
 				break;
 			case REINICIAR_SENHA:
 				cabecalho = "Senha reiniciada com sucesso";
-				corpoEmail.append( getEmailBody( usuario.getNmUsuario(), usuario.getDcUsername(), usuario.getDcSenha(), "Acesso ao PGMC &#150; altera&ccedil;&atilde;o de dados cadastrais", "A senha de acesso ao PGMC foi reiniciada com sucesso. Seguem os novos dados de acesso:" ) );
+				corpoEmail.append( getEmailBody( usuario.getNmUsuario(), usuario.getDcUsername(), usuario.getDcSenha(), "Acesso ao PGMC - alteração de dados cadastrais", "A senha de acesso ao PGMC foi reiniciada com sucesso. Seguem os novos dados de acesso:" ) );
 				break;
 			case ALTERAR_SENHA:
 				cabecalho = "Senha alterada com sucesso";
-				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Acesso ao PGMC &#150; altera&ccedil;&atilde;o de dados cadastrais", "A senha de acesso ao PGMC foi alterada com sucesso." ) );
+				corpoEmail.append( getEmailSemDadosBody( usuario.getNmUsuario(), "Acesso ao PGMC - alteração de dados cadastrais", "A senha de acesso ao PGMC foi alterada com sucesso." ) );
 				break;
 			default:
 				break;

@@ -348,7 +348,18 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public void excluir( Long idUsuario ) throws Exception {
 		Usuario usuario = usuarioRepository.findOne( idUsuario );
 
-		ldapService.deleteUser( usuario.getDcUsername(), usuario.getFlMaster() );
+		if ( usuarioRepository.existsDelegadoComUsuario( idUsuario ) ) {
+			throw new MguException( "MGU ERRO: Usuário não pode ser excluído porque é um delegado!" );
+		}
+
+		usuarioRepository.delete( idUsuario );
+
+		try {
+			ldapService.deleteUser( usuario.getDcUsername(), usuario.getFlMaster() );
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			throw new LdapException( "LDAP ERRO: Usuário não existe no LDAP!" );
+		}
 
 		try {
 			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
@@ -367,13 +378,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 			throw new MessagingException( "MGU ALERTA: Usuário excluído com sucesso porém não foi possível enviar o e-mail para \"" + usuario.getDcUsername() + "\"" );
 		}
 
-		usuarioRepository.delete( idUsuario );
-
 	}
 
 	@Override
 	public void resetar( Long idUsuario, String usuarioLogado, boolean realizadoPeloMaster ) throws Exception {
 		Usuario usuario = usuarioRepository.findOne( idUsuario );
+		usuario.setQtTentativaAcesso( 0l );
 
 		String novaSenha = GeradorSenha.getRandomPassword( 8 );
 		usuario.setDcSenha( novaSenha );
@@ -396,6 +406,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		usuario.setFlPrimeiroAcessoSNOA( false );
 		usuario.setUltimaTrocaSenha( new Date() );
 		usuario.setUltimoAcesso( new Date() );
+		usuario.setQtTentativaAcesso( 0l );
 
 		novaSenha = GeradorSenha.md5( novaSenha );
 		usuario.setDcSenha( novaSenha );

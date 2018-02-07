@@ -23,23 +23,41 @@ public class MailConfig {
 	public JavaMailSender getJavaMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-		mailSender.setHost( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_HOST.getDcParametro() ) );
-		mailSender.setPort( Integer.valueOf( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_PORT.getDcParametro() ) ) );
+		// adicionar <system-properties><property name="mgu.development"
+		// value="true"/></system-properties> no servidor localhost
+		String prop = System.getProperty( "mgu.development" );
+		boolean isDevelopment = !Strings.isNullOrEmpty( prop ) ? Boolean.parseBoolean( prop ) : false;
+		if ( isDevelopment ) {
 
-		String usernameMail = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_USERNAME.getDcParametro() );
-		String passwordMail = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_PASSWORD.getDcParametro() );
-		boolean auth = false;
-		if ( !Strings.isNullOrEmpty( usernameMail ) && !Strings.isNullOrEmpty( passwordMail ) ) {
-			auth = true;
-			mailSender.setUsername( usernameMail );
-			mailSender.setPassword( passwordMail );
+			mailSender.setHost( "smtp.cleartech.com.br" );
+			mailSender.setPort( 25 );
+			mailSender.setUsername( "svc_no_reply" );
+			mailSender.setPassword( "CTECH@noreply" );
+
+			Properties props = mailSender.getJavaMailProperties();
+			props.put( "mail.smtp.auth", "true" );
+			props.put( "mail.transport.protocol", "smtp" );
+			props.put( "mail.smtp.starttls.enable", "true" );
+			// props.put( "mail.debug", "true" );
+
+		} else {
+
+			mailSender.setHost( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_HOST.getDcParametro() ) );
+			mailSender.setPort( Integer.valueOf( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_PORT.getDcParametro() ) ) );
+
+			String usernameMail = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_USERNAME.getDcParametro() );
+			String passwordMail = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.MAIL_PASSWORD.getDcParametro() );
+			boolean auth = false;
+			if ( !Strings.isNullOrEmpty( usernameMail ) && !Strings.isNullOrEmpty( passwordMail ) ) {
+				auth = true;
+				mailSender.setUsername( usernameMail );
+				mailSender.setPassword( passwordMail );
+			}
+
+			Properties props = mailSender.getJavaMailProperties();
+			props.put( "mail.smtp.auth", String.valueOf( auth ) );
+
 		}
-
-		Properties props = mailSender.getJavaMailProperties();
-		props.put( "mail.smtp.auth", String.valueOf( auth ) );
-		// props.put( "mail.transport.protocol", "smtp" );
-		// props.put( "mail.smtp.starttls.enable", "true" );
-		// props.put( "mail.debug", "true" );
 
 		return mailSender;
 	}

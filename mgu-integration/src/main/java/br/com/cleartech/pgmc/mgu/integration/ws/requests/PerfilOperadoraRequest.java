@@ -5,6 +5,8 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+
 @XmlRootElement( name = "perfilOperadora" )
 public class PerfilOperadoraRequest {
 	private Long id;
@@ -39,6 +41,7 @@ public class PerfilOperadoraRequest {
 		this.sistema = sistema;
 	}
 
+	@JacksonXmlElementWrapper( useWrapping = false )
 	@XmlElement( name = "tipoOperadoras" )
 	public List<TipoOperadoraBean> getTipoOperadoras() {
 		return tipoOperadoras;

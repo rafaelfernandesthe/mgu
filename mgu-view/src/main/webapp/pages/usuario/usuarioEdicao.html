@@ -106,7 +106,7 @@
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label required" for="listaGrupoPerfil" th:text="#{grupoPerfisIdList}">Grupo Perfil</label>
+						<label class="control-label" for="listaGrupoPerfil" th:text="#{grupoPerfisIdList}">Grupo Perfil</label>
 					</div>
 					<div class="col-sm-10 form-group">
 						<div class="pui-picklist" id="listaGrupoPerfil">
@@ -118,7 +118,7 @@
 
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label required" for="bloqueado" th:text="#{flBloqueio}">Bloqueado: </label>
+						<label class="control-label" for="bloqueado" th:text="#{flBloqueio}">Bloqueado: </label>
 					</div>
 					<div id="bloqueado" class="col-sm-10 form-group">
 						<label class="radio-inline" th:if="${usuario.flBloqueio.toInt() == 2 || usuario.flBloqueio.toInt() == 3 || usuario.flBloqueio.toInt() == 4}"> <input type="radio" th:value="BLOQUEADO_NAO" disabled th:text="Não"></label>
@@ -135,7 +135,7 @@
 				</div>
 				<div class="row">
 					<div class="col-sm-2 form-group ">
-						<label class="control-label required" for="enviaEmail" th:text="#{flEnvioEmail}">Envia E-mail: </label>
+						<label class="control-label" for="enviaEmail" th:text="#{flEnvioEmail}">Envia E-mail: </label>
 					</div>
 					<div id="enviaEmail" class="col-sm-4 form-group">
 						<label class="radio-inline"> <input type="radio" th:value="false" th:field="*{flEnvioEmail}">Não</label> 
