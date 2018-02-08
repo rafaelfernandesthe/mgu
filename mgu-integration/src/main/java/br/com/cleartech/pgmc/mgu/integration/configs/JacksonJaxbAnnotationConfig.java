@@ -35,7 +35,7 @@ public class JacksonJaxbAnnotationConfig extends WebMvcConfigurationSupport {
 	@Override
 	public void configureMessageConverters( List<HttpMessageConverter<?>> converters ) {
 		Jackson2ObjectMapperBuilder builder = Jackson2ObjectMapperBuilder.xml();
-		builder.indentOutput( true );
+		builder.indentOutput( false );
 		ObjectMapper objectMapper = builder.build();
 		objectMapper.registerModule( new JaxbAnnotationModule() );
 		// objectMapper.setSerializationInclusion( Include.NON_NULL );
