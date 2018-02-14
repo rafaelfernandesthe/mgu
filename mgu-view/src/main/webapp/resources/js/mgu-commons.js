@@ -117,7 +117,9 @@ function show_puidialog(identifierDialog, reqType, urlTarget){
 		                    context: this,
 		                }).done(function(msg) {
 		                			var sucesso = msg.match(/sucesso/i) ? 1 : 0;
-		                			document.location = document.location+'&success='+sucesso+'&msgText='+msg;
+		                			var finalPath = document.location.toString().indexOf('?') == -1 ? '?' : '&';
+		                			finalPath += 'success='+sucesso+'&msgText='+msg;
+		                			document.location = document.location+finalPath;
 		                		});
 	                	
 	                }
