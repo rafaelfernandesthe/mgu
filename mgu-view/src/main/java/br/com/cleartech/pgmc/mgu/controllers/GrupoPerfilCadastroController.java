@@ -53,6 +53,8 @@ public class GrupoPerfilCadastroController {
 	@PostMapping( "/salvar" )
 	public String salvar( @Validated @ModelAttribute( "grupoPerfil" ) GrupoPerfilCadastroDTO grupoPerfilDto, BindingResult bindingResult, Model model ) {
 
+		MguUtils.trim(grupoPerfilDto);
+		
 		// carregar grupos
 		List<Perfil> perfisSelecionados = MguUtils.idListToPerfilList( grupoPerfilDto.getPerfisIdList() );
 		grupoPerfilDto.setPerfis( perfisSelecionados );
@@ -75,7 +77,7 @@ public class GrupoPerfilCadastroController {
 				LOGGER.info( "salvando: " + grupoPerfilDto.toString() );
 				grupoPerfilDto.setPrestadora( prestadoraService.prestadoraPorUsername( MguUtils.getUsuarioLogado().getDcUsername() ) );
 				grupoPerfilService.salvar( grupoPerfilDto.getGrupoPerfil() );
-				return "redirect:/grupoPerfilConsulta/s" + String.format( MappedViews.SUCESSO_PARAMETRO_NOVO.getPath(), "Grupo de Perfil Cadastrado com sucesso!" );
+				return "redirect:/grupoPerfilConsulta/s" + MguUtils.adjustURL( null, String.format( MappedViews.SUCESSO_PARAMETRO.getPath(), "Grupo de Perfil Cadastrado com sucesso!" ) );
 			} catch ( Exception e ) {
 				bindingResult.addError( new ObjectError( "grupoPerfil", e.getMessage() ) );
 			}

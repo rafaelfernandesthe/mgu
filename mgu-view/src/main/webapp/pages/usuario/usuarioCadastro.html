@@ -9,7 +9,7 @@
 		<ul class="pui-breadcrumb">
 			<li><a href="#">Home</a></li>
 			<li><a href="#">Usuário</a></li>
-			<li><a href="#">Cadastro</a></li>
+			<li><a href="#">Cadastrar Usuário</a></li>
 		</ul>
 
 		<div class="painel-primary pui-panel" th:title="#{pagina.cadastro}+' '+#{usuario}">
@@ -22,14 +22,14 @@
 						<label class="control-label required" for="nome" th:text="#{nmUsuario}">Nome</label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input id="nome" class="form-control input-sm" th:errorclass="field-error" th:field="*{nmUsuario}" autofocus />
+						<input id="nome" class="form-control input-sm" th:errorclass="field-error" th:field="*{nmUsuario}" maxlength="50" autofocus />
 					</div>
 
 					<div class="col-sm-2 form-group ">
 						<label class="control-label required" for="username" th:text="#{dcUsername}">Usuário Acesso: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="username" th:errorclass="field-error" th:field="*{dcUsername}" />
+						<input class="form-control input-sm" id="username" th:errorclass="field-error" th:field="*{dcUsername}" maxlength="30"/>
 					</div>
 				</div>
 				<div class="row">
@@ -37,14 +37,14 @@
 						<label class="control-label required" for="email" th:text="#{dcEmail}">Email: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="email" th:errorclass="field-error" th:field="*{dcEmail}" />
+						<input class="form-control input-sm" id="email" th:errorclass="field-error" th:field="*{dcEmail}" maxlength="250"/>
 					</div>
 
 					<div class="col-sm-2 form-group ">
 						<label class="control-label" for="cargo" th:text="#{dcCargo}">Cargo: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="cargo" th:field="*{dcCargo}" />
+						<input class="form-control input-sm" id="cargo" th:field="*{dcCargo}" maxlength="50"/>
 					</div>
 				</div>
 

@@ -68,7 +68,7 @@ public class ParametroConsultaController {
 		parametroSistema.setGrupoPrestadora( grupoPrestadora );
 		parametroSistemaService.salvar( parametroSistema );
 
-		return "redirect:/parametro" + String.format( MappedViews.SUCESSO_PARAMETRO_NOVO.getPath(), "Parâmetro salvo com sucesso!" );
+		return "redirect:/parametro" + MguUtils.adjustURL( null, String.format( MappedViews.SUCESSO_PARAMETRO.getPath(), "Parâmetro salvo com sucesso!" ) );
 	}
 
 	private boolean validaParametroSistema( ParametroSistema parametroSistema, BindingResult result ) {

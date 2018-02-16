@@ -85,6 +85,8 @@ public class UsuarioEdicaoController {
 	@PostMapping( "/salvar" )
 	public String salvar( @Validated @ModelAttribute( "usuario" ) UsuarioCadastroDTO usuarioDto, BindingResult bindingResult, Model model ) {
 
+		MguUtils.trim(usuarioDto);
+		
 		usuarioDB = usuarioService.find( usuarioDto.getId() );
 		// carregar grupos
 		List<GrupoPerfil> groupSelecteds = MguUtils.idListToGrupoPerfilList( usuarioDto.getGrupoPerfisIdList() );
@@ -99,12 +101,12 @@ public class UsuarioEdicaoController {
 				usuarioService.salvarEditar( usuarioDto.getUsuario(), usuarioDB );
 
 				if ( usuarioDto.getUrlConsulta() != null ) {
-					return "redirect:" + usuarioDto.getUrlConsulta() + String.format( MappedViews.SUCESSO_PARAMETRO_COMPEMENTO.getPath(), mensagem );
+					return "redirect:" + MguUtils.adjustURL( usuarioDto.getUrlConsulta(), String.format( MappedViews.SUCESSO_PARAMETRO.getPath(), mensagem ) );
 				} else {
-					return "redirect:/usuarioConsulta" + String.format( MappedViews.SUCESSO_PARAMETRO_NOVO.getPath(), mensagem );
+					return "redirect:/usuarioConsulta" + MguUtils.adjustURL( null, String.format( MappedViews.SUCESSO_PARAMETRO.getPath(), mensagem ) );
 				}
 			} catch ( MessagingException e ) {
-				return "redirect:/usuarioConsulta" + String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO_NOVO.getPath(), e.getMessage(), mensagem );
+				return "redirect:/usuarioConsulta" + MguUtils.adjustURL( null, String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO.getPath(), e.getMessage(), mensagem ) );
 			} catch ( Exception e ) {
 				bindingResult.addError( new ObjectError( "usuario", e.getMessage() ) );
 			}

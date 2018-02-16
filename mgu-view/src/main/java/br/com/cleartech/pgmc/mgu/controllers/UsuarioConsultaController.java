@@ -48,6 +48,7 @@ public class UsuarioConsultaController {
 
 	@GetMapping( "/s" )
 	public String lista( @ModelAttribute( "usuario" ) UsuarioConsultaDTO usuarioDTO, Model model, HttpServletRequest request ) {
+		MguUtils.trim( usuarioDTO );
 		model.addAttribute( "msgAlertaEmail", request.getParameter( "msgAlertaEmail" ) );
 		List<Usuario> lista = usuarioService.find( usuarioDTO.getUsuario(), MguUtils.getUsuarioLogado().getIdPrestadora() );
 		model.addAttribute( "usuariosJSON", MguUtils.getJSON( lista ) );

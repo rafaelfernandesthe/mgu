@@ -8,7 +8,7 @@
 		<ul class="pui-breadcrumb">
 			<li><a href="#">Home</a></li>
 			<li><a href="#">Usuario</a></li>
-			<li><a href="#">Consulta</a></li>
+			<li><a href="#">Gerenciar Usuário</a></li>
 		</ul>
  
 		<div class="painel-primary pui-panel-toggleable" th:title="#{pagina.consulta}+' '+#{usuario}">
@@ -21,14 +21,14 @@
 						<label class="control-label" for="nome" th:text="#{nmUsuario}"></label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="nome" th:field="*{nmUsuario}" autofocus />
+						<input class="form-control input-sm" id="nome" th:field="*{nmUsuario}" autofocus maxlength="50"/>
 					</div>
 
 					<div class="col-sm-2 form-group ">
 						<label class="control-label" for="username" th:text="#{dcUsername}">Usuário Acesso: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="username" th:field="*{dcUsername}" />
+						<input class="form-control input-sm" id="username" th:field="*{dcUsername}" maxlength="30"/>
 					</div>
 				</div>
 				<div class="row">
@@ -36,14 +36,14 @@
 						<label class="control-label" for="email" th:text="#{dcEmail}">Email: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="email" th:field="*{dcEmail}" />
+						<input class="form-control input-sm" id="email" th:field="*{dcEmail}" maxlength="250"/>
 					</div>
 
 					<div class="col-sm-2 form-group ">
 						<label class="control-label" for="cargo" th:text="#{dcCargo}">Cargo: </label>
 					</div>
 					<div class="col-sm-4 form-group">
-						<input class="form-control input-sm" id="cargo" th:field="*{dcCargo}" />
+						<input class="form-control input-sm" id="cargo" th:field="*{dcCargo}" maxlength="50"/>
 					</div>
 				</div>
 

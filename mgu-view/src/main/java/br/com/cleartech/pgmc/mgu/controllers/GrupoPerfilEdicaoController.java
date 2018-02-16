@@ -64,6 +64,8 @@ public class GrupoPerfilEdicaoController {
 	@PostMapping( "/salvar" )
 	public String salvar( @Validated @ModelAttribute( "grupoPerfil" ) GrupoPerfilCadastroDTO grupoPerfilDto, BindingResult bindingResult, Model model ) {
 
+		MguUtils.trim(grupoPerfilDto);
+		
 		GrupoPerfil grupoPerfilDB = grupoPerfilService.find( grupoPerfilDto.getId() );
 
 		// carregar perfis
@@ -76,9 +78,9 @@ public class GrupoPerfilEdicaoController {
 				LOGGER.info( "salvando: " + grupoPerfilDto.toString() );
 				grupoPerfilService.salvarEditar( grupoPerfilDto.getGrupoPerfil(), grupoPerfilDB );
 				if ( grupoPerfilDto.getUrlConsulta() != null ) {
-					return "redirect:" + grupoPerfilDto.getUrlConsulta() + String.format( MappedViews.SUCESSO_PARAMETRO_COMPEMENTO.getPath(), mensagem );
+					return "redirect:" + MguUtils.adjustURL( grupoPerfilDto.getUrlConsulta(), String.format( MappedViews.SUCESSO_PARAMETRO.getPath(), mensagem ) );
 				} else {
-					return "redirect:/grupoPerfilConsulta" + String.format( MappedViews.SUCESSO_PARAMETRO_NOVO.getPath(), mensagem );
+					return "redirect:/grupoPerfilConsulta" + MguUtils.adjustURL( null, String.format( MappedViews.SUCESSO_PARAMETRO.getPath(), mensagem ) );
 				}
 			} catch ( Exception e ) {
 				bindingResult.addError( new ObjectError( "grupoPerfil", e.getMessage() ) );

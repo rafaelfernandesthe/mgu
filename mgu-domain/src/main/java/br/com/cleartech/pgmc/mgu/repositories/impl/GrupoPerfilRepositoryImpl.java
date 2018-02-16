@@ -19,6 +19,7 @@ import br.com.cleartech.pgmc.mgu.entities.QUsuario;
 import br.com.cleartech.pgmc.mgu.repositories.GrupoPerfilRepository;
 import br.com.cleartech.pgmc.mgu.repositories.util.QuerydslJpaRepositoryAux;
 import br.com.cleartech.pgmc.mgu.utils.QueryUtils;
+import br.com.cleartech.pgmc.mgu.utils.StringUtils;
 
 @Repository
 @Transactional( readOnly = true )
@@ -44,7 +45,7 @@ public class GrupoPerfilRepositoryImpl extends QuerydslJpaRepositoryAux<GrupoPer
 		BooleanBuilder bb = new BooleanBuilder();
 		if ( idPrestadora != null )
 			bb.and( qGrupoPerfil.prestadora.id.eq( idPrestadora ) );
-		if ( noGrupoPerfil != null )
+		if ( !StringUtils.isEmpty( noGrupoPerfil ) )
 			bb.and( QueryUtils.containsIgnoreCaseIgnoreAccents( "grupoPerfil.noGrupoPerfil", noGrupoPerfil ) );
 
 		JPQLQuery query = createQuery( bb ).orderBy( new OrderSpecifier<String>( Order.ASC, qGrupoPerfil.noGrupoPerfil.toLowerCase() ) );

@@ -101,4 +101,46 @@ public class MguUtils {
 		return (MguUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
+	public static String adjustURL( String urlPath, String urlParameters ) {
+		String result = "";
+		if ( urlPath == null && urlParameters.startsWith( "&" ) ) {
+			result = "?" + urlParameters.substring( 1 );
+		} else if ( urlPath == null ) {
+			result = urlParameters;
+		} else {
+			if ( urlPath.contains( "?" ) && urlParameters.startsWith( "?" ) ) {
+				result = urlPath + "&" + urlParameters.substring( 1 );
+			} else if ( !urlPath.contains( "?" ) && urlParameters.startsWith( "&" ) ) {
+				result = urlPath + "?" + urlParameters.substring( 1 );
+			} else {
+				result = urlPath + urlParameters;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Executa o trim() em todos os campos do tipo String 
+	 * @param object
+	 */
+	public static void trim( Object object ) {
+		Class<?> k = object.getClass();
+		String actualValue = null;
+		for ( Field f : k.getDeclaredFields() ) {
+			f.setAccessible( true );
+			if ( f.getType().equals( String.class ) ) {
+				try {
+					actualValue = (String) f.get( object );
+					if ( actualValue != null ) {
+						f.set( object, actualValue.trim() );
+					}
+				} catch ( IllegalArgumentException e ) {
+					e.printStackTrace();
+				} catch ( IllegalAccessException e ) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 }

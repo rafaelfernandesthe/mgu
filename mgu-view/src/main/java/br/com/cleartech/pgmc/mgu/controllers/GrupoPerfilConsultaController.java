@@ -35,6 +35,7 @@ public class GrupoPerfilConsultaController {
 
 	@GetMapping( "/s" )
 	public String lista( GrupoPerfil grupoPerfil, Model model ) {
+		MguUtils.trim( grupoPerfil );
 		grupoPerfil.setPrestadora( new Prestadora( MguUtils.getUsuarioLogado().getIdPrestadora() ) );
 		List<GrupoPerfil> lista = grupoPerfilService.findByPrestadoraAndNome( grupoPerfil );
 
