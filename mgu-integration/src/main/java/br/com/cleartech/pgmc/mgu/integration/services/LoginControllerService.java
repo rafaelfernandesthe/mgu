@@ -429,7 +429,13 @@ public class LoginControllerService {
 						perfilResponse.setId( perfil.getIdPerfil() );
 						perfilResponse.setNome( perfil.getDcPerfil() );
 
-						grupoPrestadoraResponse.getPrestadoras().get( 0 ).getPerfis().add( perfilResponse );
+						for(PrestadoraResponse p : grupoPrestadoraResponse.getPrestadoras()){
+							if(p.getId().equals( prestadora.getId() )){
+								p.getPerfis().add( perfilResponse );
+								break;
+							}
+						};
+//						grupoPrestadoraResponse.getPrestadoras().get( 0 ).getPerfis().add( perfilResponse );
 					}
 
 					if ( SistemaUtils.GED.equalsIgnoreCase( sistemaUsuario ) && perfil.getDcPerfil().equals( "GED_PMS" ) && loginResponse.getIsPMS() ) {
@@ -438,7 +444,13 @@ public class LoginControllerService {
 						perfilResponse.setNome( loginResponse.getPerfilGed() );
 						loginResponse.setIsPMS( false );
 
-						grupoPrestadoraResponse.getPrestadoras().get( 0 ).getPerfis().add( perfilResponse );
+						for(PrestadoraResponse p : grupoPrestadoraResponse.getPrestadoras()){
+							if(p.getId().equals( prestadora.getId() )){
+								p.getPerfis().add( perfilResponse );
+								break;
+							}
+						};
+//						grupoPrestadoraResponse.getPrestadoras().get( 0 ).getPerfis().add( perfilResponse );
 					}
 
 				}
