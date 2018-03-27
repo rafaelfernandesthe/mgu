@@ -7,7 +7,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<version.project>4.0.0</version.project>
+		<version.project>4.0.1</version.project>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

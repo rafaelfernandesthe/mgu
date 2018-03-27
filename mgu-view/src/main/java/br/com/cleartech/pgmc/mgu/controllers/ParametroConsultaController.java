@@ -37,7 +37,6 @@ public class ParametroConsultaController {
 
 	@GetMapping
 	public String init( Model model, HttpServletRequest request ) {
-
 		ParametroSistema parametroSistema = parametroSistemaService.findByGrupoPrestadoraId( MguUtils.getUsuarioLogado().getIdGrupoPrestadora() );
 		if ( parametroSistema == null ) {
 			model.addAttribute( "parametroSistema", new ParametroSistema() );
@@ -107,4 +106,5 @@ public class ParametroConsultaController {
 		}
 		return false;
 	}
+
 }
