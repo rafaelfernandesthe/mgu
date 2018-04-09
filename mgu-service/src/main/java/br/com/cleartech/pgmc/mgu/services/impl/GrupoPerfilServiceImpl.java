@@ -46,8 +46,8 @@ public class GrupoPerfilServiceImpl implements GrupoPerfilService {
 	}
 
 	@Override
-	public List<GrupoPerfil> findByUsuario( Long idUsuario ) {
-		return grupoPerfilRepository.findByUsuario( idUsuario );
+	public List<GrupoPerfil> findByUsuario( Long idUsuario, Long prestadoraLogadaId ) {
+		return grupoPerfilRepository.findByUsuario( idUsuario, prestadoraLogadaId );
 	}
 
 	@Override

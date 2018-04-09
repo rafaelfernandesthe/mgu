@@ -1,5 +1,7 @@
 package br.com.cleartech.pgmc.mgu.repositories.impl;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,13 @@ public class PrestadoraRepositoryImpl extends QuerydslJpaRepositoryAux<Prestador
 		}
 
 		return createQuery( bb ).limit( 1 ).uniqueResult( qPrestadora );
+	}
+
+	@Override
+	public List<Prestadora> buscaPrestadorasDoGrupo( Long grupoPrestadoraId ) {
+		BooleanBuilder bb = new BooleanBuilder();
+		bb.and( qPrestadora.grupoPrestadora.id.eq( grupoPrestadoraId ) );
+		return createQuery( bb ).list( qPrestadora );
 	}
 
 }

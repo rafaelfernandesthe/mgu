@@ -53,9 +53,11 @@ public class GrupoPerfilRepositoryImpl extends QuerydslJpaRepositoryAux<GrupoPer
 	}
 
 	@Override
-	public List<GrupoPerfil> findByUsuario( Long idUsuario ) {
+	public List<GrupoPerfil> findByUsuario( Long idUsuario, Long prestadoraLogadaId ) {
 		BooleanBuilder bb = new BooleanBuilder();
 		bb.and( qGrupoPerfil.usuarios.any().id.eq( idUsuario ) );
+		if ( prestadoraLogadaId != null )
+			bb.and( qGrupoPerfil.prestadora.id.eq( prestadoraLogadaId ) );
 		return createQuery( bb ).list( ConstructorExpression.create( GrupoPerfil.class, qGrupoPerfil.id, qGrupoPerfil.noGrupoPerfil ) );
 	}
 

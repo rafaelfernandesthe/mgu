@@ -138,7 +138,7 @@ public class MguIntegrationController {
 				if ( valor ) {
 					return ResponseUtils.mguResponse( CodigoMensagem.RETORNO_5 );
 				}
-				usuarioService.salvar( usuario, true );
+				usuarioService.salvar( usuario, true, prestadora );
 				mguResponse = ResponseUtils.mguResponse( CodigoMensagem.RETORNO_2 );
 
 			} catch ( LdapException e ) {

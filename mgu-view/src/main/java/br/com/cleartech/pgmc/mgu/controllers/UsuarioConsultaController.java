@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.cleartech.pgmc.mgu.entities.FiltroValor;
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
+import br.com.cleartech.pgmc.mgu.entities.Prestadora;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 import br.com.cleartech.pgmc.mgu.exceptions.LdapException;
 import br.com.cleartech.pgmc.mgu.services.GrupoPerfilService;
+import br.com.cleartech.pgmc.mgu.services.PrestadoraService;
 import br.com.cleartech.pgmc.mgu.services.TempoRespostaService;
 import br.com.cleartech.pgmc.mgu.services.UsuarioService;
 import br.com.cleartech.pgmc.mgu.view.dtos.UsuarioConsultaDTO;
@@ -37,6 +39,9 @@ public class UsuarioConsultaController {
 
 	@Autowired
 	private GrupoPerfilService grupoPerfilService;
+
+	@Autowired
+	private PrestadoraService prestadoraService;
 
 	@Autowired
 	private TempoRespostaService tempoRespostaService;
@@ -79,7 +84,7 @@ public class UsuarioConsultaController {
 	@GetMapping( "/grupoPerfis/{idUsuario}" )
 	@ResponseBody
 	public List<GrupoPerfil> carregaGrupos( @PathVariable Long idUsuario ) {
-		return grupoPerfilService.findByUsuario( idUsuario );
+		return grupoPerfilService.findByUsuario( idUsuario , MguUtils.getUsuarioLogado().getIdPrestadora());
 	}
 
 	@RequestMapping( method = RequestMethod.DELETE, value = "/excluir/{idUsuario}" )
@@ -129,7 +134,8 @@ public class UsuarioConsultaController {
 	@ResponseBody
 	public String desbloquear( @PathVariable Long idUsuario ) {
 		try {
-			usuarioService.desbloquear( usuarioService.find( idUsuario ) );
+			Prestadora prestadoraLogada = prestadoraService.findById( MguUtils.getUsuarioLogado().getIdPrestadora() );
+			usuarioService.desbloquear( usuarioService.find( idUsuario ), prestadoraLogada );
 		} catch ( Exception e ) {
 			e.printStackTrace();
 			return "Ocorreu um erro ao tentar desbloquear o Usuário! " + e.getMessage();

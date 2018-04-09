@@ -2,6 +2,7 @@ package br.com.cleartech.pgmc.mgu.services;
 
 import java.util.List;
 
+import br.com.cleartech.pgmc.mgu.entities.Prestadora;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
 
@@ -23,13 +24,13 @@ public interface UsuarioService {
 
 	void bloquear( Usuario usuario, boolean removerMaster ) throws Exception;
 
-	void desbloquear( Usuario usuario ) throws Exception;
+	void desbloquear( Usuario usuario, Prestadora prestadoraLogada ) throws Exception;
 
 	void alteraBloqueioUsuario( Usuario usuario, BloqueioUsuario bloqueio, String usuarioAlterando ) throws Exception;
 
-	Usuario salvar( Usuario usuario, boolean master ) throws Exception;
+	Usuario salvar( Usuario usuario, boolean master, Prestadora prestadoraLogada ) throws Exception;
 
-	Usuario salvarEditar( Usuario usuarioAtualizado, Usuario usuarioDB ) throws Exception;
+	Usuario salvarEditar( Usuario usuarioAtualizado, Usuario usuarioDB, Prestadora prestadoraLogada ) throws Exception;
 
 	List<Usuario> findUsuarioDelegadoDisponivel( Long idUsuario, Long idPrestadora );
 

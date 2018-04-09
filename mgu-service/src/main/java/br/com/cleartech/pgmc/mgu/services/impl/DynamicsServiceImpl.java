@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
 
+import br.com.cleartech.pgmc.mgu.entities.Prestadora;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.ParametrizacaoEnum;
 import br.com.cleartech.pgmc.mgu.services.DynamicsService;
@@ -37,7 +38,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 	private ParametrizacaoService parametrizacaoService;
 
 	@Override
-	public DadosRetorno criarUsuario( Usuario usuario ) throws Exception {
+	public DadosRetorno criarUsuario( Usuario usuario, Prestadora prestadoraLogada ) throws Exception {
 		JGet.tryUrl( getEndpoint() );
 
 		DadosUsuarioPgmc d = new DadosUsuarioPgmc();
@@ -56,7 +57,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		marshaller.marshal( nomeUsuario, System.out );
 		d.setNome( nomeUsuario );
 
-		JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadoras().get( 0 ).getNoPrestadora() );
+		JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( prestadoraLogada.getNoPrestadora() );
 		marshaller.marshal( prest, System.out );
 		d.setNomePrestadora( prest );
 
@@ -79,7 +80,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 		marshaller.marshal( email, System.out );
 		d.setEmail( email );
 
-		JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadoras().get( 0 ).getId() ) );
+		JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( prestadoraLogada.getId() ) );
 		marshaller.marshal( spid, System.out );
 		d.setSpidPrestadora( spid );
 
@@ -93,7 +94,7 @@ public class DynamicsServiceImpl implements DynamicsService {
 	}
 
 	@Override
-	public void alterar( Usuario usuario, boolean removerAcesso ) throws JAXBException, Exception {
+	public void alterar( Usuario usuario, boolean removerAcesso, Prestadora prestadoraLogada ) throws JAXBException, Exception {
 		JGet.tryUrl( getEndpoint() );
 		try {
 			DadosUsuarioPgmc d = new DadosUsuarioPgmc();
@@ -112,17 +113,17 @@ public class DynamicsServiceImpl implements DynamicsService {
 			marshaller.marshal( nomeUsuario, System.out );
 			d.setNome( nomeUsuario );
 
-			if ( usuario.getPrestadoras().isEmpty() ) {
+			if ( prestadoraLogada == null ) {
 				logger.warn( "PROBLEMAS NA INTEGACAO -> prestadora == null" );
 				return;
 			}
 
-			JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( usuario.getPrestadoras().get( 0 ).getId() ) );
+			JAXBElement<String> spid = new ObjectFactory().createDadosUsuarioPgmcSpidPrestadora( String.valueOf( prestadoraLogada.getId() ) );
 			marshaller.marshal( spid, System.out );
 			d.setSpidPrestadora( spid );
 
-			if ( usuario.getPrestadoras().get( 0 ).getNoPrestadora() != null ) {
-				JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( usuario.getPrestadoras().get( 0 ).getNoPrestadora() );
+			if ( prestadoraLogada.getNoPrestadora() != null ) {
+				JAXBElement<String> prest = new ObjectFactory().createDadosUsuarioPgmcNomePrestadora( prestadoraLogada.getNoPrestadora() );
 				marshaller.marshal( prest, System.out );
 				d.setNomePrestadora( prest );
 			}

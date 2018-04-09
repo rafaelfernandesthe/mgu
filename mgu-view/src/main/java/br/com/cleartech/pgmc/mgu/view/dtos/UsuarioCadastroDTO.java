@@ -48,6 +48,8 @@ public class UsuarioCadastroDTO implements Serializable {
 
 	private Prestadora prestadora;
 
+	private List<Prestadora> prestadoraList;
+
 	private List<Integer> grupoPerfisIdList;
 
 	private BloqueioUsuario flBloqueio = BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO;
@@ -100,8 +102,12 @@ public class UsuarioCadastroDTO implements Serializable {
 		usuario.setGrupoPerfis( this.getGrupoPerfis() );
 		usuario.setFlBloqueio( this.getFlBloqueio() );
 		usuario.setFlEnvioEmail( this.getFlEnvioEmail() );
-		usuario.setPrestadoras( Arrays.asList( this.getPrestadora() ) );
 		usuario.setDelegado( this.getDelegado() );
+		if ( usuario.getFlMaster() ) {
+			usuario.setPrestadoras( Arrays.asList( this.getPrestadora() ) );
+		} else {
+			usuario.setPrestadoras( this.getPrestadoraList() );
+		}
 		return usuario;
 	}
 
@@ -271,6 +277,14 @@ public class UsuarioCadastroDTO implements Serializable {
 
 	public void setUrlConsulta( String urlConsulta ) {
 		this.urlConsulta = urlConsulta;
+	}
+
+	public List<Prestadora> getPrestadoraList() {
+		return prestadoraList;
+	}
+
+	public void setPrestadoraList( List<Prestadora> prestadoraList ) {
+		this.prestadoraList = prestadoraList;
 	}
 
 }

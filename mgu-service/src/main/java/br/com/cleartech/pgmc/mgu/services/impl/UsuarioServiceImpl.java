@@ -18,6 +18,7 @@ import br.com.cleartech.pgmc.mgu.entities.Delegado;
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.LogSenhaUsuario;
 import br.com.cleartech.pgmc.mgu.entities.Perfil;
+import br.com.cleartech.pgmc.mgu.entities.Prestadora;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.enums.AssuntoEnum;
 import br.com.cleartech.pgmc.mgu.enums.BloqueioUsuario;
@@ -27,10 +28,12 @@ import br.com.cleartech.pgmc.mgu.exceptions.DynamicsException;
 import br.com.cleartech.pgmc.mgu.exceptions.LdapException;
 import br.com.cleartech.pgmc.mgu.exceptions.MguException;
 import br.com.cleartech.pgmc.mgu.repositories.LogSenhaUsuarioRepository;
+import br.com.cleartech.pgmc.mgu.repositories.PrestadoraRepository;
 import br.com.cleartech.pgmc.mgu.repositories.UsuarioRepository;
 import br.com.cleartech.pgmc.mgu.services.DelegadoService;
 import br.com.cleartech.pgmc.mgu.services.DynamicsService;
 import br.com.cleartech.pgmc.mgu.services.EmailService;
+import br.com.cleartech.pgmc.mgu.services.GrupoPerfilService;
 import br.com.cleartech.pgmc.mgu.services.LdapService;
 import br.com.cleartech.pgmc.mgu.services.ParametrizacaoService;
 import br.com.cleartech.pgmc.mgu.services.PerfilService;
@@ -61,6 +64,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 	private PerfilService perfilService;
 
 	@Autowired
+	private GrupoPerfilService grupoPerfilService;
+
+	@Autowired
 	private DynamicsService dynamicsService;
 
 	@Autowired
@@ -72,13 +78,16 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Autowired
 	private DelegadoService delegadoService;
 
+	@Autowired
+	private PrestadoraRepository prestadoraRepository;
+
 	@Override
 	public Usuario salvar( Usuario usuario ) {
 		return usuarioRepository.save( usuario );
 	}
 
 	@Override
-	public Usuario salvar( Usuario usuario, boolean master ) throws Exception {
+	public Usuario salvar( Usuario usuario, boolean master, Prestadora prestadoraLogada ) throws Exception {
 		if ( !master ) {
 			usuario.setFlEnviarDynamics( false );
 		}
@@ -95,7 +104,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		try {
 			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
 			if ( dynamicsAtivo ) {
-				DadosRetorno retornoDynamics = dynamicsService.criarUsuario( usuario );
+				DadosRetorno retornoDynamics = dynamicsService.criarUsuario( usuario, prestadoraLogada );
 
 				if ( StatusDynamics.SUCESSO.getValue().equals( retornoDynamics.getId().getValue() ) ) {
 					if ( mensagensValidasDynamics.contains( retornoDynamics.getMensagem().getValue() ) ) {
@@ -129,7 +138,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
-	public Usuario salvarEditar( Usuario usuarioAtualizado, Usuario usuarioDB ) throws Exception {
+	public Usuario salvarEditar( Usuario usuarioAtualizado, Usuario usuarioDB, Prestadora prestadoraLogada ) throws Exception {
 		usuarioAtualizado.setUltimoAcesso( usuarioDB.getUltimoAcesso() == null ? new Date() : usuarioDB.getUltimoAcesso() );
 		usuarioAtualizado.setUltimaTrocaSenha( usuarioDB.getUltimaTrocaSenha() == null ? new Date() : usuarioDB.getUltimaTrocaSenha() );
 
@@ -176,14 +185,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 			usuarioAtualizado.setFlEnviarDynamics( true );
 		}
 
-		atualizaDados( usuarioAtualizado, usuarioDB );
+		atualizaDados( usuarioAtualizado, usuarioDB, prestadoraRepository.buscaPrestadorasDoGrupo( prestadoraLogada.getGrupoPrestadora().getId() ), grupoPerfilService.findByPrestadora( prestadoraLogada.getId() ) );
 		usuarioRepository.save( usuarioDB );
 
 		try {
 			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
 			logger.info( "dynamics ativo? " + dynamicsAtivo );
 			if ( dynamicsAtivo ) {
-				dynamicsService.alterar( usuarioDB, false );
+				dynamicsService.alterar( usuarioDB, false, prestadoraLogada );
 			}
 		} catch ( DynamicsException e ) {
 			throw new DynamicsException( e.getMessage() );
@@ -207,18 +216,26 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return usuarioAtualizado;
 	}
 
-	private void atualizaDados( Usuario usuarioAtualizado, Usuario usuarioDB ) {
+	private void atualizaDados( Usuario usuarioAtualizado, Usuario usuarioDB, List<Prestadora> prestadorasGrupo, List<GrupoPerfil> gruposPerfisDaPrestadora ) {
 		usuarioDB.setNmUsuario( usuarioAtualizado.getNmUsuario() );
 		usuarioDB.setDcEmail( usuarioAtualizado.getDcEmail() );
 		usuarioDB.setDcCargo( usuarioAtualizado.getDcCargo() );
 		usuarioDB.setDcTelefone( usuarioAtualizado.getDcTelefone() );
 		usuarioDB.setDcTelefoneFixo( usuarioAtualizado.getDcTelefoneFixo() );
 		usuarioDB.setNivelEscalonamento( usuarioAtualizado.getNivelEscalonamento() );
-		usuarioDB.setGrupoPerfis( usuarioAtualizado.getGrupoPerfis() );
+		
+		usuarioDB.setGrupoPerfis( grupoPerfilService.findByUsuario( usuarioDB.getId(), null ) );
+		usuarioDB.getGrupoPerfis().removeAll( gruposPerfisDaPrestadora );
+		usuarioDB.getGrupoPerfis().addAll( usuarioAtualizado.getGrupoPerfis() );
+
 		usuarioDB.setFlBloqueio( usuarioAtualizado.getFlBloqueio() );
 		usuarioDB.setFlEnvioEmail( usuarioAtualizado.isFlEnvioEmail() );
 		usuarioDB.setFlEnviarDynamics( usuarioAtualizado.getFlEnviarDynamics() );
 		usuarioDB.setDelegado( usuarioAtualizado.getDelegado() );
+
+		if ( !usuarioDB.getFlMaster() ) {
+			usuarioDB.setPrestadoras( prestadorasGrupo );
+		}
 	}
 
 	@Override
@@ -275,7 +292,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		usuarioMasterNovo.setFlMaster( true );
 		usuarioMasterNovo.setFlBloqueio( BloqueioUsuario.BLOQUEADO_PRIMEIROACESSO );
-		salvar( usuarioMasterNovo, true );
+		salvar( usuarioMasterNovo, true, usuarioMasterNovo.getPrestadoras().get( 0 ) );
 
 	}
 
@@ -420,7 +437,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
-	public void desbloquear( Usuario usuario ) throws Exception {
+	public void desbloquear( Usuario usuario, Prestadora prestadoraLogada ) throws Exception {
 		usuario.setFlEnviarDynamics( true );
 		usuario.setFlBloqueio( BloqueioUsuario.BLOQUEADO_NAO );
 		usuarioRepository.save( usuario );
@@ -428,7 +445,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		try {
 			boolean dynamicsAtivo = parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) != null ? Boolean.parseBoolean( parametrizacaoService.findByDcParametro( ParametrizacaoEnum.DYNAMICS_ACTIVE.getDcParametro() ) ) : false;
 			if ( dynamicsAtivo ) {
-				dynamicsService.criarUsuario( usuario );
+				dynamicsService.criarUsuario( usuario, prestadoraLogada );
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();

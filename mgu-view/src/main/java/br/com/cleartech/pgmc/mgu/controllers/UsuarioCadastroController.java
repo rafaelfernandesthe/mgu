@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.cleartech.pgmc.mgu.entities.GrupoPerfil;
 import br.com.cleartech.pgmc.mgu.entities.NivelEscalonamento;
+import br.com.cleartech.pgmc.mgu.entities.Prestadora;
 import br.com.cleartech.pgmc.mgu.entities.Usuario;
 import br.com.cleartech.pgmc.mgu.services.GrupoPerfilService;
 import br.com.cleartech.pgmc.mgu.services.LdapService;
@@ -69,7 +70,7 @@ public class UsuarioCadastroController {
 	@PostMapping( "/salvar" )
 	public String salvar( @Validated @ModelAttribute( "usuario" ) UsuarioCadastroDTO usuarioDto, BindingResult bindingResult, Model model ) {
 
-		MguUtils.trim(usuarioDto);
+		MguUtils.trim( usuarioDto );
 
 		List<GrupoPerfil> groupSelecteds = new ArrayList<GrupoPerfil>();
 
@@ -103,12 +104,16 @@ public class UsuarioCadastroController {
 			bindingResult.addError( new FieldError( "usuario", "dcUsername", usuarioDto.getDcUsername(), false, null, null, "Usuário de Acesso é obrigatório." ) );
 		}
 
+		Prestadora prestadoraLogada = prestadoraService.findById( MguUtils.getUsuarioLogado().getIdPrestadora() );
 		if ( !bindingResult.hasErrors() ) {
 			String mensagem = "Usuário salvo com sucesso!";
 			try {
 				LOGGER.info( "salvando: " + usuarioDto.toString() );
-				usuarioDto.setPrestadora( prestadoraService.findById( MguUtils.getUsuarioLogado().getIdPrestadora() ) );
-				usuarioService.salvar( usuarioDto.getUsuario(), false );
+				// ao salvar um usuario ele deve se associar a todas as
+				// prestadoras do grupo
+				usuarioDto.setPrestadoraList( prestadoraService.buscaPrestadorasDoGrupo( prestadoraLogada.getGrupoPrestadora().getId() ) );
+
+				usuarioService.salvar( usuarioDto.getUsuario(), false, prestadoraLogada );
 				return "redirect:/usuarioConsulta/s" + MguUtils.adjustURL( null, String.format( MappedViews.SUCESSO_PARAMETRO.getPath(), mensagem ) );
 			} catch ( MessagingException e ) {
 				return "redirect:/usuarioConsulta/s" + MguUtils.adjustURL( null, String.format( MappedViews.SUCESSO_COM_ALERTA_EMAIL_PARAMETRO.getPath(), e.getMessage(), mensagem ) );

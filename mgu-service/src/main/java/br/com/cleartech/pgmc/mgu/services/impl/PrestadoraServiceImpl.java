@@ -1,5 +1,7 @@
 package br.com.cleartech.pgmc.mgu.services.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,11 @@ public class PrestadoraServiceImpl implements PrestadoraService {
 	@Override
 	public Prestadora prestadoraPorUsername( String dcUsername ) {
 		return prestadoraRepository.prestadoraPorUsername( dcUsername );
+	}
+
+	@Override
+	public List<Prestadora> buscaPrestadorasDoGrupo( Long grupoPrestadoraId ) {
+		return prestadoraRepository.buscaPrestadorasDoGrupo( grupoPrestadoraId );
 	}
 
 }

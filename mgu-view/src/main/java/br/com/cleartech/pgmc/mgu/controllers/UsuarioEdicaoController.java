@@ -63,7 +63,8 @@ public class UsuarioEdicaoController {
 		}
 		model.addAttribute( "usuario", usuarioDto );
 
-		List<GrupoPerfil> groupSelecteds = grupoPerfilService.findByUsuario( usuarioDB.getId() );
+		Prestadora prestadoraLogada = prestadoraService.findById( MguUtils.getUsuarioLogado().getIdPrestadora() );
+		List<GrupoPerfil> groupSelecteds = grupoPerfilService.findByUsuario( usuarioDB.getId(), prestadoraLogada.getId() );
 		usuarioDto.setGrupoPerfis( groupSelecteds );
 
 		List<GrupoPerfil> listaGrupoPerfilTotal = getGrupoPerfilList();
@@ -74,8 +75,8 @@ public class UsuarioEdicaoController {
 		model.addAttribute( "grupoPerfisTargetJSON", MguUtils.getVO2JSON( groupSelecteds, "id", "noGrupoPerfil" ) );
 
 		if ( usuarioDto.getFlMaster() ) {
-			Prestadora prestadora = prestadoraService.prestadoraPorUsername( MguUtils.getUsuarioLogado().getDcUsername() );
-			List<Usuario> delegados = usuarioService.findUsuarioDelegadoDisponivel( usuarioDB.getId(), prestadora.getId() );
+			prestadoraLogada = prestadoraService.prestadoraPorUsername( MguUtils.getUsuarioLogado().getDcUsername() );
+			List<Usuario> delegados = usuarioService.findUsuarioDelegadoDisponivel( usuarioDB.getId(), prestadoraLogada.getId() );
 			model.addAttribute( "listaUsuarioDelegado", delegados );
 		}
 
@@ -85,20 +86,25 @@ public class UsuarioEdicaoController {
 	@PostMapping( "/salvar" )
 	public String salvar( @Validated @ModelAttribute( "usuario" ) UsuarioCadastroDTO usuarioDto, BindingResult bindingResult, Model model ) {
 
-		MguUtils.trim(usuarioDto);
-		
+		MguUtils.trim( usuarioDto );
+
 		usuarioDB = usuarioService.find( usuarioDto.getId() );
 		// carregar grupos
 		List<GrupoPerfil> groupSelecteds = MguUtils.idListToGrupoPerfilList( usuarioDto.getGrupoPerfisIdList() );
 		usuarioDto.setGrupoPerfis( groupSelecteds );
 
+		Prestadora prestadoraLogada = prestadoraService.findById( MguUtils.getUsuarioLogado().getIdPrestadora() );
 		if ( !bindingResult.hasErrors() ) {
 			String mensagem = "Usuário alterado com sucesso!";
 			try {
 				LOGGER.info( "salvando: " + usuarioDto.toString() );
-				usuarioDto.setPrestadora( prestadoraService.prestadoraPorUsername( MguUtils.getUsuarioLogado().getDcUsername() ) );
 
-				usuarioService.salvarEditar( usuarioDto.getUsuario(), usuarioDB );
+				if ( usuarioDB.getFlMaster() ) {
+					prestadoraLogada = prestadoraService.prestadoraPorUsername( MguUtils.getUsuarioLogado().getDcUsername() );
+					usuarioDto.setPrestadora( prestadoraLogada );
+				}
+
+				usuarioService.salvarEditar( usuarioDto.getUsuario(), usuarioDB, prestadoraLogada );
 
 				if ( usuarioDto.getUrlConsulta() != null ) {
 					return "redirect:" + MguUtils.adjustURL( usuarioDto.getUrlConsulta(), String.format( MappedViews.SUCESSO_PARAMETRO.getPath(), mensagem ) );

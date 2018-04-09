@@ -16,7 +16,7 @@ public interface GrupoPerfilService {
 
 	public List<GrupoPerfil> loadAllById( List<GrupoPerfil> list );
 
-	public List<GrupoPerfil> findByUsuario( Long idUsuario );
+	public List<GrupoPerfil> findByUsuario( Long idUsuario, Long prestadoraLogadaId );
 
 	public boolean existsByNoGrupoPerfil( String noGrupoPerfil );
 
